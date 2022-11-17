@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+
+#folder
+node_modules
+
+Makefile
+*.cmake
+
+*.vscode
+
+*.DS_Store
+
+CMakeFiles/
