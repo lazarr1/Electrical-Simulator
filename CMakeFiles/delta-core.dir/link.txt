@@ -1,2 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/ar qc libdelta-core.a "CMakeFiles/delta-core.dir/src/CircuitElement.cpp.o"
-/Library/Developer/CommandLineTools/usr/bin/ranlib libdelta-core.a
