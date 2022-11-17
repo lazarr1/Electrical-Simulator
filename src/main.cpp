@@ -1,12 +1,16 @@
 #include <iostream>
-#include "simulator/CircuitElement.h"
-#include "simulator/Circuit.h"
+#include "simulator/circuit_element.h"
+#include "simulator/circuit.h"
+
+
 
 int main(){
 
-    std::cout << "hi to" << std::endl;
+    std::cout << "hio" << std::endl;
 
-    CPassiveElement test;
+
+    Circuit _test;
+
 
 
 
