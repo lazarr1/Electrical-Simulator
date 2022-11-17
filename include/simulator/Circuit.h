@@ -8,44 +8,16 @@
 #include <memory>
 #include <utility>
 
-//A circuit is just a graph
-
-class Node;
-
-//An edge connects two nodes
-struct Edge{
-
-    Edge(CircuitElement elementType);
-
-    std::shared_ptr<CircuitElement> elecComponent; 
-
-    //There can only ever be one entry node and one exit node into a component
-    std::shared_ptr<Node> _connectedNodes[2];
-
-
-};
-
-
-// A node is a network of edges 
-struct Node{
-
-
-    int numAdjacentNodes;
-    std::vector<std::shared_ptr<Node>> _connectedNodes;
-
-    // bool visited;
-    int connectedEdges;
-    //connected edges
-    std::vector<std::shared_ptr<Edge>> _circuitComponents;
-
-};
-
+#include "node.h"
+#include "edge.h"
 
 
 // A circuit manages nodes and edges, it is just a graph
 class Circuit{
 
     public:
+
+        void AddComponent(std::shared_ptr<CircuitElement>);
 
         void CreateIncidenceMatrix();
 

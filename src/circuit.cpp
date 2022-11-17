@@ -2,4 +2,16 @@
 
 
 
-// Edge::
+
+
+void Circuit::AddComponent(std::shared_ptr<CircuitElement> elementType){
+
+    // Edge 
+    
+    // elecComponent = elementType;
+
+
+
+
+
+}

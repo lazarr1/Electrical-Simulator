@@ -37,6 +37,9 @@ set(elec_sim_SOURCES
     # Source files
     src/circuit_element.cpp
     src/circuit.cpp
+    src/simulator.cpp
+    src/edge.cpp
+    src/node.cpp
 
 )
 
