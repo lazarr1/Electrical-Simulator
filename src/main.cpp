@@ -9,13 +9,16 @@ int main(){
 
     std::cout << "hio" << std::endl;
 
-    Simulator test;
+    #ifdef __DEBUG__
+        Simulator test;
 
-    //cannot do this yet gonna comment the rest of the code first.
-    test.CreateResistor(100.0);
-    test.CreateResistor(200.0);
+        //cannot do this yet gonna comment the rest of the code first.
+        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);
 
-    test.PrintComponents();
+
+        test.PrintComponents();
+    #endif
 
     // Circuit _test;
 

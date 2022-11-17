@@ -30,7 +30,7 @@ void Simulator::CreateResistor(double resistanceInput){
 }
 
 
-// #ifdef debug
+#ifdef __DEBUG__
 void Simulator::PrintComponents(){
 
     std::cout << "I have " << _presentComponents.size() << " components with values: " << std::endl;
@@ -40,4 +40,4 @@ void Simulator::PrintComponents(){
         std::cout << iComponent.second->GetImpedance().resistance << std::endl;
     }
 }
-// #endif
+#endif
