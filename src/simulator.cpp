@@ -12,14 +12,17 @@ void Simulator::CreateResistor(double resistanceInput){
             // just simulator counts how many things are created, use this as the key  
                 //These createa a bit of overhead, elements now need to store partno
             // Or count how many resistors etc there are
-
     std::string name("resistor x");
+
+    //create a shared ptr
     std::shared_ptr<PassiveElement> resistor = std::make_shared<PassiveElement>(name);
 
     resistor->SetResistance(resistanceInput);
 
+    //update the circuit to include the new component
     _circuit.AddComponent(resistor);
 
+    //update the simulator to store the new component
     _presentComponents[resistor->GetName()] = resistor;
     
     
@@ -29,9 +32,6 @@ void Simulator::CreateResistor(double resistanceInput){
 
 // #ifdef debug
 void Simulator::PrintComponents(){
-
-    std::cout << "testing 123" << std::endl;
-
 
     std::cout << "I have " << _presentComponents.size() << " components with values: " << std::endl;
 

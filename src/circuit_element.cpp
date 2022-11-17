@@ -2,9 +2,8 @@
 
 
 Impedance::Impedance(){
-    
     resistance = 0.0;
-    capacitance = 0.0;
+    capacitance = 0.0 ;
     inductance = 0.0;
 }
 

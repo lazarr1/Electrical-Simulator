@@ -4,10 +4,12 @@
 #include <string>
 
 
-
+//Struct defining the impedance of a component
 struct Impedance{    
 
+    //default all values to 0
     Impedance();
+
 
     double resistance;
     double capacitance;
@@ -15,10 +17,13 @@ struct Impedance{
 };
 
 
-// A base struct for all circuit components to store all types of circuit elements
+//A abstract class for all circuit components to store all types of circuit elements in a circuit
+//All circuit components derive from this class
 class CircuitElement{
 
     public:
+
+        //Requires a name for every element
         CircuitElement(std::string nameInput);
 
         virtual Impedance GetImpedance() = 0;
@@ -37,7 +42,7 @@ class CircuitElement{
 
 // TO be moved to PassiveElement.h
 
-// struct containing a passive circuit component's properties
+// class containing a passive component's properties
 class PassiveElement: public CircuitElement{
 
     public: 
@@ -48,7 +53,6 @@ class PassiveElement: public CircuitElement{
 
         void SetResistance(double resistanceInput);
     
-    // PassiveElement(std::string nameInput);
     
     private:
         Impedance _impedance;

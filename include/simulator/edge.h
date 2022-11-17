@@ -14,7 +14,7 @@ class Edge{
     public:
         Edge(std::shared_ptr<CircuitElement> elementType);
 
-
+        //In the destructor, all connected edges remove their reference to this class
         ~Edge();
 
 
