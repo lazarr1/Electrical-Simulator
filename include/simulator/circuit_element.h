@@ -5,36 +5,56 @@
 
 
 
+struct Impedance{    
 
-// struct PassiveImpedance{
-//     double _resistance;
-//     double _capacitance;
-//     double _inductance;
-// };
+    Impedance();
+
+    double resistance;
+    double capacitance;
+    double inductance;
+};
 
 
-// A struct that allows a node to store all types of circuit elements
-struct CircuitElement{
+// A base struct for all circuit components to store all types of circuit elements
+class CircuitElement{
 
-    CircuitElement(std::string nameInput);
+    public:
+        CircuitElement(std::string nameInput);
 
-    std::string name;
+        virtual Impedance GetImpedance() = 0;
+
+        std::string GetName();
+
+
+    private:
+
+        std::string _name;
+
+
 
 };
 
 
 // TO be moved to PassiveElement.h
-// truct defining the basic properties of a circuit element
-struct PassiveElement: public CircuitElement{
 
-    //Use the same constructors as the base circuit element class
-    using CircuitElement::CircuitElement;
+// struct containing a passive circuit component's properties
+class PassiveElement: public CircuitElement{
+
+    public: 
+        //Use the same constructors as the base circuit element class
+        using CircuitElement::CircuitElement;
+
+        Impedance GetImpedance();
+
+        void SetResistance(double resistanceInput);
     
     // PassiveElement(std::string nameInput);
     
-    double _resistance;
-    double _capacitance;
-    double _inductance;
+    private:
+        Impedance _impedance;
+
+        std::string _name;
+
 
 };
 

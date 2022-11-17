@@ -1,10 +1,10 @@
 #include "simulator/simulator.h"
 
 #include <string>
+#include <iostream>
 
 
-
-void Simulator::CreateResistor(double resistance){
+void Simulator::CreateResistor(double resistanceInput){
 
     //TODO:
         //Implement a counter of number of resistors present
@@ -14,13 +14,30 @@ void Simulator::CreateResistor(double resistance){
             // Or count how many resistors etc there are
 
     std::string name("resistor x");
-    auto resistor = std::make_shared<PassiveElement>(name);
+    std::shared_ptr<PassiveElement> resistor = std::make_shared<PassiveElement>(name);
 
-    _presentComponents[resistor->name] = resistor;
+    resistor->SetResistance(resistanceInput);
 
+    _circuit.AddComponent(resistor);
+
+    _presentComponents[resistor->GetName()] = resistor;
     
     
-
-
 
 }
+
+
+// #ifdef debug
+void Simulator::PrintComponents(){
+
+    std::cout << "testing 123" << std::endl;
+
+
+    std::cout << "I have " << _presentComponents.size() << " components with values: " << std::endl;
+
+    for( auto& iComponent : _presentComponents){
+        std::cout << iComponent.second->GetName() << std::endl;
+        std::cout << iComponent.second->GetImpedance().resistance << std::endl;
+    }
+}
+// #endif

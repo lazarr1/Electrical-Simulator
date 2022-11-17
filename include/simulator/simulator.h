@@ -10,13 +10,14 @@
 
 class Simulator{
 
+    public:
 
-
-        void CreateResistor(double resistance);
+        void CreateResistor(double resistanceInput);
 
         //default reistance of 100 ohms
         void CreateResistor();
 
+        void PrintComponents();
 
     private:
         

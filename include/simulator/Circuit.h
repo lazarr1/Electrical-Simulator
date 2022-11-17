@@ -17,7 +17,8 @@ class Circuit{
 
     public:
 
-        void AddComponent(std::shared_ptr<CircuitElement>);
+        void AddComponent(std::shared_ptr<CircuitElement> component);
+
 
         void CreateIncidenceMatrix();
 
