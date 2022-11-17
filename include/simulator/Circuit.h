@@ -1,7 +1,7 @@
 #ifndef CIRCUIT_H
 #define CIRCUIT_H
 
-#include "CircuitElement.h"
+#include "circuit_element.h"
 
 #include <vector>
 #include <list>
@@ -12,56 +12,49 @@
 
 class Node;
 
-class Edge{
+//An edge connects two nodes
+struct Edge{
 
-    public:
-        
-        
-    private:
+    Edge(CircuitElement elementType);
 
+    std::shared_ptr<CircuitElement> elecComponent; 
 
-
-        CircuitElement _elecComponent; 
-
-        //There can only ever be one entry node and one exit node into a component
-        std::shared_ptr<Node> _connectedNodes[2];
+    //There can only ever be one entry node and one exit node into a component
+    std::shared_ptr<Node> _connectedNodes[2];
 
 
 };
 
-class Node{
 
-    public:
-
-
-        //void KVL();
-        //void KCL();
+// A node is a network of edges 
+struct Node{
 
 
-    private:
+    int numAdjacentNodes;
+    std::vector<std::shared_ptr<Node>> _connectedNodes;
 
-        int _numAdjacentNodes;
-
-        //connected nodes unsure if needed rn
-        std::vector<std::shared_ptr<Node>> _connectedNodes;
-
-        bool visited;
-        int connected;
-
-        //connected edges
-        std::vector<std::shared_ptr<Edge>> _circuitComponents;
+    // bool visited;
+    int connectedEdges;
+    //connected edges
+    std::vector<std::shared_ptr<Edge>> _circuitComponents;
 
 };
 
 
 
-
+// A circuit manages nodes and edges, it is just a graph
 class Circuit{
 
     public:
 
+        void CreateIncidenceMatrix();
+
 
     private:
+
+
+
+        std::vector<std::vector<int> > _incidenceMatrix;
 
         //Full Map of nodes
 
