@@ -14,8 +14,22 @@ int main(){
 
         Simulator test;
 
-        //cannot do this yet.
         test.CreateResistor(100.0);
+        test.CreateResistor(200.0);
+        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
+        test.CreateResistor(200.0);        test.CreateResistor(100.0);
         test.CreateResistor(200.0);
 
 

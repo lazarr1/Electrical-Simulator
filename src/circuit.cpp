@@ -12,19 +12,38 @@ int & Circuit::GetEdgeCount(){
     return _matrixSize.first;
 }
 
-int & Circuit::GetNodeCount(){
+int & Circuit::GetPrincipalNodeCount(){
     return _matrixSize.second;
 }
 
 //A "component" is actually just a branch/edge with a component
 void Circuit::AddComponent(std::shared_ptr<CircuitElement> component){
 
-    //create an edge with the component
-    std::shared_ptr<Edge> edge = std::make_shared<Edge>(component);
 
-    //increment the edge count of the circuit's size
-    int & edgeCount = GetEdgeCount();
+    //update the circuit's incidence matrix size
+    int edgeCount = GetEdgeCount();
     edgeCount++;
 
+    //update the circuit's number of principal nodes
+    int principalNodes = GetPrincipalNodeCount();
+    principalNodes += component->GetIOPinNum();
+
+
+    //store the edges in the circuit
+    _components[component->GetName()] = component;
+
+}
+
+
+void Circuit::CreateConnection(std::string ComponentName1, ConnectionSite Connection1, std::string ComponentName2, ConnectionSite Connection2){
+    // if(){
+
+    // }
+    // else if(){
+
+    // }
+    // else if(){
+
+    // }
 
 }

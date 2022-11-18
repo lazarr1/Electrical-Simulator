@@ -39,6 +39,21 @@ void Simulator::CreateResistor(const double resistanceInput){
 }
 
 
+void Simulator::CreateConnection(std::string ComponentName1, ConnectionSite Connection1, std::string ComponentName2, ConnectionSite Connection2){
+
+    if(_presentComponents.count(ComponentName1) && _presentComponents.count(ComponentName2)){
+
+        // _circuit.CreateConnection(std::string ComponentName1, ConnectionSite Connection1, std::string ComponentName2, ConnectionSite Connection2);
+
+    }
+    else{
+        std::cout << "Component does not exist" << std::endl;
+    }
+
+
+}
+
+
 #ifdef __DEBUG__
 void Simulator::PrintComponents() const{
 

@@ -47,7 +47,6 @@ set(elec_sim_SOURCES
     src/circuit_element.cpp
     src/circuit.cpp
     src/simulator.cpp
-    src/edge.cpp
     src/node.cpp
 
 )
