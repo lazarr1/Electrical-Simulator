@@ -24,11 +24,11 @@ std::string CircuitElement::GetName(){
     return _name;
 }
 
-Impedance PassiveElement::GetImpedance(){
+Impedance PassiveElement::GetImpedance() const{
     return _impedance;
 }
 
-void PassiveElement::SetResistance(double resistanceInput){
+void PassiveElement::SetResistance(const double resistanceInput){
 
     _impedance.resistance = resistanceInput;
 

@@ -14,7 +14,7 @@ Simulator::Simulator()
 
 }
 
-void Simulator::CreateResistor(double resistanceInput){
+void Simulator::CreateResistor(const double resistanceInput){
 
 
     //Increment the count of current components;
@@ -40,7 +40,7 @@ void Simulator::CreateResistor(double resistanceInput){
 
 
 #ifdef __DEBUG__
-void Simulator::PrintComponents(){
+void Simulator::PrintComponents() const{
 
     std::cout << "Checking number of components stored" << std::endl;
     assert(_numComponents == _presentComponents.size());

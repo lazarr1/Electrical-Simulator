@@ -27,7 +27,7 @@ class CircuitElement{
         CircuitElement(std::string nameInput);
         virtual ~CircuitElement();
 
-        virtual Impedance GetImpedance() = 0;
+        virtual Impedance GetImpedance() const = 0;
 
         std::string GetName();
 
@@ -51,9 +51,9 @@ class PassiveElement: public CircuitElement{
         using CircuitElement::CircuitElement;
         ~PassiveElement();
 
-        Impedance GetImpedance();
+        Impedance GetImpedance() const;
 
-        void SetResistance(double resistanceInput);
+        void SetResistance(const double resistanceInput);
     
     
     private:

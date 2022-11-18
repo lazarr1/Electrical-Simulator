@@ -6,3 +6,7 @@ Edge::Edge(std::shared_ptr<CircuitElement> elementType)
 {
 
 }
+
+Edge::~Edge(){
+
+}

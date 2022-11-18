@@ -17,10 +17,16 @@ class Circuit{
 
     public:
 
+        Circuit();
+
         void AddComponent(std::shared_ptr<CircuitElement> component);
 
 
         void CreateIncidenceMatrix();
+
+        int& GetEdgeCount();
+        int& GetNodeCount();
+
 
 
     private:
@@ -28,11 +34,13 @@ class Circuit{
 
 
         std::vector<std::vector<int> > _incidenceMatrix;
+        
+        //nodes x deges; 
+        std::pair<int,int> _matrixSize;
 
         //Full Map of nodes
 
-        //nodes x vertices; 
-        std::pair<int,int> _size;
+
 
         std::vector<std::vector< std::shared_ptr<Node>>> _nodes;
         std::vector<std::vector< std::shared_ptr<Edge>>> _edges;

@@ -16,12 +16,12 @@ class Simulator{
 
         Simulator();
 
-        void CreateResistor(double resistanceInput);
+        void CreateResistor(const double resistanceInput);
 
         //default reistance of 100 ohms
         void CreateResistor();
 
-        void PrintComponents();
+        void PrintComponents() const;
 
     private:
 
