@@ -1,6 +1,7 @@
 #include "simulator/circuit_element.h"
 
 
+
 Impedance::Impedance(){
     resistance = 0.0;
     capacitance = 0.0 ;
@@ -16,15 +17,18 @@ CircuitElement::~CircuitElement(){
 
 }
 
+std::string CircuitElement::GetName() const{
+    return _name;
+}
+
+
 PassiveElement::~PassiveElement(){
     
 }
 
-std::string CircuitElement::GetName(){
-    return _name;
-}
 
-Impedance PassiveElement::GetImpedance() const{
+
+Impedance& PassiveElement::GetImpedance(){
     return _impedance;
 }
 
@@ -33,3 +37,8 @@ void PassiveElement::SetResistance(const double resistanceInput){
     _impedance.resistance = resistanceInput;
 
 }
+
+const int PassiveElement::GetIOPinNum() const{
+    return ioPins;
+}
+

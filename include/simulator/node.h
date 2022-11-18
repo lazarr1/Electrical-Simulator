@@ -5,8 +5,9 @@
 #include <memory>
 #include <vector>
 
+#include "circuit_element.h"
 
-#include "edge.h"
+
 
 // A node is a network of edges 
 class Node{
@@ -16,13 +17,12 @@ class Node{
 
 
     private: 
-        int numAdjacentNodes;
-        std::vector<std::shared_ptr<Node>> _connectedNodes;
+        // int numAdjacentNodes;
+        // std::vector<std::shared_ptr<Node>> _connectedNodes;
 
         // bool visited;
-        int connectedEdges;
-        //connected edges
-        std::vector<std::shared_ptr<Edge>> _circuitComponents;
+        int connectedComponents;
+        std::vector<std::shared_ptr<CircuitElement>> _circuitComponents;
 
 };
 

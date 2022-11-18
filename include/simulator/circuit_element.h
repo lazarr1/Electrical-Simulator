@@ -4,6 +4,8 @@
 #include <string>
 
 
+
+
 //Struct defining the impedance of a component
 struct Impedance{    
 
@@ -17,6 +19,14 @@ struct Impedance{
 };
 
 
+enum ConnectionSite{
+    negative = 0,
+    positive = 1
+
+    //might have more sites for more complex components, for now this will suffice
+};
+
+
 //A abstract class for all circuit components to store all types of circuit elements in a circuit
 //All circuit components derive from this class
 class CircuitElement{
@@ -25,11 +35,17 @@ class CircuitElement{
 
         //Requires a name for every element
         CircuitElement(std::string nameInput);
+
+        std::string GetName() const;
+
+        
         virtual ~CircuitElement();
 
-        virtual Impedance GetImpedance() const = 0;
+        virtual Impedance& GetImpedance() = 0;
 
-        std::string GetName();
+        virtual const int GetIOPinNum() const = 0;
+
+
 
 
     private:
@@ -51,12 +67,17 @@ class PassiveElement: public CircuitElement{
         using CircuitElement::CircuitElement;
         ~PassiveElement();
 
-        Impedance GetImpedance() const;
+        Impedance& GetImpedance();
 
         void SetResistance(const double resistanceInput);
+
+        const int GetIOPinNum() const;
+
     
     
     private:
+
+        const int ioPins = 2;
         Impedance _impedance;
 
         std::string _name;
