@@ -25,6 +25,7 @@ class CircuitElement{
 
         //Requires a name for every element
         CircuitElement(std::string nameInput);
+        virtual ~CircuitElement();
 
         virtual Impedance GetImpedance() = 0;
 
@@ -46,8 +47,9 @@ class CircuitElement{
 class PassiveElement: public CircuitElement{
 
     public: 
-        //Use the same constructors as the base circuit element class
+        //Use the same constructors and destructors as the base circuit element class
         using CircuitElement::CircuitElement;
+        ~PassiveElement();
 
         Impedance GetImpedance();
 

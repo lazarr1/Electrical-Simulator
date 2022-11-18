@@ -7,17 +7,21 @@
 
 int main(){
 
-    std::cout << "hio" << std::endl;
 
     #ifdef __DEBUG__
+        
+        std::cout << "Debugging" << std::endl;
+
         Simulator test;
 
-        //cannot do this yet gonna comment the rest of the code first.
+        //cannot do this yet.
         test.CreateResistor(100.0);
         test.CreateResistor(200.0);
 
 
         test.PrintComponents();
+
+        //can add a bunch of asserts here etc
     #endif
 
     // Circuit _test;

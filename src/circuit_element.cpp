@@ -12,6 +12,14 @@ CircuitElement::CircuitElement(std::string nameInput)
 {
 }
 
+CircuitElement::~CircuitElement(){
+
+}
+
+PassiveElement::~PassiveElement(){
+    
+}
+
 std::string CircuitElement::GetName(){
     return _name;
 }

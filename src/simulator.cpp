@@ -3,18 +3,27 @@
 #include <string>
 #include <iostream>
 
+#ifdef ___DEBUG__
+    #include <assert>
+#endif
+
+
+Simulator::Simulator()
+ : _numComponents(0)
+{
+
+}
 
 void Simulator::CreateResistor(double resistanceInput){
 
-    //TODO:
-        //Implement a counter of number of resistors present
-            //Could do this in a static int counter 
-            // just simulator counts how many things are created, use this as the key  
-                //These createa a bit of overhead, elements now need to store partno
-            // Or count how many resistors etc there are
-    std::string name("resistor x");
 
-    //create a shared ptr
+    //Increment the count of current components;
+    _numComponents++;
+
+    //create a name for the resistor
+    std::string name("R" + std::to_string(_numComponents));
+
+    //create a resistor with the given name
     std::shared_ptr<PassiveElement> resistor = std::make_shared<PassiveElement>(name);
 
     resistor->SetResistance(resistanceInput);
@@ -33,11 +42,22 @@ void Simulator::CreateResistor(double resistanceInput){
 #ifdef __DEBUG__
 void Simulator::PrintComponents(){
 
-    std::cout << "I have " << _presentComponents.size() << " components with values: " << std::endl;
+    std::cout << "Checking number of components stored" << std::endl;
+    assert(_numComponents == _presentComponents.size());
+
+    std::cout << "Correct number of parts in simulator!@@@@@@@@@@@@@@@@@@@" << std::endl;
+
+
+
+    std::cout << "I have " << _numComponents << " components with values: " << std::endl;
 
     for( auto& iComponent : _presentComponents){
-        std::cout << iComponent.second->GetName() << std::endl;
-        std::cout << iComponent.second->GetImpedance().resistance << std::endl;
+        std::cout << "Name: " << iComponent.second->GetName() << std::endl;
+        std::cout << "Resistance: " << iComponent.second->GetImpedance().resistance << std::endl;
+        std::cout << "Capacitance: " << iComponent.second->GetImpedance().capacitance << std::endl;
+        std::cout << "Inductance: " << iComponent.second->GetImpedance().inductance << std::endl;
+
+
     }
 }
 #endif

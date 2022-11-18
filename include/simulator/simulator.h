@@ -8,9 +8,13 @@
 #include "circuit.h"
 
 
+//Simulator class 
 class Simulator{
 
     public:
+
+
+        Simulator();
 
         void CreateResistor(double resistanceInput);
 
@@ -20,10 +24,14 @@ class Simulator{
         void PrintComponents();
 
     private:
+
+        //The simulator keeps track of all its components
+        int _numComponents;
+        std::unordered_map<std::string, std::shared_ptr<CircuitElement>> _presentComponents;
+
         
         Circuit _circuit;
 
-        std::unordered_map<std::string, std::shared_ptr<CircuitElement>> _presentComponents;
 
 };
 
