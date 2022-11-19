@@ -14,9 +14,13 @@
 // A node is a network of edges 
 typedef struct Node{
 
+
     Node();
 
-    std::string nodeName;
+    bool visited;
+
+
+    // std::string nodeName;
     // int numAdjacentNodes;
     // std::vector<std::shared_ptr<Node>> _connectedNodes;
 

@@ -9,8 +9,11 @@
 
 #include <memory>
 #include <utility>
-#include <unordered_map>
+#include <unordered_set>
 #include <string>
+#include <vector>
+
+#include <map>
 
 #include "node.h"
 
@@ -27,32 +30,32 @@ class Circuit{
 
         void CreateIncidenceMatrix();
 
-        void CreateConnection(std::string ComponentName1, ConnectionSite Connection1, std::string ComponentName2, ConnectionSite Connection2);
+        void CreateConnection(std::string componentName1, std::string componentName2);
 
-
+        void BeginBFS();
 
     private:
+        //Incidence matrx storing node and edges and their connection. A simple DC-Resistor circuit would look like
+        /*
+                [DC SUPPLY ] [RESISTOR]
+        [Node 1]     -1          1  
+        [Node 2]     1          -1
+        */
+        std::map< std::shared_ptr<Node>, std::map< std::shared_ptr<Edge>, int > > _incidenceMatrix;
 
-    
-        std::vector<std::vector<int> > _incidenceMatrix;
-        
-        //unique nodes x deges; 
-        std::pair<int,int> _matrixSize;
-
-        //To avoid using _matrixSize.first/second
-        int& GetEdgeCount();
-        int& GetPrincipalNodeCount();
-
-        //Full Map of nodes
-
-
-        //Stores all nodes and all edges
-        
-        //stores all nodes of the graph
         std::vector<std::shared_ptr<Node>> _nodes;
-
-        //stores all edges of the graph
         std::vector<std::shared_ptr<Edge>> _edges;
+
+
+        // std::vector<std::vector<int> > _incidenceMatrix;
+
+
+        //===========Functions
+        std::shared_ptr<Edge> FindEdge(std::string name);
+
+
+        void PrintBFS(std::shared_ptr<Node> node);
+
 
 };
 

@@ -21,12 +21,6 @@ struct Impedance{
 };
 
 
-enum ConnectionSite{
-    negative = 0,
-    positive = 1
-
-    //might have more sites for more complex components, for now this will suffice
-};
 
 
 //A abstract class for all circuit components to store all types of circuit elements in a circuit

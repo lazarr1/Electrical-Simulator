@@ -33,6 +33,7 @@ int main(){
         test.CreateResistor(200.0);
 
 
+        test.CreateConnection(std::string("R1"), std::string("R2"));
         test.PrintComponents();
 
         //can add a bunch of asserts here etc

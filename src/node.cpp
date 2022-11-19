@@ -3,4 +3,5 @@
 
 Node::Node(){
     connectedComponents = 0;
+    visited = false;
 }

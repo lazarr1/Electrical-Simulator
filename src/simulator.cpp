@@ -39,11 +39,11 @@ void Simulator::CreateResistor(const double resistanceInput){
 }
 
 
-void Simulator::CreateConnection(std::string ComponentName1, ConnectionSite Connection1, std::string ComponentName2, ConnectionSite Connection2){
+void Simulator::CreateConnection(std::string ComponentName1, std::string ComponentName2){
 
     if(_presentComponents.count(ComponentName1) && _presentComponents.count(ComponentName2)){
 
-        // _circuit.CreateConnection(std::string ComponentName1, ConnectionSite Connection1, std::string ComponentName2, ConnectionSite Connection2);
+        _circuit.CreateConnection(ComponentName1, ComponentName2);
 
     }
     else{
@@ -55,7 +55,7 @@ void Simulator::CreateConnection(std::string ComponentName1, ConnectionSite Conn
 
 
 #ifdef __DEBUG__
-void Simulator::PrintComponents() const{
+void Simulator::PrintComponents(){
 
     std::cout << "Checking number of components stored" << std::endl;
     assert(_numComponents == _presentComponents.size());
@@ -74,5 +74,7 @@ void Simulator::PrintComponents() const{
 
 
     }
+
+    _circuit.BeginBFS();
 }
 #endif
