@@ -41,7 +41,7 @@ class Simulator{
         int _numComponents;
         std::unordered_map<std::string, std::shared_ptr<CircuitElement>> _presentComponents;
 
-        //This class needs a component manager to update old components
+        //This class may need a component manager to update old components
         //ComponentManager(_presentComponents); <-- contructor like that
 
         

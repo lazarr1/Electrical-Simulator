@@ -1,6 +1,6 @@
 #include "simulator/circuit_element.h"
 
-
+#include <iostream>
 
 Impedance::Impedance(){
     resistance = 0.0;
@@ -14,7 +14,6 @@ CircuitElement::CircuitElement(std::string nameInput)
 }
 
 CircuitElement::~CircuitElement(){
-
 }
 
 std::string CircuitElement::GetName() const{
@@ -22,10 +21,28 @@ std::string CircuitElement::GetName() const{
 }
 
 
+PassiveElement::PassiveElement(std::string nameInput)
+    : CircuitElement::CircuitElement(nameInput)
+{
+}
+
 PassiveElement::~PassiveElement(){
     
 }
 
+// void PassiveElement::AddNode(std::shared_ptr<Node> node){
+
+//     if(_connectedNodes.size() < ioPins){
+
+//         _connectedNodes.push_back(node);
+
+//     }
+//     else{
+//         std::cout << "tried to assign to many nodes to a component" << std::endl;
+//     }
+
+
+// }
 
 
 Impedance& PassiveElement::GetImpedance(){

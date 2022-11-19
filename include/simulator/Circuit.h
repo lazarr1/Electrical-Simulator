@@ -3,6 +3,7 @@
 
 #include "circuit_element.h"
 
+#include "edge.h"
 
 
 
@@ -45,11 +46,11 @@ class Circuit{
 
         //Stores all nodes and all edges
         
-        //key is the unique node number
-        std::unordered_map<int, std::shared_ptr<Node>> _nodes;
+        //stores all nodes of the graph
+        std::vector<std::shared_ptr<Node>> _nodes;
 
-        //key is the component at an edge's name an edge is only created by a component
-        std::unordered_map<std::string, std::shared_ptr<CircuitElement>> _components;
+        //stores all edges of the graph
+        std::vector<std::shared_ptr<Edge>> _edges;
 
 };
 

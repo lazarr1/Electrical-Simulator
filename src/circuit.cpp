@@ -20,7 +20,7 @@ int & Circuit::GetPrincipalNodeCount(){
 void Circuit::AddComponent(std::shared_ptr<CircuitElement> component){
 
 
-    //update the circuit's incidence matrix size
+    //update the circuit's number of edges
     int edgeCount = GetEdgeCount();
     edgeCount++;
 
@@ -28,9 +28,10 @@ void Circuit::AddComponent(std::shared_ptr<CircuitElement> component){
     int principalNodes = GetPrincipalNodeCount();
     principalNodes += component->GetIOPinNum();
 
+    std::shared_ptr<Node> node = std::make_shared<Node>();
+    std::shared_ptr<Edge> edge = std::make_shared<Edge>();
 
-    //store the edges in the circuit
-    _components[component->GetName()] = component;
+
 
 }
 

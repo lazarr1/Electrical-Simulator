@@ -2,9 +2,11 @@
 #define CIRCUIT_ELEMENT_H
 
 #include <string>
+#include <vector>
+// #include "node.h"
 
 
-
+struct Node;
 
 //Struct defining the impedance of a component
 struct Impedance{    
@@ -46,9 +48,15 @@ class CircuitElement{
         virtual const int GetIOPinNum() const = 0;
 
 
+        // virtual void AddNode(std::shared_ptr<Node> node) = 0;
+
+        //All classes have access to the connected nodes to make functionality clearer
+        // std::vector <std::shared_ptr<Node> > _connectedNodes;
 
 
-    private:
+
+
+    protected:
 
         std::string _name;
 
@@ -63,13 +71,15 @@ class CircuitElement{
 class PassiveElement: public CircuitElement{
 
     public: 
-        //Use the same constructors and destructors as the base circuit element class
-        using CircuitElement::CircuitElement;
+
+        PassiveElement(std::string nameInput);
         ~PassiveElement();
 
         Impedance& GetImpedance();
 
         void SetResistance(const double resistanceInput);
+
+        // void AddNode(std::shared_ptr<Node> node);
 
         const int GetIOPinNum() const;
 
@@ -77,10 +87,12 @@ class PassiveElement: public CircuitElement{
     
     private:
 
+        //might be a base class functionality?
         const int ioPins = 2;
+
         Impedance _impedance;
 
-        std::string _name;
+
 
 
 };

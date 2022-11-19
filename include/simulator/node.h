@@ -4,27 +4,29 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
+#include "edge.h"
 #include "circuit_element.h"
 
 
 
 // A node is a network of edges 
-class Node{
-
-    public:
+typedef struct Node{
 
 
+    std::string nodeName;
+    // int numAdjacentNodes;
+    // std::vector<std::shared_ptr<Node>> _connectedNodes;
 
-    private: 
-        // int numAdjacentNodes;
-        // std::vector<std::shared_ptr<Node>> _connectedNodes;
+    // bool visited;
+    int connectedComponents;
 
-        // bool visited;
-        int connectedComponents;
-        std::vector<std::shared_ptr<CircuitElement>> _circuitComponents;
+    //Maps all components to their respective nodes 
+    std::
+    vector<std::shared_ptr<Edge>> connections;
 
-};
+}Node;
 
 
 #endif
