@@ -28,9 +28,29 @@ void Circuit::AddComponent(std::shared_ptr<CircuitElement> component){
     int principalNodes = GetPrincipalNodeCount();
     principalNodes += component->GetIOPinNum();
 
-    std::shared_ptr<Node> node = std::make_shared<Node>();
+    
+    //create the edge with the given component
     std::shared_ptr<Edge> edge = std::make_shared<Edge>();
+    edge->elecComponent = component;
 
+    CreateComponentNodes(component->GetIOPinNum());
+
+    for(int iNewNodes = 0; iNewNodes < component->GetIOPinNum(); iNewNodes++){
+        std::shared_ptr<Node> node = std::make_shared<Node>();
+
+        //the node needs to know what edges it is connected to
+        node.connections.push_back(edge);
+
+        //the edge needs to know what nodes it connects
+        edge.connectedNodes.push_back(node);
+
+        //the circuit stores all nodes
+        _nodes.push_back(node);
+    }
+
+
+    //the circuit stores all edges
+    _edges.push_back(edge);
 
 
 }

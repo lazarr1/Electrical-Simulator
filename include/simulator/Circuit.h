@@ -32,6 +32,8 @@ class Circuit{
 
 
     private:
+
+    
         std::vector<std::vector<int> > _incidenceMatrix;
         
         //unique nodes x deges; 

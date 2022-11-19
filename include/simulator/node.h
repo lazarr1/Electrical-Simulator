@@ -14,6 +14,7 @@
 // A node is a network of edges 
 typedef struct Node{
 
+    Node();
 
     std::string nodeName;
     // int numAdjacentNodes;
@@ -23,8 +24,7 @@ typedef struct Node{
     int connectedComponents;
 
     //Maps all components to their respective nodes 
-    std::
-    vector<std::shared_ptr<Edge>> connections;
+    std::vector<std::shared_ptr<Edge>> connections;
 
 }Node;
 
