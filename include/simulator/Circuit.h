@@ -26,13 +26,13 @@ class Circuit{
 
         Circuit();
 
-        void AddComponent(std::shared_ptr<CircuitElement> component);
+        void AddComponent(std::shared_ptr<CircuitComponent> component);
 
-        void CreateIncidenceMatrix();
+        // void CreateIncidenceMatrix();
 
-        void CreateConnection(std::string componentName1, std::string componentName2);
+        // void CreateConnection(std::string componentName1, std::string componentName2);
 
-        void BeginBFS();
+        // void BeginBFS();
 
     private:
         //Incidence matrx storing node and edges and their connection. A simple DC-Resistor circuit would look like

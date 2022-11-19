@@ -39,7 +39,7 @@ class Simulator{
 
         //The simulator keeps track of all its components
         int _numComponents;
-        std::unordered_map<std::string, std::shared_ptr<CircuitElement>> _presentComponents;
+        std::unordered_map<std::string, std::shared_ptr<CircuitComponent>> _presentComponents;
 
         
         Circuit _circuit;

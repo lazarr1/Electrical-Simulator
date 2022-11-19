@@ -19,12 +19,6 @@ typedef struct Node{
 
     bool visited;
 
-
-    // std::string nodeName;
-    // int numAdjacentNodes;
-    // std::vector<std::shared_ptr<Node>> _connectedNodes;
-
-    // bool visited;
     int connectedComponents;
 
     //Maps all components to their respective nodes 

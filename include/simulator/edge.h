@@ -13,7 +13,7 @@ struct Node;
 struct Edge{
   
         //The component connecting the nodes
-        std::shared_ptr<CircuitElement> elecComponent; 
+        std::shared_ptr<CircuitComponent> elecComponent; 
 
 
         //Connected nodes

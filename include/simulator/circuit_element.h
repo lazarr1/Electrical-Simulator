@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+#include <iostream>
 // #include "node.h"
 
 
@@ -25,35 +27,29 @@ struct Impedance{
 
 //A abstract class for all circuit components to store all types of circuit elements in a circuit
 //All circuit components derive from this class
-class CircuitElement{
+class CircuitComponent{
 
-    public:
+        public:
+            //Requires a name for every element
+            CircuitComponent(std::string nameInput);
 
-        //Requires a name for every element
-        CircuitElement(std::string nameInput);
+            virtual ~CircuitComponent();
 
-        std::string GetName() const;
+            virtual void Print() const = 0;
 
-        
-        virtual ~CircuitElement();
+            std::string GetName() const;
+            
+            virtual Impedance GetImpedance() const = 0;
 
-        virtual Impedance& GetImpedance() = 0;
-
-        virtual const int GetIOPinNum() const = 0;
-
-
-        // virtual void AddNode(std::shared_ptr<Node> node) = 0;
-
-        //All classes have access to the connected nodes to make functionality clearer
-        // std::vector <std::shared_ptr<Node> > _connectedNodes;
+            virtual void SetResistance(double resistance) = 0;
 
 
+        protected:
+            std::string _name;
 
+            // Impedance impedance;
 
-    protected:
-
-        std::string _name;
-
+            std::vector<std::shared_ptr<Node> > _terminals;
 
 
 };
@@ -62,32 +58,27 @@ class CircuitElement{
 // TO be moved to PassiveElement.h
 
 // class containing a passive component's properties
-class PassiveElement: public CircuitElement{
+class PassiveComponent: public CircuitComponent{
 
-    public: 
+    public:
+        PassiveComponent(std::string nameInput);
+        PassiveComponent(std::string nameInput, std::shared_ptr<Node> positiveNode, std::shared_ptr<Node> negativeNode);
+        ~PassiveComponent();
 
-        PassiveElement(std::string nameInput);
-        ~PassiveElement();
+        void Print() const;
 
-        Impedance& GetImpedance();
+        void SetResistance(double resistance);
 
-        void SetResistance(const double resistanceInput);
+        Impedance GetImpedance() const;
 
-        // void AddNode(std::shared_ptr<Node> node);
 
-        const int GetIOPinNum() const;
-
-    
-    
     private:
-
-        //might be a base class functionality?
-        const int ioPins = 2;
+        const int _ioPins = 2;
 
         Impedance _impedance;
 
-
-
+        const int _positiveTerminal = 0;
+        const int _negativeTerminal = 1;
 
 };
 

@@ -24,7 +24,7 @@ void Simulator::CreateResistor(const double resistanceInput){
     std::string name("R" + std::to_string(_numComponents));
 
     //create a resistor with the given name
-    std::shared_ptr<PassiveElement> resistor = std::make_shared<PassiveElement>(name);
+    std::shared_ptr<PassiveComponent> resistor = std::make_shared<PassiveComponent>(name);
 
     resistor->SetResistance(resistanceInput);
 
@@ -41,14 +41,14 @@ void Simulator::CreateResistor(const double resistanceInput){
 
 void Simulator::CreateConnection(std::string ComponentName1, std::string ComponentName2){
 
-    if(_presentComponents.count(ComponentName1) && _presentComponents.count(ComponentName2)){
+    // if(_presentComponents.count(ComponentName1) && _presentComponents.count(ComponentName2)){
 
-        _circuit.CreateConnection(ComponentName1, ComponentName2);
+    //     _circuit.CreateConnection(ComponentName1, ComponentName2);
 
-    }
-    else{
-        std::cout << "Component does not exist" << std::endl;
-    }
+    // }
+    // else{
+    //     std::cout << "Component does not exist" << std::endl;
+    // }
 
 
 }
@@ -67,14 +67,10 @@ void Simulator::PrintComponents(){
     std::cout << "I have " << _numComponents << " components with values: " << std::endl;
 
     for( auto& iComponent : _presentComponents){
-        std::cout << "Name: " << iComponent.second->GetName() << std::endl;
-        std::cout << "Resistance: " << iComponent.second->GetImpedance().resistance << std::endl;
-        std::cout << "Capacitance: " << iComponent.second->GetImpedance().capacitance << std::endl;
-        std::cout << "Inductance: " << iComponent.second->GetImpedance().inductance << std::endl;
-
-
+        iComponent.second->Print();
     }
 
-    _circuit.BeginBFS();
 }
+
+
 #endif

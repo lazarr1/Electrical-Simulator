@@ -1,6 +1,7 @@
 #include "simulator/circuit_element.h"
 
-#include <iostream>
+
+
 
 Impedance::Impedance(){
     resistance = 0.0;
@@ -8,54 +9,50 @@ Impedance::Impedance(){
     inductance = 0.0;
 }
 
-CircuitElement::CircuitElement(std::string nameInput)
+CircuitComponent::CircuitComponent(std::string nameInput)
     : _name(nameInput)
 {
 }
 
-CircuitElement::~CircuitElement(){
+CircuitComponent::~CircuitComponent(){
 }
 
-std::string CircuitElement::GetName() const{
+std::string CircuitComponent::GetName() const{
     return _name;
 }
 
-
-PassiveElement::PassiveElement(std::string nameInput)
-    : CircuitElement::CircuitElement(nameInput)
+PassiveComponent::PassiveComponent(std::string nameInput)
+    : CircuitComponent::CircuitComponent(nameInput)
 {
+    _terminals.resize(_ioPins);
+
 }
 
-PassiveElement::~PassiveElement(){
+PassiveComponent::PassiveComponent(std::string nameInput, std::shared_ptr<Node> positiveNode, std::shared_ptr<Node> negativeNode)
+    : CircuitComponent::CircuitComponent(nameInput)
+{
+    _terminals.resize(_ioPins);
+
+    _terminals[_positiveTerminal] = positiveNode;
+    _terminals[_negativeTerminal] = negativeNode;
+}
+
+PassiveComponent::~PassiveComponent(){
     
 }
 
-// void PassiveElement::AddNode(std::shared_ptr<Node> node){
+void PassiveComponent::Print() const{
+    std::cout << "Name: " << _name << std::endl;
+    std::cout << "Resistance: " << _impedance.resistance << std::endl;
+    std::cout << "Capacitance: " << _impedance.capacitance << std::endl;
+    std::cout << "Inductance: " << _impedance.inductance << std::endl;
 
-//     if(_connectedNodes.size() < ioPins){
+}
 
-//         _connectedNodes.push_back(node);
+void PassiveComponent::SetResistance(double resistance){
+    _impedance.resistance = resistance;
+}
 
-//     }
-//     else{
-//         std::cout << "tried to assign to many nodes to a component" << std::endl;
-//     }
-
-
-// }
-
-
-Impedance& PassiveElement::GetImpedance(){
+Impedance PassiveComponent::GetImpedance() const{
     return _impedance;
 }
-
-void PassiveElement::SetResistance(const double resistanceInput){
-
-    _impedance.resistance = resistanceInput;
-
-}
-
-const int PassiveElement::GetIOPinNum() const{
-    return ioPins;
-}
-
