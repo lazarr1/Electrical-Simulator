@@ -10,50 +10,33 @@ Circuit::Circuit(){
 // //A "component" is actually just a branch/edge with a component
 void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
 
-//     //create the edge with the given component
-//     std::shared_ptr<Edge> edge = std::make_shared<Edge>();
-//     edge->elecComponent = component;
+    //create the edge with the given component
 
-//     //create a new node for each IOPin
-//     for(int iNewNodes = 0; iNewNodes < component->GetIOPinNum(); iNewNodes++){
-//         std::shared_ptr<Node> node = std::make_shared<Node>();
+    _components.insert(component);
 
-//         //the node needs to know what edges it is connected to
-//         node->connections.push_back(edge);
+    std::vector<std::shared_ptr<Node>> newNodes;
 
-//         //the edge needs to know what nodes it connects
-//         edge->connectedNodes.push_back(node);
+    //create a new node for each IOPin
+    for(int iNewNodes = 0; iNewNodes < component->GetIOPins(); iNewNodes++){
+        
+        std::shared_ptr<Node> node = std::make_shared<Node>(component);
 
-//         //the circuit stores all nodes
-//         _nodes.push_back(node);
-//     }
+        newNodes.push_back(node);
+        _nodes.insert(node);
+    }
 
+    //Connect the nodes as the component requires
+    component->ConnectNodes(newNodes);
 
-//     //the circuit stores all edges
-//     _edges.push_back(edge);
+    //add the new connections to the incidence matrix
+    for(std::shared_ptr<Node> iNode : newNodes){
+        //Every new node is connected to the new component
+        _incidenceMatrix[iNode][component] = iNode->direction;
+    }
 
 
 }
 
-// std::shared_ptr<Edge> Circuit::FindEdge(std::string name){
-
-//     // std::shared_ptr<Edge> edge = NULL;
-
-//     for( std::shared_ptr<Edge>& iEdge : _edges){
-//         if(iEdge->elecComponent->GetName() == name){
-//             return iEdge;
-//             break;
-//         }
-//     }
-
-//     //Exception
-//     //This stinks
-//     std::cout <<"The object was found in the simulator, but wasn't listed as an edge, big error" << std::endl;
-//     exit(1);
-
-
-
-// }
 
 // void Circuit::CreateConnection(std::string componentName1, std::string componentName2){
 
@@ -111,4 +94,14 @@ void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
 //     }
 
 // }
+
+
+void Circuit::PrintIM(){
+    for(auto i : _incidenceMatrix){
+        std::cout << i.first->connection->GetName() << " ";
+        for(auto j : i.second){
+            std::cout << j.second << std::endl;
+        }
+    }
+}
 

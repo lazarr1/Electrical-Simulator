@@ -70,6 +70,8 @@ void Simulator::PrintComponents(){
         iComponent.second->Print();
     }
 
+    _circuit.PrintIM();
+
 }
 
 

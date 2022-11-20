@@ -8,6 +8,12 @@
 // #include "node.h"
 
 
+enum Direction{
+    In = -1,
+    NotFlowing = 0,
+    Out = 1
+};
+
 struct Node;
 
 //Struct defining the impedance of a component
@@ -43,13 +49,18 @@ class CircuitComponent{
 
             virtual void SetResistance(double resistance) = 0;
 
+            virtual const int GetIOPins() const =0;
+
+            virtual void ConnectNodes(std::vector<std::shared_ptr<Node>> nodes) = 0;
+
 
         protected:
             std::string _name;
 
+
             // Impedance impedance;
 
-            std::vector<std::shared_ptr<Node> > _terminals;
+            // std::vector<std::shared_ptr<Node> > _terminals;
 
 
 };
@@ -62,7 +73,7 @@ class PassiveComponent: public CircuitComponent{
 
     public:
         PassiveComponent(std::string nameInput);
-        PassiveComponent(std::string nameInput, std::shared_ptr<Node> positiveNode, std::shared_ptr<Node> negativeNode);
+        // PassiveComponent(std::string nameInput, std::shared_ptr<Node> positiveNode, std::shared_ptr<Node> negativeNode);
         ~PassiveComponent();
 
         void Print() const;
@@ -71,10 +82,13 @@ class PassiveComponent: public CircuitComponent{
 
         Impedance GetImpedance() const;
 
+        const int GetIOPins() const;
+
+        void ConnectNodes(std::vector<std::shared_ptr<Node>> nodes);
 
     private:
-        const int _ioPins = 2;
 
+        const int _ioPins = 2;
         Impedance _impedance;
 
         const int _positiveTerminal = 0;

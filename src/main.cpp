@@ -17,20 +17,6 @@ int main(){
         test.CreateResistor(100.0);
         test.CreateResistor(200.0);
         test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);
 
 
         test.CreateConnection(std::string("R1"), std::string("R2"));

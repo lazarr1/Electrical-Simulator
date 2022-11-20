@@ -1,10 +1,6 @@
 #include "simulator/node.h"
 
 
-Node::Node(int rankInput){
-
-    //This is the location of the node within the containing vector
-    rank = rankInput;
-    parent = -1;
-
+Node::Node(std::shared_ptr<CircuitComponent> component){
+    connection = component;
 }
