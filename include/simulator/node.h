@@ -11,20 +11,39 @@
 
 
 
-// A node is a network of edges 
+// An electric node is implemented in a disjoint set. It connects a component.
 typedef struct Node{
 
+    int rank;
+    int parent;
 
-    Node();
+    std::vector<Node> children;
 
-    bool visited;
+    Node(int rankInput, std::shared_ptr<CircuitComponent> );
 
-    int connectedComponents;
 
-    //Maps all components to their respective nodes 
-    std::vector<std::shared_ptr<Edge>> connections;
+    //All nodes a component they are connected to
+    std::shared_ptr<CircuitComponent>> connection;
 
 }Node;
 
+
+//nodes are stored as a disjoint set, where each node stores 
+class NodeManager{
+    public:
+
+        void AddNode(Node);
+
+        Node& Find(Node node);
+
+        void ConnectNodes(Node a, Node b);
+
+        void DisconnectNode(Node a);
+
+
+    private:
+
+        std::vector<Node> set;
+};
 
 #endif

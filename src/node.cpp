@@ -1,7 +1,10 @@
 #include "simulator/node.h"
 
 
-Node::Node(){
-    connectedComponents = 0;
-    visited = false;
+Node::Node(int rankInput){
+
+    //This is the location of the node within the containing vector
+    rank = rankInput;
+    parent = -1;
+
 }
