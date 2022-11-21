@@ -3,68 +3,59 @@
 
 #include "circuit_element.h"
 
-#include <vector>
-#include <list>
+
+
+
+
 #include <memory>
 #include <utility>
+#include <unordered_set>
+#include <string>
+#include <vector>
 
-//A circuit is just a graph
+#include <map>
 
-class Node;
-
-//An edge connects two nodes
-struct Edge{
-
-    Edge(CircuitElement elementType);
-
-    std::shared_ptr<CircuitElement> elecComponent; 
-
-    //There can only ever be one entry node and one exit node into a component
-    std::shared_ptr<Node> _connectedNodes[2];
-
-
-};
-
-
-// A node is a network of edges 
-struct Node{
-
-
-    int numAdjacentNodes;
-    std::vector<std::shared_ptr<Node>> _connectedNodes;
-
-    // bool visited;
-    int connectedEdges;
-    //connected edges
-    std::vector<std::shared_ptr<Edge>> _circuitComponents;
-
-};
+#include "node.h"
 
 
 
-// A circuit manages nodes and edges, it is just a graph
+// A circuit manages nodes and their components(edges), it is just a graph
 class Circuit{
 
     public:
 
-        void CreateIncidenceMatrix();
+        Circuit();
 
+        void AddComponent(std::shared_ptr<CircuitComponent> component);
+
+        void PrintIM();
+
+        // void CreateIncidenceMatrix();
+
+        void CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
+
+        void RemoveConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
 
     private:
+        //Incidence matrx storing node and edges and their connection. A simple DC-Resistor circuit would look like
+        /*
+                [DC SUPPLY ] [RESISTOR]
+        [Node 1]    -1          1  
+        [Node 2]     1         -1
+
+        Here if a component is not found, it is not stored rather than having a zero
+        */
+
+        std::map< std::shared_ptr<Node>, std::map< std::shared_ptr<CircuitComponent>, Direction > > _incidenceMatrix;
+
+        //store all the nodes and components
+        std::unordered_set<std::shared_ptr<Node>> _nodes;
+        std::unordered_set<std::shared_ptr<CircuitComponent>> _components;
 
 
+        // std::vector<std::vector<int> > _incidenceMatrix;
 
-        std::vector<std::vector<int> > _incidenceMatrix;
 
-        //Full Map of nodes
-
-        //nodes x vertices; 
-        std::pair<int,int> _size;
-
-        std::vector<std::vector< std::shared_ptr<Node>>> _nodes;
-        std::vector<std::vector< std::shared_ptr<Edge>>> _edges;
-
-    
 
 };
 

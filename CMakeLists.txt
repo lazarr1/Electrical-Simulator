@@ -5,8 +5,17 @@
 #run cmake && make install
 
 cmake_minimum_required(VERSION 3.10)
-project(Electrical-Simulator)
+project(Circuit-Simulator)
 
+
+set(IS_DEBUG_BUILD CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+# Indication to the code that this is a debug build
+if (${IS_DEBUG_BUILD})
+    add_compile_definitions(__DEBUG__)
+    add_compile_options("-Wall")
+
+endif ()
 
 
 add_compile_options(-std=c++11)
@@ -37,6 +46,8 @@ set(elec_sim_SOURCES
     # Source files
     src/circuit_element.cpp
     src/circuit.cpp
+    src/simulator.cpp
+    src/node.cpp
 
 )
 
