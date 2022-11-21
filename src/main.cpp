@@ -20,7 +20,8 @@ int main(){
 
 
         test.CreateConnection(std::string("N1"), std::string("N3"));
-        test.RemoveConnection(std::string("N1"), std::string("N3"));
+        test.CreateConnection(std::string("N5"), std::string("N1"));
+        test.RemoveConnection(std::string("N5"), std::string("N3"));
 
         test.PrintComponents();
 
