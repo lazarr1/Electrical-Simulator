@@ -10,19 +10,49 @@
 
 
 
-// An electric node is implemented in a disjoint set. It connects a component.
-typedef struct Node{
 
-    Node(std::shared_ptr<CircuitComponent> component);
+struct Node{
+
+    std::string name;
+
+
+
+    Node(std::string nameInput, std::shared_ptr<CircuitComponent> component);
 
     double voltage;
+
+    // bool operator<(const Node& x) const
+    // {
+    //     return (name < x.name);
+    // }
+
+    
+    // bool operator>(const Node& x) const
+    // {
+    //     return (name > x.name);
+    // }
+
+    // bool operator==(const Node& x) const
+    // {
+    //     return(name == x.name);
+    // }
+
+
+    // struct HashFunction
+    // {
+    //     size_t operator()(const Node& node) const
+    //     {
+    //     size_t nameHash = std::hash<std::string>()(node.name);
+    //     return nameHash;
+    //     }
+    // };
 
     //A node flows in this direction to its connection
     //One node only connects to one thing
     Direction direction;
     std::shared_ptr<CircuitComponent> connection;
 
-}Node;
+};
 
 
 

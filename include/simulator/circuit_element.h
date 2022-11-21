@@ -33,34 +33,26 @@ struct Impedance{
 
 //A abstract class for all circuit components to store all types of circuit elements in a circuit
 //All circuit components derive from this class
-class CircuitComponent{
-
-        public:
-            //Requires a name for every element
-            CircuitComponent(std::string nameInput);
-
-            virtual ~CircuitComponent();
-
-            virtual void Print() const = 0;
-
-            std::string GetName() const;
-            
-            virtual Impedance GetImpedance() const = 0;
-
-            virtual void SetResistance(double resistance) = 0;
-
-            virtual const int GetIOPins() const =0;
-
-            virtual void ConnectNodes(std::vector<std::shared_ptr<Node>> nodes) = 0;
+struct CircuitComponent{
 
 
-        protected:
-            std::string _name;
+    //Requires a name for every element
+    CircuitComponent(std::string nameInput, int numioPins, const Direction * connectionDirections);
+
+    virtual ~CircuitComponent();
+
+    virtual void Print() const;
+
+    std::string name;
 
 
-            // Impedance impedance;
+    const int ioPins;
+    Impedance impedance;
 
-            // std::vector<std::shared_ptr<Node> > _terminals;
+
+    const Direction * connectionDirection;
+    std::vector<std::shared_ptr<Node>> connectedNodes;
+
 
 
 };
@@ -69,30 +61,25 @@ class CircuitComponent{
 // TO be moved to PassiveElement.h
 
 // class containing a passive component's properties
-class PassiveComponent: public CircuitComponent{
+struct PassiveComponent: public CircuitComponent{
 
-    public:
-        PassiveComponent(std::string nameInput);
-        // PassiveComponent(std::string nameInput, std::shared_ptr<Node> positiveNode, std::shared_ptr<Node> negativeNode);
-        ~PassiveComponent();
 
-        void Print() const;
+    PassiveComponent(std::string nameInput);
+    PassiveComponent(std::string nameInput, std::shared_ptr<Node> positiveNode, std::shared_ptr<Node> negativeNode);
+    ~PassiveComponent();
 
-        void SetResistance(double resistance);
+    const int passiveIoPins = 2;
 
-        Impedance GetImpedance() const;
+    void Print() const;
+    
+    //A node flows in a node flows out
+    const Direction passiveDirection[2] {In, Out};
 
-        const int GetIOPins() const;
 
-        void ConnectNodes(std::vector<std::shared_ptr<Node>> nodes);
+    // Impedance impedance;
 
-    private:
-
-        const int _ioPins = 2;
-        Impedance _impedance;
-
-        const int _positiveTerminal = 0;
-        const int _negativeTerminal = 1;
+    // const int positiveTerminal = 0;
+    // const int negativeTerminal = 1;
 
 };
 

@@ -23,12 +23,11 @@ class Simulator{
         void CreateResistor(const double resistanceInput);
 
 
-        //Connects component 1's positive or negative side to component 2's positive or negative side
-        //TOBE overloaded for more complex components or maybe not
-        void CreateConnection(std::string ComponentName1, std::string ComponentName2);
+
+        void CreateConnection(std::string NodeName1, std::string NodeName2);
 
         //Removes a connection between two components
-        void RemoveConnection(std::string ComponentName1, std::string ComponentName2);
+        void RemoveConnection(std::string NodeName1, std::string NodeName2);
 
         //default reistance of 100 ohms
         // void CreateResistor();
@@ -39,7 +38,9 @@ class Simulator{
 
         //The simulator keeps track of all its components
         int _numComponents;
+        int _numNodes;
         std::unordered_map<std::string, std::shared_ptr<CircuitComponent>> _presentComponents;
+        std::unordered_map<std::string, std::shared_ptr<Node>> _nodes;
 
         
         Circuit _circuit;

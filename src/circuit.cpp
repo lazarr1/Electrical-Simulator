@@ -10,98 +10,70 @@ Circuit::Circuit(){
 // //A "component" is actually just a branch/edge with a component
 void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
 
-    //create the edge with the given component
-
+    //store every component
     _components.insert(component);
+    
+    for(auto iNode : component->connectedNodes){
 
-    std::vector<std::shared_ptr<Node>> newNodes;
-
-    //create a new node for each IOPin
-    for(int iNewNodes = 0; iNewNodes < component->GetIOPins(); iNewNodes++){
-        
-        std::shared_ptr<Node> node = std::make_shared<Node>(component);
-
-        newNodes.push_back(node);
-        _nodes.insert(node);
-    }
-
-    //Connect the nodes as the component requires
-    component->ConnectNodes(newNodes);
-
-    //add the new connections to the incidence matrix
-    for(std::shared_ptr<Node> iNode : newNodes){
-        //Every new node is connected to the new component
+        // update the incidence matrix
         _incidenceMatrix[iNode][component] = iNode->direction;
+
+        //store every node
+        _nodes.insert(iNode);
     }
 
 
 }
 
 
-// void Circuit::CreateConnection(std::string componentName1, std::string componentName2){
-
-//     //Find the edges to connect
-//     std::shared_ptr<Edge> edge1 = FindEdge(componentName1);
-//     std::shared_ptr<Edge> edge2 = FindEdge(componentName2);
-
-//     // //iterate through the nodes the edges connect
-//     for(auto iNodes : edge1->connectedNodes){
-//         iNodes->connections.push_back(edge2);
-
-//         edge2->connectedNodes.push_back(iNodes);
-//     }
-    
-//     for(auto iNodes : edge2->connectedNodes){
-//         iNodes->connections.push_back(edge1);
-
-//         edge1->connectedNodes.push_back(iNodes);
-
-//     }
-
-// }
-
-// void Circuit::BeginBFS(){
-
-//     std::cout << "There are " << _nodes.size() << " Nodes" << std::endl;
-//     std::cout << "There are " << _edges.size() << " Edges" << std::endl;
 
 
-//     PrintBFS(_nodes[0]);
+void Circuit::CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2){
 
-//     for(auto & iNode : _nodes){
-//         iNode->visited = false;
-//     }
-// }
+    // _nodes.erase(node2);
+    //O(logn + logm)
+    _incidenceMatrix[node1][node2->connection] = node2->direction;
+    _incidenceMatrix.erase(node2);
 
-// void Circuit::PrintBFS(std::shared_ptr<Node> node){
+}
 
-//     if(!node->visited){
+void Circuit::RemoveConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2){
 
-//         //start on the first node
-//         for(auto iEdge : node->connections){
-//             std::cout << iEdge->elecComponent->GetName() << std::endl;
-//         }
-//         std::cout << "visited" << std::endl;
-        
-//         node->visited = true;
+    if(_incidenceMatrix[node1].count(node2->connection)){
+        _incidenceMatrix[node1].erase(node2->connection);
+        _incidenceMatrix[node2][node2->connection] = node2->direction;    
+    }
+    else{
+        std::cout << "No connection to remove" << std::endl;
+    }
+}
 
-//         for(auto iEdge : node->connections){
-//             for(auto iNode : iEdge->connectedNodes){
-//                 PrintBFS(iNode);
-//             }
-//         }
 
-//     }
-
-// }
 
 
 void Circuit::PrintIM(){
-    for(auto i : _incidenceMatrix){
-        std::cout << i.first->connection->GetName() << " ";
-        for(auto j : i.second){
-            std::cout << j.second << std::endl;
+
+    for(auto i : _nodes){
+
+        // std::cout << i->name;
+        if(_incidenceMatrix.count(i) > 0){
+            std::cout << i->name;
         }
+
+        for(auto j : _components){
+            if(_incidenceMatrix.count(i) > 0){
+
+                if(_incidenceMatrix[i].count(j) > 0){
+                    std::cout << " " << _incidenceMatrix[i][j];
+                }
+                else{
+                    std::cout << " 0";
+                }
+            }
+        }
+        
+        if(_incidenceMatrix.count(i) > 0)
+            std::cout<<std::endl;
     }
 }
 

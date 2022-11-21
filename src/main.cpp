@@ -19,7 +19,9 @@ int main(){
         test.CreateResistor(100.0);
 
 
-        test.CreateConnection(std::string("R1"), std::string("R2"));
+        test.CreateConnection(std::string("N1"), std::string("N3"));
+        test.RemoveConnection(std::string("N1"), std::string("N3"));
+
         test.PrintComponents();
 
         //can add a bunch of asserts here etc

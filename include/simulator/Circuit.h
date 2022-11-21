@@ -32,7 +32,9 @@ class Circuit{
 
         // void CreateIncidenceMatrix();
 
-        // void CreateConnection(std::string componentName1, std::string componentName2);
+        void CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
+
+        void RemoveConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
 
     private:
         //Incidence matrx storing node and edges and their connection. A simple DC-Resistor circuit would look like
