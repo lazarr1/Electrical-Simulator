@@ -14,6 +14,9 @@
 
 struct Node{
 
+    int rank;
+    int parent;
+
     std::string name;
 
 
