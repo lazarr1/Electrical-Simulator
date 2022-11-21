@@ -55,6 +55,7 @@ void Circuit::RemoveConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node
     node1->shortCircuits.erase(node2);
     node2->shortCircuits.erase(node1);
 
+    //
     if(_incidenceMatrix.count(node1)){
         if(_incidenceMatrix[node1].count(node2->connection)){
 

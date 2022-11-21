@@ -5,7 +5,7 @@
 #run cmake && make install
 
 cmake_minimum_required(VERSION 3.10)
-project(Electrical-Simulator)
+project(Circuit-Simulator)
 
 
 set(IS_DEBUG_BUILD CMAKE_BUILD_TYPE STREQUAL "Debug")
