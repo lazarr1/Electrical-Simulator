@@ -3,8 +3,16 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+#include <iostream>
 // #include "node.h"
 
+
+enum Direction{
+    In = -1,
+    NotFlowing = 0,
+    Out = 1
+};
 
 struct Node;
 
@@ -21,44 +29,29 @@ struct Impedance{
 };
 
 
-enum ConnectionSite{
-    negative = 0,
-    positive = 1
-
-    //might have more sites for more complex components, for now this will suffice
-};
 
 
 //A abstract class for all circuit components to store all types of circuit elements in a circuit
 //All circuit components derive from this class
-class CircuitElement{
-
-    public:
-
-        //Requires a name for every element
-        CircuitElement(std::string nameInput);
-
-        std::string GetName() const;
-
-        
-        virtual ~CircuitElement();
-
-        virtual Impedance& GetImpedance() = 0;
-
-        virtual const int GetIOPinNum() const = 0;
+struct CircuitComponent{
 
 
-        // virtual void AddNode(std::shared_ptr<Node> node) = 0;
+    //Requires a name for every element
+    CircuitComponent(std::string nameInput, int numioPins, const Direction * connectionDirections);
 
-        //All classes have access to the connected nodes to make functionality clearer
-        // std::vector <std::shared_ptr<Node> > _connectedNodes;
+    virtual ~CircuitComponent();
+
+    virtual void Print() const;
+
+    std::string name;
 
 
+    const int ioPins;
+    Impedance impedance;
 
 
-    protected:
-
-        std::string _name;
+    const Direction * connectionDirection;
+    std::vector<std::shared_ptr<Node>> connectedNodes;
 
 
 
@@ -68,32 +61,25 @@ class CircuitElement{
 // TO be moved to PassiveElement.h
 
 // class containing a passive component's properties
-class PassiveElement: public CircuitElement{
+struct PassiveComponent: public CircuitComponent{
 
-    public: 
 
-        PassiveElement(std::string nameInput);
-        ~PassiveElement();
+    PassiveComponent(std::string nameInput);
+    PassiveComponent(std::string nameInput, std::shared_ptr<Node> positiveNode, std::shared_ptr<Node> negativeNode);
+    ~PassiveComponent();
 
-        Impedance& GetImpedance();
+    const int passiveIoPins = 2;
 
-        void SetResistance(const double resistanceInput);
-
-        // void AddNode(std::shared_ptr<Node> node);
-
-        const int GetIOPinNum() const;
-
+    void Print() const;
     
-    
-    private:
-
-        //might be a base class functionality?
-        const int ioPins = 2;
-
-        Impedance _impedance;
+    //A node flows in a node flows out
+    const Direction passiveDirection[2] {In, Out};
 
 
+    // Impedance impedance;
 
+    // const int positiveTerminal = 0;
+    // const int negativeTerminal = 1;
 
 };
 

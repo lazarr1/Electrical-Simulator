@@ -3,14 +3,17 @@
 
 #include "circuit_element.h"
 
-#include "edge.h"
+
 
 
 
 #include <memory>
 #include <utility>
-#include <unordered_map>
+#include <unordered_set>
 #include <string>
+#include <vector>
+
+#include <map>
 
 #include "node.h"
 
@@ -23,36 +26,36 @@ class Circuit{
 
         Circuit();
 
-        void AddComponent(std::shared_ptr<CircuitElement> component);
+        void AddComponent(std::shared_ptr<CircuitComponent> component);
 
-        void CreateIncidenceMatrix();
+        void PrintIM();
 
-        void CreateConnection(std::string ComponentName1, ConnectionSite Connection1, std::string ComponentName2, ConnectionSite Connection2);
+        // void CreateIncidenceMatrix();
 
+        void CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
 
+        void RemoveConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
 
     private:
+        //Incidence matrx storing node and edges and their connection. A simple DC-Resistor circuit would look like
+        /*
+                [DC SUPPLY ] [RESISTOR]
+        [Node 1]    -1          1  
+        [Node 2]     1         -1
 
-    
-        std::vector<std::vector<int> > _incidenceMatrix;
-        
-        //unique nodes x deges; 
-        std::pair<int,int> _matrixSize;
+        Here if a component is not found, it is not stored rather than having a zero
+        */
 
-        //To avoid using _matrixSize.first/second
-        int& GetEdgeCount();
-        int& GetPrincipalNodeCount();
+        std::map< std::shared_ptr<Node>, std::map< std::shared_ptr<CircuitComponent>, Direction > > _incidenceMatrix;
 
-        //Full Map of nodes
+        //store all the nodes and components
+        std::unordered_set<std::shared_ptr<Node>> _nodes;
+        std::unordered_set<std::shared_ptr<CircuitComponent>> _components;
 
 
-        //Stores all nodes and all edges
-        
-        //stores all nodes of the graph
-        std::vector<std::shared_ptr<Node>> _nodes;
+        // std::vector<std::vector<int> > _incidenceMatrix;
 
-        //stores all edges of the graph
-        std::vector<std::shared_ptr<Edge>> _edges;
+
 
 };
 

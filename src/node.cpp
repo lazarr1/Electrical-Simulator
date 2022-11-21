@@ -1,6 +1,8 @@
 #include "simulator/node.h"
 
 
-Node::Node(){
-    connectedComponents = 0;
+Node::Node(std::string nameInput, std::shared_ptr<CircuitComponent> component)
+  :  name(nameInput)
+{
+    connection = component;
 }

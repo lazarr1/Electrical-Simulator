@@ -3,30 +3,59 @@
 
 
 #include <memory>
-#include <vector>
+#include <map>
 #include <string>
+#include <unordered_set>
 
-#include "edge.h"
 #include "circuit_element.h"
 
 
 
-// A node is a network of edges 
-typedef struct Node{
 
-    Node();
+struct Node{
 
-    std::string nodeName;
-    // int numAdjacentNodes;
-    // std::vector<std::shared_ptr<Node>> _connectedNodes;
+    std::string name;
 
-    // bool visited;
-    int connectedComponents;
 
-    //Maps all components to their respective nodes 
-    std::vector<std::shared_ptr<Edge>> connections;
 
-}Node;
+    Node(std::string nameInput, std::shared_ptr<CircuitComponent> component);
+
+    double voltage;
+
+    // bool operator<(const Node& x) const
+    // {
+    //     return (name < x.name);
+    // }
+
+    
+    // bool operator>(const Node& x) const
+    // {
+    //     return (name > x.name);
+    // }
+
+    // bool operator==(const Node& x) const
+    // {
+    //     return(name == x.name);
+    // }
+
+
+    // struct HashFunction
+    // {
+    //     size_t operator()(const Node& node) const
+    //     {
+    //     size_t nameHash = std::hash<std::string>()(node.name);
+    //     return nameHash;
+    //     }
+    // };
+
+    std::unordered_set<std::shared_ptr<Node>> shortCircuits;
+    //A node flows in this direction to its connection
+    //One node only connects to one thing
+    Direction direction;
+    std::shared_ptr<CircuitComponent> connection;
+
+};
+
 
 
 #endif

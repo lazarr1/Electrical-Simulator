@@ -17,21 +17,11 @@ int main(){
         test.CreateResistor(100.0);
         test.CreateResistor(200.0);
         test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);        test.CreateResistor(100.0);
-        test.CreateResistor(200.0);
 
+
+        test.CreateConnection(std::string("N1"), std::string("N3"));
+        test.CreateConnection(std::string("N5"), std::string("N1"));
+        test.RemoveConnection(std::string("N5"), std::string("N3"));
 
         test.PrintComponents();
 

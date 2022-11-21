@@ -1,6 +1,7 @@
 #include "simulator/circuit_element.h"
 
-#include <iostream>
+#include "simulator/node.h"
+
 
 Impedance::Impedance(){
     resistance = 0.0;
@@ -8,54 +9,40 @@ Impedance::Impedance(){
     inductance = 0.0;
 }
 
-CircuitElement::CircuitElement(std::string nameInput)
-    : _name(nameInput)
+CircuitComponent::CircuitComponent(std::string nameInput, int numioPins, const Direction * connectionDirections)
+    : name(nameInput), ioPins(numioPins), connectionDirection(connectionDirections)
 {
+
 }
 
-CircuitElement::~CircuitElement(){
-}
-
-std::string CircuitElement::GetName() const{
-    return _name;
+CircuitComponent::~CircuitComponent(){
 }
 
 
-PassiveElement::PassiveElement(std::string nameInput)
-    : CircuitElement::CircuitElement(nameInput)
+
+//might need virtual here?
+void CircuitComponent::Print() const{
+    std::cout << name << std::endl;
+}
+
+
+
+
+PassiveComponent::PassiveComponent(std::string nameInput)
+    : CircuitComponent::CircuitComponent(nameInput, 2, passiveDirection)  
 {
+
 }
 
-PassiveElement::~PassiveElement(){
+
+PassiveComponent::~PassiveComponent(){
     
 }
 
-// void PassiveElement::AddNode(std::shared_ptr<Node> node){
-
-//     if(_connectedNodes.size() < ioPins){
-
-//         _connectedNodes.push_back(node);
-
-//     }
-//     else{
-//         std::cout << "tried to assign to many nodes to a component" << std::endl;
-//     }
-
-
-// }
-
-
-Impedance& PassiveElement::GetImpedance(){
-    return _impedance;
-}
-
-void PassiveElement::SetResistance(const double resistanceInput){
-
-    _impedance.resistance = resistanceInput;
+void PassiveComponent::Print() const{
+    std::cout << "Name: " << name << std::endl;
+    std::cout << "Resistance: " << impedance.resistance << std::endl;
+    std::cout << "Capacitance: " << impedance.capacitance << std::endl;
+    std::cout << "Inductance: " << impedance.inductance << std::endl;
 
 }
-
-const int PassiveElement::GetIOPinNum() const{
-    return ioPins;
-}
-
