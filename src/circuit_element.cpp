@@ -20,10 +20,9 @@ CircuitComponent::~CircuitComponent(){
 
 
 
-//might need virtual here?
-void CircuitComponent::Print() const{
-    std::cout << name << std::endl;
-}
+// void CircuitComponent::Print() const{
+//     std::cout << name << std::endl;
+// }
 
 
 
@@ -38,8 +37,7 @@ PassiveComponent::PassiveComponent(std::string nameInput)
 PassiveComponent::~PassiveComponent(){
     
 }
-
-void PassiveComponent::Print() const{
+void CircuitComponent::Print() const{
     std::cout << "Name: " << name << std::endl;
     std::cout << "Resistance: " << impedance.resistance << std::endl;
     std::cout << "Capacitance: " << impedance.capacitance << std::endl;

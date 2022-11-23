@@ -27,13 +27,22 @@ void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
 
 }
 
-
-
-//Creating a connection combines the directions node2 flows with to the directions node1 flows
 void Circuit::CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2){
 
+    //merge the bigger node group with the smaller node group
+    if(node1->parent->children.size() > node2->parent->children.size()){
+        Union(node1, node2);
+    }
+    else{
+        Union(node2, node1);
+    }
+}
+
+//Creating a connection combines the directions node2 flows with to the directions node1 flows
+void Circuit::Union(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2){
+
     //maybe rename this to union. have this function just check which one has less children and union those 
-    // so that run time is slower much like a disjoint set
+    // so that run time is quicker much like a disjoint set
 
     //Let parent node store their connections
 
@@ -51,8 +60,9 @@ void Circuit::CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node
 
         //connect all of node2's children
         AddNodeConnection(node1->parent, iNode);
-
+        
         //update node1's encapsulating/parent node children list
+        iNode->parent = node1->parent;
         node1->parent->children.push_back(iNode);
     }
     
@@ -61,9 +71,10 @@ void Circuit::CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node
 
     //all of node2's children become node1's
     node2->parent->children.clear();
+    node2->parent = node1->parent;
 
     //node2's parent is now consumed by node1's parent
-    node2->parent = node1->parent;
+    // node2->parent = node1->parent;
 
 }
 
@@ -72,37 +83,46 @@ void Circuit::RemoveConnection(std::shared_ptr<Node> node){
 
     //erase the parent node from the matrix
     _incidenceMatrix.erase(node->parent);
+    _incidenceMatrix[node->parent][node->parent->connection] = node->parent->direction;
+
+    //store the parent so that it can later have its children after the for loop
+    std::shared_ptr<Node> tempParentPtr = node->parent;
+
 
     //Do the same for the children
     for(auto iNode : node->parent->children){
-        // std::cout <<"name: " << iNode->name << std::endl;
-        _incidenceMatrix.erase(iNode->parent);
+        std::cout <<"name: " << iNode->name << std::endl;
+        // _incidenceMatrix.erase(iNode->parent);
 
         _incidenceMatrix[iNode][iNode->connection] = iNode->direction;
         iNode->parent = iNode;
 
     }
 
-    //add back the component that was removed
-    AddNodeConnection(node->parent,node->parent);
-
-    
     //clear the children
-    node->parent->children.clear();
+    tempParentPtr->parent->children.clear();
+
 
 }
 
 void Circuit::AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2){
 
     if(_incidenceMatrix[node1].count(node2->connection)){
+
         //The component has been short circuited as the positive node has been connected to the negative
-        _incidenceMatrix[node1][node2->connection] = Direction::NoFlow;
+        if(_incidenceMatrix[node1][node2->connection] != node2->direction){
+            #ifdef __DEBUG__
+                std::cout << "Short circuit" << std::endl;
+            #endif
+            _incidenceMatrix[node1][node2->connection] = Direction::NoFlow;
+        }
+
     }
     else{
         _incidenceMatrix[node1][node2->connection] = node2->direction;
     }
 
-
+    // node2->parent = node1->parent;
 }
 
 
