@@ -10,7 +10,7 @@
 
 enum Direction{
     In = -1,
-    NotFlowing = 0,
+    NoFlow = 0,
     Out = 1
 };
 
@@ -65,12 +65,11 @@ struct PassiveComponent: public CircuitComponent{
 
 
     PassiveComponent(std::string nameInput);
-    PassiveComponent(std::string nameInput, std::shared_ptr<Node> positiveNode, std::shared_ptr<Node> negativeNode);
     ~PassiveComponent();
 
     const int passiveIoPins = 2;
 
-    void Print() const;
+    // void Print() const;
     
     //A node flows in a node flows out
     const Direction passiveDirection[2] {In, Out};

@@ -31,8 +31,11 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY build/)
 
 set(CMAKE_CXX_STANDARD 11)
 
+FIND_PACKAGE( Boost 1.80 COMPONENTS program_options REQUIRED )
+
 include_directories(
   include
+  ${Boost_INCLUDE_DIR}
 )
 
 
@@ -48,6 +51,7 @@ set(elec_sim_SOURCES
     src/circuit.cpp
     src/simulator.cpp
     src/node.cpp
+    # src/node_manager.cpp
 
 )
 
@@ -58,12 +62,12 @@ add_library(circ_sim_lib ${elec_sim_SOURCES})
 
 
 add_executable(simulator src/main.cpp)
-target_link_libraries(simulator circ_sim_lib) 
+target_link_libraries(simulator circ_sim_lib ${Boost_LIBRARIES}) 
 
 
 ###################
 #BUILD 
-install(TARGETS simulator DESTINATION ${DIVISIBLE_INSTALL_BIN_DIR})
+install(TARGETS simulator DESTINATION ${DIVISIBLE_INSTALL_BIN_DIR} )
 
 
 
