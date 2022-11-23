@@ -27,7 +27,7 @@ class Simulator{
         void CreateConnection(std::string NodeName1, std::string NodeName2);
 
         //Removes a connection between two components
-        void RemoveConnection(std::string NodeName1, std::string NodeName2);
+        void RemoveConnection(std::string NodeName);
 
         //default reistance of 100 ohms
         // void CreateResistor();

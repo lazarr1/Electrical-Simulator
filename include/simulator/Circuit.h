@@ -1,18 +1,14 @@
 #ifndef CIRCUIT_H
 #define CIRCUIT_H
 
+
 #include "circuit_element.h"
-
-
-
-
 
 #include <memory>
 #include <utility>
 #include <unordered_set>
 #include <string>
 #include <vector>
-
 
 #include <map>
 
@@ -35,9 +31,12 @@ class Circuit{
 
         void CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
 
-        void RemoveConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
+        void RemoveConnection(std::shared_ptr<Node> node);
 
     private:
+
+        void AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
+
         //Incidence matrx storing node and edges and their connection. A simple DC-Resistor circuit would look like
         /*
                 [DC SUPPLY ] [RESISTOR]
@@ -53,15 +52,8 @@ class Circuit{
         std::unordered_set<std::shared_ptr<Node>> _nodes;
         std::unordered_set<std::shared_ptr<CircuitComponent>> _components;
 
-
         // std::vector<std::vector<int> > _incidenceMatrix;
-
-
 
 };
 
 #endif
-
-
-
-

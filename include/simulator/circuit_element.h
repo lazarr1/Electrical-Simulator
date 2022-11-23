@@ -10,7 +10,7 @@
 
 enum Direction{
     In = -1,
-    NotFlowing = 0,
+    NoFlow = 0,
     Out = 1
 };
 
