@@ -39,7 +39,7 @@ class Circuit{
     private:
         //Incidence matrx storing node and edges and their connection. A simple DC-Resistor circuit would look like
         /*
-                [DC SUPPLY ] [RESISTOR]
+                [DC SUPPLY]  [RESISTOR]
         [Node 1]    -1          1  
         [Node 2]     1         -1
 
