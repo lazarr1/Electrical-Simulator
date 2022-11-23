@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <unordered_set>
+#include <list>
 
 #include "circuit_element.h"
 
@@ -13,6 +14,7 @@
 
 
 struct Node{
+
 
     std::string name;
 
@@ -48,11 +50,14 @@ struct Node{
     //     }
     // };
 
-    std::unordered_set<std::shared_ptr<Node>> shortCircuits;
     //A node flows in this direction to its connection
     //One node only connects to one thing
     Direction direction;
     std::shared_ptr<CircuitComponent> connection;
+
+    std::shared_ptr<Node> parent;
+    std::list<std::shared_ptr<Node>> children;
+
 
 };
 

@@ -74,11 +74,11 @@ void Simulator::CreateConnection(std::string NodeName1, std::string NodeName2){
 
 }
 
-void Simulator::RemoveConnection(std::string NodeName1, std::string NodeName2){
+void Simulator::RemoveConnection(std::string NodeName){
 
-    if(_nodes.count(NodeName1) && _nodes.count(NodeName2)){
+    if(_nodes.count(NodeName)){
 
-        _circuit.RemoveConnection(_nodes[NodeName1], _nodes[NodeName2] );
+        _circuit.RemoveConnection(_nodes[NodeName]);
 
     }
     else{
