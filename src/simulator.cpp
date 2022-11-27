@@ -31,7 +31,6 @@ void Simulator::CreateResistor(const double resistanceInput){
 
     for(int iNewNodes = 0; iNewNodes < resistor->ioPins; iNewNodes++){
 
-
         _numNodes++;
 
         std::string name("N" + std::to_string(_numNodes));
@@ -51,11 +50,7 @@ void Simulator::CreateResistor(const double resistanceInput){
 
     //update the simulator to store the new component
     _presentComponents[resistor->name] = resistor;
-    
-    // std::cout << resistor->ioPins << std::endl;
 
-    // std::cout << resistor->connectionDirection[0] << std::endl;
-    // std::cout << resistor->connectionDirection[1] << std::endl;
 
 }
 
@@ -94,7 +89,7 @@ void Simulator::Simulate(){
 
 void Simulator::GroundNode(std::string NodeName){
     if(_nodes.count(NodeName))
-        _circuit.Ground(_nodes[NodeName]);
+        _nodes[NodeName]->parent->grounded = true;
 }
 
 
@@ -104,7 +99,7 @@ void Simulator::PrintComponents(){
     std::cout << "Checking number of components stored" << std::endl;
     assert(_numComponents == _presentComponents.size());
 
-    std::cout << "Correct number of parts in simulator!@@@@@@@@@@@@@@@@@@@" << std::endl;
+    std::cout << "Correct number of parts in simulator" << std::endl;
 
     std::cout << "I have " << _numNodes << " Nodes" << std::endl;
 

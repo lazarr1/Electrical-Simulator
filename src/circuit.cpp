@@ -211,11 +211,6 @@ void Circuit::StampMatrix(const int i, const int j, const double x){
 
 }
 
-void Circuit::Ground(std::shared_ptr<Node> node){
-
-    node->parent->grounded = true;
-
-}
 
 void Circuit::PrintIM(){
 

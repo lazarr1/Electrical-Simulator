@@ -5,7 +5,6 @@
 #include "circuit_element.h"
 
 #include <memory>
-#include <utility>
 #include <unordered_set>
 #include <string>
 #include <vector>
@@ -14,10 +13,22 @@
 
 #include "node.h"
 
-
 #include <boost/numeric/ublas/matrix.hpp>
 
-// A circuit manages nodes and their components(edges), it is just a graph
+/*  Class: Circuit
+ *      This class manages all the connections, it is a graph. It also builds the stamp matrices that must be solved
+ *      to solve the circuit.
+ *
+ * 
+ * 
+ *      Member functions:
+ *          -
+ * 
+ *  
+ *     TOBE implemented:
+ *          - Split into a circuit solver? this should just manage the connections maybe?
+ * 
+ */
 class Circuit{
 
     public:
@@ -28,15 +39,12 @@ class Circuit{
 
         void PrintIM();
 
-        // void CreateIncidenceMatrix();
-
         void CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
 
         void RemoveConnection(std::shared_ptr<Node> node);
 
         void BuildCircuitMatrix();
 
-        void Ground(std::shared_ptr<Node> node);
 
     private:
 
@@ -57,7 +65,6 @@ class Circuit{
 
         This exists just for testing purposes
         */
-
         std::map< std::shared_ptr<Node>, std::map< std::shared_ptr<CircuitComponent>, Direction > > _incidenceMatrix;
 
 
