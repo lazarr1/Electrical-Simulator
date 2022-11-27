@@ -7,12 +7,31 @@
 #include "circuit_element.h"
 #include "circuit.h"
 
-// class Circuit;
 
 
 
 
-//Simulator class 
+/*  Class: Simulator
+ *      This class manages all the components, manages any changes to the components and 
+ *      forwards any changes made to the circuit 
+ *
+ * 
+ * 
+ *      Member functions:
+ *          - CreateResistor: takes in a resistance to make a resistor
+ *          - GroundNode: grounds a node
+ *          - CreateConnection: creates a connection between two nodes
+ *          - RemoveConnection: removes all nodes at a junction
+ *          - PrintComponents: prints all components, and tells 
+ *             circuit to print its information  only avliable in debug mode
+ *          - Simulate: Runs the simulation
+ * 
+ *  
+ *     TOBE implemented:
+ *          - Remove connection, without destroying entire junction
+ *          - Adding other components
+ * 
+ */
 class Simulator{
 
     public:
@@ -22,17 +41,15 @@ class Simulator{
 
         void CreateResistor(const double resistanceInput);
 
-
+        void GroundNode(std::string NodeName);
 
         void CreateConnection(std::string NodeName1, std::string NodeName2);
 
-        //Removes a connection between two components
-        void RemoveConnection(std::string NodeName1, std::string NodeName2);
-
-        //default reistance of 100 ohms
-        // void CreateResistor();
+        void RemoveConnection(std::string NodeName);
 
         void PrintComponents();
+
+        void Simulate();
 
     private:
 

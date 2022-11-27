@@ -1,7 +1,8 @@
 #include "simulator/circuit.h"
 
 #include <iostream>
-
+#include <iomanip>
+#include <algorithm>
 
 Circuit::Circuit(){
 }
@@ -18,6 +19,8 @@ void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
         // update the incidence matrix
         _incidenceMatrix[iNode][component] = iNode->direction;
 
+        iNode->parent = iNode;
+
         //store every node
         _nodes.insert(iNode);
     }
@@ -25,73 +28,188 @@ void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
 
 }
 
-
-
-//Creating a connection combines the directions node2 flows with to the directions node1 flows
 void Circuit::CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2){
 
-    // _nodes.erase(node2);
-    //Let nodes store their connections
-    node1->shortCircuits.insert(node2);
+    //If they are not already connected
+    if(node1->parent != node2->parent){
 
-    //represent the nodes as node1 in the incidence matrix
-    _incidenceMatrix[node1][node2->connection] = node2->direction;
-    _incidenceMatrix.erase(node2);
-
-    //add all the connections previously in node2 to node1
-    for(auto iNode : node2->shortCircuits){
-        _incidenceMatrix[node1][iNode->connection] = iNode->direction;
-        // _incidenceMatrix.erase(iNode);
+        //merge the bigger node group with the smaller node group
+        if(node1->parent->children.size() < node2->parent->children.size()){
+            Union(node2, node1);
+        }
+        else{
+            Union(node1, node2);
+        }
     }
-    
-    //all of node2's short circuit become node1's
-    node2->shortCircuits.clear();
 
 }
 
-void Circuit::RemoveConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2){
+//Creating a connection combines the directions node2 flows with to the directions node1 flows
+void Circuit::Union(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2){
 
-    //remove 
-    node1->shortCircuits.erase(node2);
-    node2->shortCircuits.erase(node1);
+    //connect node1 with node2's encapsulating parent node
+    AddNodeConnection(node1->parent, node2->parent);
 
-    //
-    if(_incidenceMatrix.count(node1)){
-        if(_incidenceMatrix[node1].count(node2->connection)){
+    //erase the larger/parent node of node2
+    _incidenceMatrix.erase(node2->parent);
 
-            _incidenceMatrix[node1].erase(node2->connection);
-            _incidenceMatrix[node2][node2->connection] = node2->direction;    
+    //add all the connections previously in node2 to node1
+    for(auto iNode : node2->parent->children){
 
-            for(auto iNode : node1->shortCircuits){
-                _incidenceMatrix[node2][iNode->connection] = iNode->direction;
-                node2->shortCircuits.insert(iNode);
-                _incidenceMatrix[node1].erase(iNode->connection);
-            }
-            node1->shortCircuits.clear();
-        }
+        //connect all of node2's children
+        AddNodeConnection(node1->parent, iNode);
+        
+        //update node1's encapsulating/parent node children list
+        iNode->parent = node1->parent;
+        node1->parent->children.push_back(iNode);
     }
-    else if(_incidenceMatrix.count(node2)){
-        if(_incidenceMatrix[node2].count(node1->connection)){
+    
+    //add node2's encapsulating node to node1
+    node1->parent->children.push_back(node2->parent);
 
-            _incidenceMatrix[node2].erase(node1->connection);
-            _incidenceMatrix[node1][node1->connection] = node1->direction;    
+    //all of node2's children become node1's
+    node2->parent->children.clear();
+    node2->parent = node1->parent;
 
-            // for(auto iNode : node1->shortCircuits){
-            //     if(node1->shortCircuits.count(iNode) == 0){
-            //         _incidenceMatrix[node1][iNode->connection] = iNode->direction;
-            //         _incidenceMatrix[node2].erase(iNode->connection);
-            //     }   
-            // }
 
+}
+
+//Deletes all the nodes at a junction
+void Circuit::RemoveConnection(std::shared_ptr<Node> node){
+
+    //erase the parent node from the matrix
+    _incidenceMatrix.erase(node->parent);
+    _incidenceMatrix[node->parent][node->parent->connection] = node->parent->direction;
+
+    //store the parent so that it can later have its children after the for loop
+    std::shared_ptr<Node> tempParentPtr = node->parent;
+
+
+    //Do the same for the children
+    for(auto iNode : node->parent->children){
+        // _incidenceMatrix.erase(iNode->parent);
+
+        _incidenceMatrix[iNode][iNode->connection] = iNode->direction;
+        iNode->parent = iNode;
+
+    }
+
+    //clear the children
+    tempParentPtr->parent->children.clear();
+
+
+}
+
+
+void Circuit::AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2){
+
+    if(_incidenceMatrix[node1].count(node2->connection)){
+
+        //The component has been short circuited as the positive node has been connected to the negative
+        if(_incidenceMatrix[node1][node2->connection] != node2->direction){
+            #ifdef __DEBUG__
+                std::cout << "Short circuit" << std::endl;
+            #endif
+            _incidenceMatrix[node1][node2->connection] = Direction::NoFlow;
         }
 
     }
     else{
-        std::cout << "No connection to remove" << std::endl;
+        _incidenceMatrix[node1][node2->connection] = node2->direction;
     }
+
+    // node2->parent = node1->parent;
 }
 
 
+void Circuit::BuildCircuitMatrix(){
+
+    //map each parent node in a consecutively numbered way to build the stamp matrix
+    int idGenerator = 0;
+
+    bool grounded = false;
+    _parentNodes.clear();
+
+    std::shared_ptr<Node> groundedNode;
+
+    for(std::shared_ptr<Node> iNode : _nodes){
+
+        //only add parents and non-grounded nodes
+        if(iNode->parent == iNode && iNode->parent->grounded == false){
+            iNode->id = idGenerator++;
+            _parentNodes.push_back(iNode);
+        }
+
+        //find the grounded node
+        if(iNode->parent->grounded){
+            groundedNode = iNode->parent;
+            grounded = true;
+        }
+    }
+
+
+    //This is simply to check that the matrix is correct before grounding
+    #ifdef __DEBUG__
+        if(!grounded){
+        _circuitMatrix.resize(idGenerator,idGenerator, false);
+
+        for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
+            //if the component is a resistor
+            if(iComponent->name[0] == 'R'){
+                StampResistor(*iComponent);
+            }
+        }
+        }
+    #endif
+
+    //If the circuit has not been grounded, then the simualtion cannot run
+    if(grounded){
+        
+        //add grounded node to the end
+        _parentNodes.push_back(groundedNode);
+        groundedNode->id = idGenerator;
+
+
+        //resize square matrix, do not keep the previous values
+        _circuitMatrix.resize(idGenerator,idGenerator, false);
+
+
+        for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
+                //if the component is a resistor
+                if(iComponent->name[0] == 'R'){
+                    StampResistor(*iComponent);
+                }
+        }
+    }
+    // std::cout << _circuitMatrix(0,0) << std::endl;
+
+}
+
+void Circuit::StampResistor(const CircuitComponent resistor){
+
+    if(resistor.impedance.resistance == 0){
+        std::cout << "bad resistance" << std::endl;
+    }
+    else{
+        double addmittance = 1/resistor.impedance.resistance;
+
+        StampMatrix(resistor.connectedNodes[0]->parent->id, resistor.connectedNodes[0]->parent->id ,addmittance);
+        StampMatrix(resistor.connectedNodes[0]->parent->id, resistor.connectedNodes[1]->parent->id ,-addmittance);
+        StampMatrix(resistor.connectedNodes[1]->parent->id, resistor.connectedNodes[0]->parent->id ,-addmittance);
+        StampMatrix(resistor.connectedNodes[1]->parent->id, resistor.connectedNodes[1]->parent->id ,addmittance);
+    }
+
+}
+
+void Circuit::StampMatrix(const int i, const int j, const double x){
+
+
+    //Make sure that the node is not grounded:
+    if((_parentNodes[i]->parent->grounded == false) &&  (_parentNodes[j]->parent->grounded == false)){
+        _circuitMatrix(i,j) += x;
+    }
+
+}
 
 
 void Circuit::PrintIM(){
@@ -122,6 +240,19 @@ void Circuit::PrintIM(){
         
         if(_incidenceMatrix.count(i) > 0)
             std::cout<<std::endl;
+    }
+
+    std::cout << std::endl;
+
+    std::cout << _circuitMatrix.size1() << std::endl;
+    std::cout << _circuitMatrix.size2() << std::endl;
+
+    for(int i = 0; i < _circuitMatrix.size1(); i ++){
+        for(int j = 0; j < _circuitMatrix.size2(); j++){
+            std::cout << std::setprecision(4) << std::fixed;
+            std::cout << _circuitMatrix(i,j)<< " "; 
+        }
+        std::cout << std::endl;
     }
 }
 

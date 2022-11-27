@@ -31,7 +31,6 @@ void Simulator::CreateResistor(const double resistanceInput){
 
     for(int iNewNodes = 0; iNewNodes < resistor->ioPins; iNewNodes++){
 
-
         _numNodes++;
 
         std::string name("N" + std::to_string(_numNodes));
@@ -51,11 +50,7 @@ void Simulator::CreateResistor(const double resistanceInput){
 
     //update the simulator to store the new component
     _presentComponents[resistor->name] = resistor;
-    
-    // std::cout << resistor->ioPins << std::endl;
 
-    // std::cout << resistor->connectionDirection[0] << std::endl;
-    // std::cout << resistor->connectionDirection[1] << std::endl;
 
 }
 
@@ -74,11 +69,11 @@ void Simulator::CreateConnection(std::string NodeName1, std::string NodeName2){
 
 }
 
-void Simulator::RemoveConnection(std::string NodeName1, std::string NodeName2){
+void Simulator::RemoveConnection(std::string NodeName){
 
-    if(_nodes.count(NodeName1) && _nodes.count(NodeName2)){
+    if(_nodes.count(NodeName)){
 
-        _circuit.RemoveConnection(_nodes[NodeName1], _nodes[NodeName2] );
+        _circuit.RemoveConnection(_nodes[NodeName]);
 
     }
     else{
@@ -88,6 +83,15 @@ void Simulator::RemoveConnection(std::string NodeName1, std::string NodeName2){
 
 }
 
+void Simulator::Simulate(){
+    _circuit.BuildCircuitMatrix();
+}
+
+void Simulator::GroundNode(std::string NodeName){
+    if(_nodes.count(NodeName))
+        _nodes[NodeName]->parent->grounded = true;
+}
+
 
 #ifdef __DEBUG__
 void Simulator::PrintComponents(){
@@ -95,7 +99,7 @@ void Simulator::PrintComponents(){
     std::cout << "Checking number of components stored" << std::endl;
     assert(_numComponents == _presentComponents.size());
 
-    std::cout << "Correct number of parts in simulator!@@@@@@@@@@@@@@@@@@@" << std::endl;
+    std::cout << "Correct number of parts in simulator" << std::endl;
 
     std::cout << "I have " << _numNodes << " Nodes" << std::endl;
 
@@ -108,6 +112,4 @@ void Simulator::PrintComponents(){
     _circuit.PrintIM();
 
 }
-
-
 #endif
