@@ -34,6 +34,8 @@ class Simulator{
 
         void PrintComponents();
 
+        void Simulate();
+
     private:
 
         //The simulator keeps track of all its components

@@ -15,6 +15,7 @@
 #include "node.h"
 
 
+#include <boost/numeric/ublas/matrix.hpp>
 
 // A circuit manages nodes and their components(edges), it is just a graph
 class Circuit{
@@ -33,7 +34,13 @@ class Circuit{
 
         void RemoveConnection(std::shared_ptr<Node> node);
 
+        void BuildCircuitMatrix();
+
     private:
+
+        void StampResistor(const CircuitComponent resistor);
+        void StampMatrix(const int i, const int j, const double x);
+
 
         void AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
         void Union(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
@@ -49,7 +56,9 @@ class Circuit{
 
         std::map< std::shared_ptr<Node>, std::map< std::shared_ptr<CircuitComponent>, Direction > > _incidenceMatrix;
 
-        std::vector<std::vector<double>> _ciruitMatrix;
+
+        //This is the stamp matrix
+        boost::numeric::ublas::matrix<double> _circuitMatrix;
 
         //store all the nodes and components
         std::unordered_set<std::shared_ptr<Node>> _nodes;

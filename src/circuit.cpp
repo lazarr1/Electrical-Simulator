@@ -1,6 +1,7 @@
 #include "simulator/circuit.h"
 
 #include <iostream>
+#include <iomanip>
 
 Circuit::Circuit(){
 }
@@ -98,6 +99,7 @@ void Circuit::RemoveConnection(std::shared_ptr<Node> node){
 
 }
 
+
 void Circuit::AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2){
 
     if(_incidenceMatrix[node1].count(node2->connection)){
@@ -119,34 +121,96 @@ void Circuit::AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Nod
 }
 
 
+void Circuit::BuildCircuitMatrix(){
+
+    //map each node in a consecutively numbered way to build the stamp matrix
+    int idGenerator = 0;
+    for(std::shared_ptr<Node> iNode : _nodes){
+        if(iNode->parent == iNode){
+            iNode->id = idGenerator++;
+        }
+    }
+    
+    //resize square matrix, do not keep the previous values
+    _circuitMatrix.resize(idGenerator,idGenerator, false);
+
+
+    for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
+            //if the component is a resistor
+            if(iComponent->name[0] == 'R'){
+                StampResistor(*iComponent);
+            }
+    }
+
+    // std::cout << _circuitMatrix(0,0) << std::endl;
+
+}
+
+void Circuit::StampResistor(const CircuitComponent resistor){
+
+    if(resistor.impedance.resistance == 0){
+        std::cout << "bad resistance" << std::endl;
+    }
+    else{
+        double addmittance = 1/resistor.impedance.resistance;
+
+        StampMatrix(resistor.connectedNodes[0]->parent->id, resistor.connectedNodes[0]->parent->id ,addmittance);
+        StampMatrix(resistor.connectedNodes[0]->parent->id, resistor.connectedNodes[1]->parent->id ,-addmittance);
+        StampMatrix(resistor.connectedNodes[1]->parent->id, resistor.connectedNodes[0]->parent->id ,-addmittance);
+        StampMatrix(resistor.connectedNodes[1]->parent->id, resistor.connectedNodes[1]->parent->id ,addmittance);
+
+
+
+    }
+
+
+}
+
+void Circuit::StampMatrix(const int i, const int j, const double x){
+
+    _circuitMatrix(i,j) += x;
+
+}
+
 void Circuit::PrintIM(){
 
-    std::cout << "__" ;
-    for(auto j : _components){
-        std::cout <<" "<< j->name;
-    }
-    std::cout << std::endl;
-    for(auto i : _nodes){
+    // std::cout << "__" ;
+    // for(auto j : _components){
+    //     std::cout <<" "<< j->name;
+    // }
+    // std::cout << std::endl;
+    // for(auto i : _nodes){
 
-        // std::cout << i->name;
-        if(_incidenceMatrix.count(i) > 0){
-            std::cout << i->name;
-        }
+    //     // std::cout << i->name;
+    //     if(_incidenceMatrix.count(i) > 0){
+    //         std::cout << i->name;
+    //     }
 
-        for(auto j : _components){
-            if(_incidenceMatrix.count(i) > 0){
+    //     for(auto j : _components){
+    //         if(_incidenceMatrix.count(i) > 0){
 
-                if(_incidenceMatrix[i].count(j) > 0){
-                    std::cout << " " << _incidenceMatrix[i][j];
-                }
-                else{
-                    std::cout << " 0";
-                }
-            }
-        }
+    //             if(_incidenceMatrix[i].count(j) > 0){
+    //                 std::cout << " " << _incidenceMatrix[i][j];
+    //             }
+    //             else{
+    //                 std::cout << " 0";
+    //             }
+    //         }
+    //     }
         
-        if(_incidenceMatrix.count(i) > 0)
-            std::cout<<std::endl;
+    //     if(_incidenceMatrix.count(i) > 0)
+    //         std::cout<<std::endl;
+    // }
+
+    std::cout << _circuitMatrix.size1() << std::endl;
+    std::cout << _circuitMatrix.size2() << std::endl;
+
+    for(int i = 0; i < _circuitMatrix.size1(); i ++){
+        for(int j = 0; j < _circuitMatrix.size2(); j++){
+            std::cout << std::setprecision(4) << std::fixed;
+            std::cout << _circuitMatrix(i,j)<< " "; 
+        }
+        std::cout << std::endl;
     }
 }
 

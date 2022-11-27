@@ -35,20 +35,26 @@ int main(){
         test.CreateConnection(std::string("N1"), std::string("N2"));
 
         // test.RemoveConnection(std::string("N5"));
+        test.Simulate();
 
 
         test.PrintComponents();
+
+        test.Simulate();
 
         //can add a bunch of asserts here etc
     }
     #endif
 
 
-    Simulator test;
-    char x[100];
+
 
 
     
+    // #ifdef true
+
+    Simulator test;
+    char x[100];
 
     while(std::cin >> x){
         if(x[0]== 'r'){
@@ -64,7 +70,10 @@ int main(){
             test.RemoveConnection(std::string("N" + std::to_string(x[1] - 48)));
         }
         
+        test.Simulate();
+        
     }
+    // #endif
 
 
 

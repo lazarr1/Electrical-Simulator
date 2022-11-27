@@ -88,7 +88,9 @@ void Simulator::RemoveConnection(std::string NodeName){
 
 }
 
-
+void Simulator::Simulate(){
+    _circuit.BuildCircuitMatrix();
+}
 #ifdef __DEBUG__
 void Simulator::PrintComponents(){
 

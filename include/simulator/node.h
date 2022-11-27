@@ -18,11 +18,24 @@ struct Node{
 
     std::string name;
 
+    int id;
 
 
     Node(std::string nameInput, std::shared_ptr<CircuitComponent> component);
 
     double voltage;
+
+
+    //A node flows in this direction to its connection
+    //One node only connects to one thing
+    Direction direction;
+    std::shared_ptr<CircuitComponent> connection;
+
+    std::shared_ptr<Node> parent;
+    std::list<std::shared_ptr<Node>> children;
+
+
+};
 
     // bool operator<(const Node& x) const
     // {
@@ -49,18 +62,5 @@ struct Node{
     //     return nameHash;
     //     }
     // };
-
-    //A node flows in this direction to its connection
-    //One node only connects to one thing
-    Direction direction;
-    std::shared_ptr<CircuitComponent> connection;
-
-    std::shared_ptr<Node> parent;
-    std::list<std::shared_ptr<Node>> children;
-
-
-};
-
-
 
 #endif
