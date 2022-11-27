@@ -33,11 +33,11 @@ void Circuit::CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node
     if(node1->parent != node2->parent){
 
         //merge the bigger node group with the smaller node group
-        if(node1->parent->children.size() > node2->parent->children.size()){
-            Union(node1, node2);
+        if(node1->parent->children.size() < node2->parent->children.size()){
+            Union(node2, node1);
         }
         else{
-            Union(node2, node1);
+            Union(node1, node2);
         }
     }
 
@@ -158,11 +158,7 @@ void Circuit::StampResistor(const CircuitComponent resistor){
         StampMatrix(resistor.connectedNodes[0]->parent->id, resistor.connectedNodes[1]->parent->id ,-addmittance);
         StampMatrix(resistor.connectedNodes[1]->parent->id, resistor.connectedNodes[0]->parent->id ,-addmittance);
         StampMatrix(resistor.connectedNodes[1]->parent->id, resistor.connectedNodes[1]->parent->id ,addmittance);
-
-
-
     }
-
 
 }
 
@@ -174,33 +170,35 @@ void Circuit::StampMatrix(const int i, const int j, const double x){
 
 void Circuit::PrintIM(){
 
-    // std::cout << "__" ;
-    // for(auto j : _components){
-    //     std::cout <<" "<< j->name;
-    // }
-    // std::cout << std::endl;
-    // for(auto i : _nodes){
+    std::cout << "__" ;
+    for(auto j : _components){
+        std::cout <<" "<< j->name;
+    }
+    std::cout << std::endl;
+    for(auto i : _nodes){
 
-    //     // std::cout << i->name;
-    //     if(_incidenceMatrix.count(i) > 0){
-    //         std::cout << i->name;
-    //     }
+        // std::cout << i->name;
+        if(_incidenceMatrix.count(i) > 0){
+            std::cout << i->name;
+        }
 
-    //     for(auto j : _components){
-    //         if(_incidenceMatrix.count(i) > 0){
+        for(auto j : _components){
+            if(_incidenceMatrix.count(i) > 0){
 
-    //             if(_incidenceMatrix[i].count(j) > 0){
-    //                 std::cout << " " << _incidenceMatrix[i][j];
-    //             }
-    //             else{
-    //                 std::cout << " 0";
-    //             }
-    //         }
-    //     }
+                if(_incidenceMatrix[i].count(j) > 0){
+                    std::cout << " " << _incidenceMatrix[i][j];
+                }
+                else{
+                    std::cout << " 0";
+                }
+            }
+        }
         
-    //     if(_incidenceMatrix.count(i) > 0)
-    //         std::cout<<std::endl;
-    // }
+        if(_incidenceMatrix.count(i) > 0)
+            std::cout<<std::endl;
+    }
+
+    std::cout << std::endl;
 
     std::cout << _circuitMatrix.size1() << std::endl;
     std::cout << _circuitMatrix.size2() << std::endl;
