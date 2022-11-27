@@ -20,6 +20,7 @@ struct Node{
 
     int id;
 
+    bool grounded;
 
     Node(std::string nameInput, std::shared_ptr<CircuitComponent> component);
 

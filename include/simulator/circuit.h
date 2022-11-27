@@ -36,6 +36,8 @@ class Circuit{
 
         void BuildCircuitMatrix();
 
+        void Ground(std::shared_ptr<Node> node);
+
     private:
 
         void StampResistor(const CircuitComponent resistor);
@@ -52,19 +54,25 @@ class Circuit{
         [Node 2]     1         -1
 
         Here if a component is not found, it is not stored rather than having a zero
+
+        This exists just for testing purposes
         */
 
         std::map< std::shared_ptr<Node>, std::map< std::shared_ptr<CircuitComponent>, Direction > > _incidenceMatrix;
 
 
         //This is the stamp matrix
+        /*
+            Addmittance matrix
+        */
         boost::numeric::ublas::matrix<double> _circuitMatrix;
 
         //store all the nodes and components
         std::unordered_set<std::shared_ptr<Node>> _nodes;
         std::unordered_set<std::shared_ptr<CircuitComponent>> _components;
 
-        // std::vector<std::vector<int> > _incidenceMatrix;
+        std::vector<std::shared_ptr<Node>> _parentNodes;
+
 
 };
 

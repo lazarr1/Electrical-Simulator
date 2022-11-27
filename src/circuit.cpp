@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 
 Circuit::Circuit(){
 }
@@ -123,25 +124,63 @@ void Circuit::AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Nod
 
 void Circuit::BuildCircuitMatrix(){
 
-    //map each node in a consecutively numbered way to build the stamp matrix
+    //map each parent node in a consecutively numbered way to build the stamp matrix
     int idGenerator = 0;
+
+    bool grounded = false;
+    _parentNodes.clear();
+
+    std::shared_ptr<Node> groundedNode;
+
     for(std::shared_ptr<Node> iNode : _nodes){
-        if(iNode->parent == iNode){
+
+        //only add parents and non-grounded nodes
+        if(iNode->parent == iNode && iNode->parent->grounded == false){
             iNode->id = idGenerator++;
+            _parentNodes.push_back(iNode);
+        }
+
+        //find the grounded node
+        if(iNode->parent->grounded){
+            groundedNode = iNode->parent;
+            grounded = true;
         }
     }
-    
-    //resize square matrix, do not keep the previous values
-    _circuitMatrix.resize(idGenerator,idGenerator, false);
 
 
-    for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
+    //This is simply to check that the matrix is correct before grounding
+    #ifdef __DEBUG__
+        if(!grounded){
+        _circuitMatrix.resize(idGenerator,idGenerator, false);
+
+        for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
             //if the component is a resistor
             if(iComponent->name[0] == 'R'){
                 StampResistor(*iComponent);
             }
-    }
+        }
+        }
+    #endif
 
+    //If the circuit has not been grounded, then the simualtion cannot run
+    if(grounded){
+        
+        //add grounded node to the end
+        _parentNodes.push_back(groundedNode);
+        groundedNode->id = idGenerator;
+
+
+        //resize square matrix, do not keep the previous values
+        _circuitMatrix.resize(idGenerator,idGenerator, false);
+
+
+        for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
+                //if the component is a resistor
+                if(iComponent->name[0] == 'R'){
+                    StampResistor(*iComponent);
+                }
+        }
+    }
     // std::cout << _circuitMatrix(0,0) << std::endl;
 
 }
@@ -164,7 +203,17 @@ void Circuit::StampResistor(const CircuitComponent resistor){
 
 void Circuit::StampMatrix(const int i, const int j, const double x){
 
-    _circuitMatrix(i,j) += x;
+
+    //Make sure that the node is not grounded:
+    if((_parentNodes[i]->parent->grounded == false) &&  (_parentNodes[j]->parent->grounded == false)){
+        _circuitMatrix(i,j) += x;
+    }
+
+}
+
+void Circuit::Ground(std::shared_ptr<Node> node){
+
+    node->parent->grounded = true;
 
 }
 

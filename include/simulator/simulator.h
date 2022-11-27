@@ -22,7 +22,7 @@ class Simulator{
 
         void CreateResistor(const double resistanceInput);
 
-
+        void GroundNode(std::string NodeName);
 
         void CreateConnection(std::string NodeName1, std::string NodeName2);
 

@@ -91,6 +91,13 @@ void Simulator::RemoveConnection(std::string NodeName){
 void Simulator::Simulate(){
     _circuit.BuildCircuitMatrix();
 }
+
+void Simulator::GroundNode(std::string NodeName){
+    if(_nodes.count(NodeName))
+        _circuit.Ground(_nodes[NodeName]);
+}
+
+
 #ifdef __DEBUG__
 void Simulator::PrintComponents(){
 
@@ -110,6 +117,4 @@ void Simulator::PrintComponents(){
     _circuit.PrintIM();
 
 }
-
-
 #endif
