@@ -49,6 +49,8 @@ class Circuit{
 
         std::map< std::shared_ptr<Node>, std::map< std::shared_ptr<CircuitComponent>, Direction > > _incidenceMatrix;
 
+        std::vector<std::vector<double>> _ciruitMatrix;
+
         //store all the nodes and components
         std::unordered_set<std::shared_ptr<Node>> _nodes;
         std::unordered_set<std::shared_ptr<CircuitComponent>> _components;
