@@ -46,17 +46,21 @@ class CircuitComponent{
 
         virtual void Print() const;
 
-        std::string name;
+        std::string GetName() const;
 
 
+        //each component has a constant number of pins
         const int ioPins;
-        Impedance impedance;
 
-
+        //This porvides the interface for external classes like the nodes to know
+        //What direction things flow in the component and to know what nodes are connected.
         const Direction * connectionDirection;
         std::vector<std::shared_ptr<Node>> connectedNodes;
 
     protected:
+
+        std::string name;
+
         CircuitSolver* _sim;
 
 };
@@ -73,15 +77,16 @@ class PassiveComponent: public CircuitComponent{
 
         void Stamp();
 
+        Impedance impedance;
+
+
         const int passiveIoPins = 2;
 
         // void Print() const;
         
+    private:
         //A node flows in a node flows out
         const Direction passiveDirection[2] {In, Out};
-
-
-
 
 };
 

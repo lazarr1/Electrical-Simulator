@@ -188,7 +188,7 @@ void Circuit::PrintIM(){
 
     std::cout << "__" ;
     for(auto j : _components){
-        std::cout <<" "<< j->name;
+        std::cout <<" "<< j->GetName();
     }
     std::cout << std::endl;
     for(auto i : _nodes){

@@ -13,11 +13,9 @@
 
 #include "node.h"
 
-#include <boost/numeric/ublas/matrix.hpp>
 
 /*  Class: Circuit
- *      This class manages all the connections, it is a graph. It also builds the stamp matrices that must be solved
- *      to solve the circuit.
+ *      This class manages all the connections, it is a graph. It also instructs the components to build the matrices for the circuit solver
  *
  * 
  * 
@@ -25,8 +23,6 @@
  *          -
  * 
  *  
- *     TOBE implemented:
- *          - Split into a circuit solver? this should just manage the connections maybe?
  * 
  */
 class Circuit{
@@ -67,14 +63,7 @@ class Circuit{
         */
         std::map< std::shared_ptr<Node>, std::map< std::shared_ptr<CircuitComponent>, Direction > > _incidenceMatrix;
 
-
-        //This is the stamp matrix
-        /*
-            Addmittance matrix
-        */
-
        CircuitSolver * _solver;
-        // boost::numeric::ublas::matrix<double> _circuitMatrix;
 
         //store all the nodes and components
         std::unordered_set<std::shared_ptr<Node>> _nodes;

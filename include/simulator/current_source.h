@@ -3,9 +3,23 @@
 
 #include "circuit_element.h"
 
-class CurrentSource{
+class CurrentSource: public CircuitComponent{
 
-    
+    public:
+        CurrentSource(std::string nameInput, CircuitSolver* sim);
+        ~CurrentSource();
+
+        void Stamp();
+
+        double current;
+        
+        const int passiveIoPins = 2;
+
+        // void Print() const;
+        
+    private:
+        //A node flows in a node flows out
+        const Direction currentDirection[2] {In, Out};
 
 };
 

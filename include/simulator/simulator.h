@@ -41,6 +41,8 @@ class Simulator{
 
         void CreateResistor(const double resistanceInput);
 
+        void CreateCurrentSource(const double current);
+
         void GroundNode(std::string NodeName);
 
         void CreateConnection(std::string NodeName1, std::string NodeName2);
@@ -52,6 +54,9 @@ class Simulator{
         void Simulate();
 
     private:
+
+        void AllocateNodes(std::shared_ptr<CircuitComponent> component);
+
 
         //The simulator keeps track of all its components
         int _numComponents;

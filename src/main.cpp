@@ -106,6 +106,8 @@ int main(){
         for(int i = 0; i < 7; i++){
             test.CreateResistor(100.0);
         }
+        
+        test.CreateResistor(100.0);
 
         //node1
         test.CreateConnection(std::string("N1"), std::string("N3"));
@@ -128,6 +130,19 @@ int main(){
         test.CreateConnection(std::string("N2"), std::string("N14"));
 
         test.GroundNode("N2");
+
+        test.CreateCurrentSource(2);
+        test.CreateCurrentSource(2);
+
+        test.CreateConnection(std::string("N1"), std::string("N15"));
+        test.CreateConnection(std::string("N12"), std::string("N17"));
+
+        test.CreateConnection(std::string("N2"), std::string("N16"));
+        test.CreateConnection(std::string("N2"), std::string("N18"));
+
+        
+
+
 
 
         test.Simulate();

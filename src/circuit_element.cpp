@@ -3,6 +3,8 @@
 #include "simulator/node.h"
 
 
+
+
 Impedance::Impedance(){
     resistance = 0.0;
     capacitance = 0.0 ;
@@ -10,7 +12,7 @@ Impedance::Impedance(){
 }
 
 CircuitComponent::CircuitComponent(std::string nameInput, int numioPins, const Direction * connectionDirections, CircuitSolver* sim)
-    : name(nameInput), ioPins(numioPins), connectionDirection(connectionDirections), _sim(sim)
+    : ioPins(numioPins), connectionDirection(connectionDirections), name(nameInput), _sim(sim)
 {
 
 }
@@ -18,14 +20,9 @@ CircuitComponent::CircuitComponent(std::string nameInput, int numioPins, const D
 CircuitComponent::~CircuitComponent(){
 }
 
-
-
-// void CircuitComponent::Print() const{
-//     std::cout << name << std::endl;
-// }
-
-
-
+std::string CircuitComponent::GetName() const{
+    return name;
+}
 
 PassiveComponent::PassiveComponent(std::string nameInput, CircuitSolver* sim)
     : CircuitComponent::CircuitComponent(nameInput, 2, passiveDirection, sim)  
@@ -39,9 +36,9 @@ PassiveComponent::~PassiveComponent(){
 }
 void CircuitComponent::Print() const{
     std::cout << "Name: " << name << std::endl;
-    std::cout << "Resistance: " << impedance.resistance << std::endl;
-    std::cout << "Capacitance: " << impedance.capacitance << std::endl;
-    std::cout << "Inductance: " << impedance.inductance << std::endl;
+    // std::cout << "Resistance: " << impedance.resistance << std::endl;
+    // std::cout << "Capacitance: " << impedance.capacitance << std::endl;
+    // std::cout << "Inductance: " << impedance.inductance << std::endl;
 
 }
 
@@ -69,13 +66,3 @@ void PassiveComponent::Stamp(){
 
 }
 
-
-// void Circuit::StampMatrix(const int i, const int j, const double x){
-
-
-//     //Make sure that the node is not grounded:
-//     if((_parentNodes[i]->parent->grounded == false) &&  (_parentNodes[j]->parent->grounded == false)){
-//         _circuitMatrix(i,j) += x;
-//     }
-
-// }
