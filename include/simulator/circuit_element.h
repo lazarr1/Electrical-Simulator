@@ -7,6 +7,8 @@
 #include <iostream>
 // #include "node.h"
 
+#include "circuit_solver.h"
+
 
 enum Direction{
     In = -1,
@@ -33,27 +35,29 @@ struct Impedance{
 
 //A abstract class for all circuit components to store all types of circuit elements in a circuit
 //All circuit components derive from this class
-struct CircuitComponent{
+class CircuitComponent{
+
+    public:
+        //Requires a name for every element
+        CircuitComponent(std::string nameInput, int numioPins, const Direction * connectionDirections, CircuitSolver* sim);
+
+        virtual ~CircuitComponent();
+        virtual void Stamp() = 0;
+
+        virtual void Print() const;
+
+        std::string name;
 
 
-    //Requires a name for every element
-    CircuitComponent(std::string nameInput, int numioPins, const Direction * connectionDirections);
-
-    virtual ~CircuitComponent();
-
-    virtual void Print() const;
-
-    std::string name;
+        const int ioPins;
+        Impedance impedance;
 
 
-    const int ioPins;
-    Impedance impedance;
+        const Direction * connectionDirection;
+        std::vector<std::shared_ptr<Node>> connectedNodes;
 
-
-    const Direction * connectionDirection;
-    std::vector<std::shared_ptr<Node>> connectedNodes;
-
-
+    protected:
+        CircuitSolver* _sim;
 
 };
 
@@ -61,24 +65,23 @@ struct CircuitComponent{
 // TO be moved to PassiveElement.h
 
 // class containing a passive component's properties
-struct PassiveComponent: public CircuitComponent{
+class PassiveComponent: public CircuitComponent{
+
+    public:
+        PassiveComponent(std::string nameInput, CircuitSolver* sim);
+        ~PassiveComponent();
+
+        void Stamp();
+
+        const int passiveIoPins = 2;
+
+        // void Print() const;
+        
+        //A node flows in a node flows out
+        const Direction passiveDirection[2] {In, Out};
 
 
-    PassiveComponent(std::string nameInput);
-    ~PassiveComponent();
 
-    const int passiveIoPins = 2;
-
-    // void Print() const;
-    
-    //A node flows in a node flows out
-    const Direction passiveDirection[2] {In, Out};
-
-
-    // Impedance impedance;
-
-    // const int positiveTerminal = 0;
-    // const int negativeTerminal = 1;
 
 };
 

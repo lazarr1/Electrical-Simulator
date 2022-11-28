@@ -7,7 +7,7 @@
 #include "circuit_element.h"
 #include "circuit.h"
 
-
+#include "circuit_solver.h"
 
 
 
@@ -58,6 +58,8 @@ class Simulator{
         int _numNodes;
         std::unordered_map<std::string, std::shared_ptr<CircuitComponent>> _presentComponents;
         std::unordered_map<std::string, std::shared_ptr<Node>> _nodes;
+
+        CircuitSolver _solver;
 
         
         Circuit _circuit;

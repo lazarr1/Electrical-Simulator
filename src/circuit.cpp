@@ -4,7 +4,9 @@
 #include <iomanip>
 #include <algorithm>
 
-Circuit::Circuit(){
+Circuit::Circuit(CircuitSolver* solver)
+{
+    _solver = solver;
 }
 
 
@@ -128,7 +130,7 @@ void Circuit::BuildCircuitMatrix(){
     int idGenerator = 0;
 
     bool grounded = false;
-    _parentNodes.clear();
+    std::vector<std::shared_ptr<Node>> parentNodes;
 
     std::shared_ptr<Node> groundedNode;
 
@@ -137,7 +139,7 @@ void Circuit::BuildCircuitMatrix(){
         //only add parents and non-grounded nodes
         if(iNode->parent == iNode && iNode->parent->grounded == false){
             iNode->id = idGenerator++;
-            _parentNodes.push_back(iNode);
+            parentNodes.push_back(iNode);
         }
 
         //find the grounded node
@@ -147,69 +149,39 @@ void Circuit::BuildCircuitMatrix(){
         }
     }
 
-
-    //This is simply to check that the matrix is correct before grounding
-    #ifdef __DEBUG__
-        if(!grounded){
-        _circuitMatrix.resize(idGenerator,idGenerator, false);
-
-        for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
-            //if the component is a resistor
-            if(iComponent->name[0] == 'R'){
-                StampResistor(*iComponent);
-            }
-        }
-        }
-    #endif
-
     //If the circuit has not been grounded, then the simualtion cannot run
     if(grounded){
         
         //add grounded node to the end
-        _parentNodes.push_back(groundedNode);
+        parentNodes.push_back(groundedNode);
         groundedNode->id = idGenerator;
 
 
         //resize square matrix, do not keep the previous values
-        _circuitMatrix.resize(idGenerator,idGenerator, false);
+        _solver->Resize(idGenerator, false);
+        _solver->SetParentNodes(parentNodes);
 
 
         for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
-                //if the component is a resistor
-                if(iComponent->name[0] == 'R'){
-                    StampResistor(*iComponent);
-                }
+                iComponent->Stamp();
         }
     }
-    // std::cout << _circuitMatrix(0,0) << std::endl;
+
+    //This is simply to check that the matrix is correct before grounding
+    #ifdef __DEBUG__
+        if(!grounded){
+            //resize square matrix, do not keep the previous values
+            _solver->Resize(idGenerator, false);
+            _solver->SetParentNodes(parentNodes);
+            
+            for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
+                iComponent->Stamp();
+            }
+        }
+    #endif
 
 }
 
-void Circuit::StampResistor(const CircuitComponent resistor){
-
-    if(resistor.impedance.resistance == 0){
-        std::cout << "bad resistance" << std::endl;
-    }
-    else{
-        double addmittance = 1/resistor.impedance.resistance;
-
-        StampMatrix(resistor.connectedNodes[0]->parent->id, resistor.connectedNodes[0]->parent->id ,addmittance);
-        StampMatrix(resistor.connectedNodes[0]->parent->id, resistor.connectedNodes[1]->parent->id ,-addmittance);
-        StampMatrix(resistor.connectedNodes[1]->parent->id, resistor.connectedNodes[0]->parent->id ,-addmittance);
-        StampMatrix(resistor.connectedNodes[1]->parent->id, resistor.connectedNodes[1]->parent->id ,addmittance);
-    }
-
-}
-
-void Circuit::StampMatrix(const int i, const int j, const double x){
-
-
-    //Make sure that the node is not grounded:
-    if((_parentNodes[i]->parent->grounded == false) &&  (_parentNodes[j]->parent->grounded == false)){
-        _circuitMatrix(i,j) += x;
-    }
-
-}
 
 
 void Circuit::PrintIM(){
@@ -242,17 +214,6 @@ void Circuit::PrintIM(){
             std::cout<<std::endl;
     }
 
-    std::cout << std::endl;
-
-    std::cout << _circuitMatrix.size1() << std::endl;
-    std::cout << _circuitMatrix.size2() << std::endl;
-
-    for(int i = 0; i < _circuitMatrix.size1(); i ++){
-        for(int j = 0; j < _circuitMatrix.size2(); j++){
-            std::cout << std::setprecision(4) << std::fixed;
-            std::cout << _circuitMatrix(i,j)<< " "; 
-        }
-        std::cout << std::endl;
-    }
+    _solver->Print();
 }
 

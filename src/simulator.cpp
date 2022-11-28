@@ -10,7 +10,7 @@
 
 
 Simulator::Simulator()
- : _numComponents(0), _numNodes(0)
+ : _numComponents(0), _numNodes(0), _solver(), _circuit(&_solver)
 {
 
 }
@@ -27,7 +27,7 @@ void Simulator::CreateResistor(const double resistanceInput){
 
 
     //create a resistor with the given name
-    std::shared_ptr<PassiveComponent> resistor = std::make_shared<PassiveComponent>(name);
+    std::shared_ptr<PassiveComponent> resistor = std::make_shared<PassiveComponent>(name, &_solver);
 
     for(int iNewNodes = 0; iNewNodes < resistor->ioPins; iNewNodes++){
 

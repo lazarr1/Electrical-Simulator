@@ -51,6 +51,7 @@ set(elec_sim_SOURCES
     src/circuit.cpp
     src/simulator.cpp
     src/node.cpp
+    src/circuit_solver.cpp
     # src/node_manager.cpp
 
 )

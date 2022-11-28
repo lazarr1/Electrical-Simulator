@@ -33,7 +33,7 @@ class Circuit{
 
     public:
 
-        Circuit();
+        Circuit(CircuitSolver* solver);
 
         void AddComponent(std::shared_ptr<CircuitComponent> component);
 
@@ -45,11 +45,11 @@ class Circuit{
 
         void BuildCircuitMatrix();
 
+        // void StampMatrix(const int i, const int j, const double x);
+
 
     private:
 
-        void StampResistor(const CircuitComponent resistor);
-        void StampMatrix(const int i, const int j, const double x);
 
 
         void AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
@@ -72,13 +72,15 @@ class Circuit{
         /*
             Addmittance matrix
         */
-        boost::numeric::ublas::matrix<double> _circuitMatrix;
+
+       CircuitSolver * _solver;
+        // boost::numeric::ublas::matrix<double> _circuitMatrix;
 
         //store all the nodes and components
         std::unordered_set<std::shared_ptr<Node>> _nodes;
         std::unordered_set<std::shared_ptr<CircuitComponent>> _components;
 
-        std::vector<std::shared_ptr<Node>> _parentNodes;
+        // std::vector<std::shared_ptr<Node>> _parentNodes;
 
 
 };
