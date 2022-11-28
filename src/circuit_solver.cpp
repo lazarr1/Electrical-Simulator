@@ -45,7 +45,6 @@ void CircuitSolver::Solve(){
     lu_factorize(_circuitMatrix, pm);
     lu_substitute(_circuitMatrix, pm, _currentVector);
 
-    std::cout << "solved" << std::endl;
     std::cout << _currentVector << std::endl;
 }
 

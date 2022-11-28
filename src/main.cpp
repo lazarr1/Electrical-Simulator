@@ -106,8 +106,6 @@ int main(){
         for(int i = 0; i < 7; i++){
             test.CreateResistor(100.0);
         }
-        
-        test.CreateResistor(100.0);
 
         //node1
         test.CreateConnection(std::string("N1"), std::string("N3"));
@@ -139,6 +137,7 @@ int main(){
 
         test.CreateConnection(std::string("N2"), std::string("N16"));
         test.CreateConnection(std::string("N2"), std::string("N18"));
+
 
         
 
