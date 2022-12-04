@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Stage, Layer, Image } from 'react-konva';
 import useImage from 'use-image';
+import resistor from './images/resistor.png'
+
+
+
+import current_source from './images/current_source.png'
 
 
 
@@ -13,7 +18,7 @@ import useImage from 'use-image';
 // VERY IMPORTANT NOTES:
 // at first we will set image state to null
 // and then we will set it to native image instance when it is loaded
-class URLImage extends React.Component {
+export class URLImage extends React.Component {
     state = {
       image: null
     };
@@ -44,6 +49,12 @@ class URLImage extends React.Component {
       // you will have to update layer manually:
       // this.imageNode.getLayer().batchDraw();
     };
+
+    handleClick = () => {
+        console.log("test");
+        <URLImage src={current_source} x={150} width = {100} height = {80} />
+    }
+
     render() {
       return (
         <Image
@@ -53,14 +64,54 @@ class URLImage extends React.Component {
           height={this.props.width}
           image={this.state.image}
           draggable
+          onClick={this.handleClick}
           ref={(node) => {
             this.imageNode = node;
-          
           }}
         />
       );
     }
-  }
+}
 
-export default URLImage;
+
+export class ImageToolbox extends URLImage{
+    handleClick = () => {
+
+      var img = {
+        // key : img,
+        src : this.props.src,
+        x : this.props.x,
+        y : 100,
+        width : this.props.width,
+        height : this.props.height
+      }
+
+
+
+      var items = this.props.items;
+
+      this.props.update(prevComponents => {
+        return [...prevComponents, img];
+      });
+
+    }
+
+    render() {
+        return (
+          <Image
+            x={this.props.x}
+            y={this.props.y}
+            width={this.props.height}
+            height={this.props.width}
+            image={this.state.image}
+            onClick={this.handleClick}
+            ref={(node) => {
+              this.imageNode = node;
+            }}
+          />
+        );
+      }
+}
+
+export default URLImage
 
