@@ -18,18 +18,6 @@ enum Direction{
 
 struct Node;
 
-//Struct defining the impedance of a component
-struct Impedance{    
-
-    //default all values to 0
-    Impedance();
-
-
-    double resistance;
-    double capacitance;
-    double inductance;
-};
-
 
 
 
@@ -48,6 +36,9 @@ class CircuitComponent{
 
         std::string GetName() const;
 
+        
+        virtual void Update() = 0;
+
 
         //each component has a constant number of pins
         const int ioPins;
@@ -61,23 +52,25 @@ class CircuitComponent{
 
         std::string name;
 
-        CircuitSolver* _sim;
+        CircuitSolver* _solver;
 
 };
 
 
-// TO be moved to PassiveElement.h
+// TO be moved to resistor.h
 
-// class containing a passive component's properties
-class PassiveComponent: public CircuitComponent{
+// class containing a resitor  properties
+class Resistor: public CircuitComponent{
 
     public:
-        PassiveComponent(std::string nameInput, CircuitSolver* sim);
-        ~PassiveComponent();
+        Resistor(std::string nameInput, CircuitSolver* sim);
+        ~Resistor();
 
         void Stamp();
 
-        Impedance impedance;
+        double resistance;
+
+        void Update();
 
 
         const int passiveIoPins = 2;

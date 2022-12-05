@@ -15,7 +15,11 @@ CurrentSource::~CurrentSource(){
 
 void CurrentSource::Stamp(){
 
-    _sim->StampCurrentVector(connectedNodes[0]->parent->id, -current);
-	_sim->StampCurrentVector(connectedNodes[1]->parent->id, current);
+    _solver->StampCurrentVector(connectedNodes[0]->parent->id, -current);
+	_solver->StampCurrentVector(connectedNodes[1]->parent->id, current);
 
+}
+
+void CurrentSource::Update(){
+    //Do nothing, current source does not change
 }

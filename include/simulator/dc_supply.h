@@ -7,9 +7,9 @@
 struct DCSupply: public CircuitComponent{
 
 
-    // PassiveComponent(std::string nameInput);
-    // PassiveComponent(std::string nameInput, std::shared_ptr<Node> positiveNode, std::shared_ptr<Node> negativeNode);
-    // ~PassiveComponent();
+    // Resistor(std::string nameInput);
+    // Resistor(std::string nameInput, std::shared_ptr<Node> positiveNode, std::shared_ptr<Node> negativeNode);
+    // ~Resistor();
 
     const int passiveIoPins = 2;
 

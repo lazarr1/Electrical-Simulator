@@ -8,6 +8,7 @@
     #include <assert>
 #endif
 
+#include "simulator/capacitor.h"
 
 
 Simulator::Simulator()
@@ -24,11 +25,11 @@ void Simulator::CreateResistor(const double resistanceInput){
     std::string name("R" + std::to_string(_numComponents));
 
     //create a resistor with the given name
-    std::shared_ptr<PassiveComponent> resistor = std::make_shared<PassiveComponent>(name, &_solver);
+    std::shared_ptr<Resistor> resistor = std::make_shared<Resistor>(name, &_solver);
 
     AllocateNodes(resistor);
 
-    resistor->impedance.resistance = resistanceInput;
+    resistor->resistance = resistanceInput;
 
     //update the circuit to include the new component
     _circuit.AddComponent(resistor);
@@ -37,6 +38,28 @@ void Simulator::CreateResistor(const double resistanceInput){
     _presentComponents[resistor->GetName()] = resistor;
 
 }
+
+void Simulator::CreateCapacitor(const double capacitance){
+    //Increment the count of current components;
+    _numComponents++;
+
+    //create a name for the resistor
+    std::string name("C" + std::to_string(_numComponents));
+
+    //create a resistor with the given name
+    std::shared_ptr<Capacitor> capacitor = std::make_shared<Capacitor>(name, &_solver);
+
+    AllocateNodes(capacitor);
+
+    capacitor->SetCapacitance(capacitance);
+
+    //update the circuit to include the new component
+    _circuit.AddComponent(capacitor);
+
+    //update the simulator to store the new component
+    _presentComponents[capacitor->GetName()] = capacitor; 
+}
+
 
 void Simulator::AllocateNodes(std::shared_ptr<CircuitComponent> component){
     for(int iNewNodes = 0; iNewNodes < component->ioPins; iNewNodes++){
@@ -108,14 +131,20 @@ void Simulator::RemoveConnection(std::string NodeName){
 }
 
 void Simulator::Simulate(){
-    _circuit.BuildCircuitMatrix();
-    _solver.Solve();
+
+    while(!_solver.GetFinishedState()){
+        _circuit.BuildCircuitMatrix();
+        _solver.Solve();
+    }
+
+
 }
 
 void Simulator::GroundNode(std::string NodeName){
     if(_nodes.count(NodeName))
         _nodes[NodeName]->parent->grounded = true;
 }
+
 
 
 #ifdef __DEBUG__

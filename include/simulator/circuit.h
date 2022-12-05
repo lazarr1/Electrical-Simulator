@@ -16,7 +16,7 @@
 
 /*  Class: Circuit
  *      This class manages all the connections, it is a graph. It also instructs the components to build the matrices for the circuit solver
- *
+ *          It is how the computer envisions and understands how the circuit is connected.
  * 
  * 
  *      Member functions:
@@ -63,11 +63,13 @@ class Circuit{
         */
         std::map< std::shared_ptr<Node>, std::map< std::shared_ptr<CircuitComponent>, Direction > > _incidenceMatrix;
 
-       CircuitSolver * _solver;
+        CircuitSolver * _solver;
 
         //store all the nodes and components
         std::unordered_set<std::shared_ptr<Node>> _nodes;
         std::unordered_set<std::shared_ptr<CircuitComponent>> _components;
+
+
 
         // std::vector<std::shared_ptr<Node>> _parentNodes;
 

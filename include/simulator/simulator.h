@@ -43,6 +43,8 @@ class Simulator{
 
         void CreateCurrentSource(const double current);
 
+        void CreateCapacitor(const double capacitance);
+
         void GroundNode(std::string NodeName);
 
         void CreateConnection(std::string NodeName1, std::string NodeName2);

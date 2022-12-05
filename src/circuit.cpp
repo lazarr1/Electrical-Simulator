@@ -120,7 +120,6 @@ void Circuit::AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Nod
         _incidenceMatrix[node1][node2->connection] = node2->direction;
     }
 
-    // node2->parent = node1->parent;
 }
 
 
@@ -165,20 +164,9 @@ void Circuit::BuildCircuitMatrix(){
         for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
                 iComponent->Stamp();
         }
+
     }
 
-    //This is simply to check that the matrix is correct before grounding
-    #ifdef __DEBUG__
-        if(!grounded){
-            //resize square matrix, do not keep the previous values
-            _solver->Resize(idGenerator, false);
-            _solver->SetParentNodes(parentNodes);
-            
-            for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
-                iComponent->Stamp();
-            }
-        }
-    #endif
 
 }
 

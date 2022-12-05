@@ -15,6 +15,8 @@ class CurrentSource: public CircuitComponent{
         
         const int passiveIoPins = 2;
 
+        void Update();
+
         // void Print() const;
         
     private:
