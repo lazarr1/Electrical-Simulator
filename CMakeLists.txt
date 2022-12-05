@@ -9,13 +9,24 @@ project(Circuit-Simulator)
 
 
 set(IS_DEBUG_BUILD CMAKE_BUILD_TYPE STREQUAL "Debug")
+# set(IS_TIME_BUILD CMAKE_BUILD_TYPE STREQUAL "Timing")
+
 
 # Indication to the code that this is a debug build
 if (${IS_DEBUG_BUILD})
     add_compile_definitions(__DEBUG__)
     add_compile_options("-Wall")
 
+    # Add to the code that this is a time
+    if (${IS_TIME_BUILD})
+      add_compile_definitions(_TIME__)
+    endif ()
 endif ()
+
+
+
+
+
 
 
 add_compile_options(-std=c++11)

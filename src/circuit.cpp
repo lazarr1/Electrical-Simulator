@@ -10,6 +10,11 @@ Circuit::Circuit(CircuitSolver* solver)
 }
 
 
+#ifdef _TIME__
+    // #include <time.h>
+    #include <chrono>
+#endif
+
 
 void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
 
@@ -125,6 +130,12 @@ void Circuit::AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Nod
 
 void Circuit::BuildCircuitMatrix(){
 
+
+    #ifdef _TIME__
+        static double time = 0.0;
+        auto start = std::chrono::steady_clock::now();
+    #endif
+
     //map each parent node in a consecutively numbered way to build the stamp matrix
     int idGenerator = 0;
 
@@ -166,6 +177,15 @@ void Circuit::BuildCircuitMatrix(){
         }
 
     }
+    #ifdef _TIME__
+
+        auto end = std::chrono::steady_clock::now();
+        auto timediff = start-end;
+        
+        time += std::chrono::duration <double, std::milli> (timediff).count();
+        // std::cout << time << std::endl;
+    #endif
+
 
 
 }

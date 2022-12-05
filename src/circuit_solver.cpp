@@ -8,9 +8,13 @@
 
 #include <algorithm>
 
+#ifdef _TIME__
+    #include <chrono>
+#endif
+
 CircuitSolver::CircuitSolver(){
     _finished = false;
-    _time = 0;
+    _TIME = 0;
 }
 CircuitSolver::~CircuitSolver(){
 
@@ -49,6 +53,11 @@ void CircuitSolver::SetParentNodes(std::vector<std::shared_ptr<Node>> parentNode
 
 void CircuitSolver::Solve(){
 
+    #ifdef _TIME__
+        static double time = 0.0;
+        auto start = std::chrono::steady_clock::now();
+    #endif
+
     using namespace boost::numeric::ublas;
 
     permutation_matrix<size_t> pm(_circuitMatrix.size1());
@@ -69,10 +78,19 @@ void CircuitSolver::Solve(){
     } 
 
     IncrementTime();
+
+    #ifdef _TIME__
+
+        auto end = std::chrono::steady_clock::now();
+        auto timediff = start-end;
+        
+        time += std::chrono::duration <double, std::milli> (timediff).count();
+        std::cout << time << std::endl;
+    #endif
 }
 
 const double CircuitSolver::GetTimestep() const{
-    return _timestep;
+    return _TIMEstep;
 }
 
 bool CircuitSolver::GetFinishedState() const{
@@ -80,8 +98,8 @@ bool CircuitSolver::GetFinishedState() const{
 }
 
 void CircuitSolver::IncrementTime(){
-    _time += _timestep;
-    if(_time >= _runtime){
+    _TIME += _TIMEstep;
+    if(_TIME >= _runtime){
         _finished = true;
     }
 }

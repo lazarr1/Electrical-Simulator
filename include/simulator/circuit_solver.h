@@ -42,12 +42,12 @@ class CircuitSolver{
         void IncrementTime();
 
         //Timestep of simulation
-        const double _timestep = 0.01;
+        const double _TIMEstep = 0.01;
 
         //duration of simulation, will be able to be set
         const double _runtime = 100;
 
-        double _time;
+        double _TIME;
 
         bool _finished;
 

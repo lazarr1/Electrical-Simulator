@@ -11,6 +11,9 @@
 #include "simulator/capacitor.h"
 #include "simulator/inductor.h"
 
+
+
+
 Simulator::Simulator()
  : _numComponents(0), _numNodes(0), _solver(), _circuit(&_solver)
 {
