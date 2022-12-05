@@ -1,24 +1,24 @@
-#include "simulator/capacitor.h"
+#include "simulator/inductor.h"
 #include "simulator/node.h"
 
 
-Capacitor::Capacitor(std::string nameInput, CircuitSolver* sim)
+Inductor::Inductor(std::string nameInput, CircuitSolver* sim)
     : CircuitComponent::CircuitComponent(nameInput, 2, passiveDirection, sim) ,_eqCurrent(nameInput, sim), _eqRes(nameInput, sim)
 {
 
 }
 
-Capacitor::~Capacitor(){
+Inductor::~Inductor(){
 
 }
 
 
-void Capacitor::SetCapacitance(const double capacitance){
+void Inductor::SetInductance(const double inductance){
 
-    _capacitance = capacitance;
+    _inductance = inductance;
 
 
-    _eqRes.resistance = _solver->GetTimestep()/(2 * _capacitance);
+    _eqRes.resistance = _solver->GetTimestep()/(2 * _inductance);
     // std::cout << "This is the cap" <<  _eqRes.resistance << std::endl;
 
     //initially 0
@@ -26,7 +26,7 @@ void Capacitor::SetCapacitance(const double capacitance){
 
 }
 
-void Capacitor::Stamp(){
+void Inductor::Stamp(){
 
     // std::cout << _eqRes.resistance << std::endl;
     _eqRes.connectedNodes = connectedNodes;
@@ -40,12 +40,12 @@ void Capacitor::Stamp(){
 
 }
 
-void Capacitor::Update(){
+void Inductor::Update(){
 
     //Equivalent current source gets filled up
     double voltdiff = connectedNodes[0]->parent->voltage - connectedNodes[1]->parent->voltage;
 
-    _eqCurrent.current = -voltdiff/_eqRes.resistance;
+    _eqCurrent.current += voltdiff/_eqRes.resistance;
 
 
 }

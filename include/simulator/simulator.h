@@ -45,6 +45,8 @@ class Simulator{
 
         void CreateCapacitor(const double capacitance);
 
+        void CreateInductor(const double inductance);
+
         void GroundNode(std::string NodeName);
 
         void CreateConnection(std::string NodeName1, std::string NodeName2);

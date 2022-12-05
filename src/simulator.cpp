@@ -9,7 +9,7 @@
 #endif
 
 #include "simulator/capacitor.h"
-
+#include "simulator/inductor.h"
 
 Simulator::Simulator()
  : _numComponents(0), _numNodes(0), _solver(), _circuit(&_solver)
@@ -59,6 +59,28 @@ void Simulator::CreateCapacitor(const double capacitance){
     //update the simulator to store the new component
     _presentComponents[capacitor->GetName()] = capacitor; 
 }
+
+void Simulator::CreateInductor(const double inductance){
+    //Increment the count of current components;
+    _numComponents++;
+
+    //create a name for the resistor
+    std::string name("IN" + std::to_string(_numComponents));
+
+    //create a resistor with the given name
+    std::shared_ptr<Inductor> inductor = std::make_shared<Inductor>(name, &_solver);
+
+    AllocateNodes(inductor);
+
+    inductor->SetInductance(inductance);
+
+    //update the circuit to include the new component
+    _circuit.AddComponent(inductor);
+
+    //update the simulator to store the new component
+    _presentComponents[inductor->GetName()] = inductor; 
+}
+
 
 
 void Simulator::AllocateNodes(std::shared_ptr<CircuitComponent> component){

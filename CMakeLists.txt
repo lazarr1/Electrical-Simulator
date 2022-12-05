@@ -54,6 +54,7 @@ set(elec_sim_SOURCES
     src/circuit_solver.cpp
     src/current_source.cpp
     src/capacitor.cpp
+    src/inductor.cpp
 
 )
 
