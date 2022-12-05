@@ -69,7 +69,6 @@ void CircuitSolver::Solve(){
     } 
 
     IncrementTime();
-    // std::cout << _currentVector << std::endl;
 }
 
 const double CircuitSolver::GetTimestep() const{

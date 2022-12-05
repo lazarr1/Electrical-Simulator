@@ -28,7 +28,8 @@ class Capacitor : public CircuitComponent{
 
         double _capacitance;
 
-        bool _isTrapizodal;
+        //I think this logic will have to be implemented when AC stuff is added?
+        // bool _isTrapizodal;
 
         //Equvalient resistance and current when transformed to norton 
         // capacitance companion model 

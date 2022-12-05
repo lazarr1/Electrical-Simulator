@@ -88,13 +88,15 @@ int main(){
         
         
         // test.CreateConnection(std::string("N7"), std::string("N3"));
-        // test.CreateConnection(std::string("N6"), std::string("N7"));
+        test.CreateConnection(std::string("N6"), std::string("N7"));
 
         test.CreateConnection(std::string("N2"), std::string("N4"));
         test.CreateConnection(std::string("N2"), std::string("N8"));
         test.CreateConnection(std::string("N8"), std::string("N2"));
-        test.CreateConnection(std::string("N2"), std::string("N7"));
-        test.CreateConnection(std::string("N6"), std::string("N2"));
+
+        
+        // test.CreateConnection(std::string("N2"), std::string("N7"));
+        // test.CreateConnection(std::string("N6"), std::string("N2"));
 
 
 
