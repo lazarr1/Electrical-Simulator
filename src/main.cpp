@@ -5,7 +5,6 @@
 #include <string>
 
 
-
 int main(){
 
 
@@ -170,6 +169,42 @@ int main(){
         -100.000000000 
         */
 
+
+    }
+
+    {        
+        std::cout << "test case 4: VCCS" << std::endl;
+        Simulator test;
+
+        test.CreateCurrentSource(1);
+        test.CreateResistor(100.0);
+        test.CreateResistor(100.0);
+        test.CreateVccs(1);
+
+
+        test.CreateConnection(std::string("N1"), std::string("N3"));
+        test.CreateConnection(std::string("N9"), std::string("N5"));
+        
+        
+        test.CreateConnection(std::string("N1"), std::string("N7"));
+        // test.CreateConnection(std::string("N5"), std::string("N1"));
+
+        test.CreateConnection(std::string("N2"), std::string("N4"));
+        test.CreateConnection(std::string("N2"), std::string("N8"));
+    
+        test.CreateConnection(std::string("N6"), std::string("N10"));
+
+        test.CreateConnection(std::string("N2"), std::string("N10"));
+
+        test.GroundNode("N2");
+
+        // test.GroundNode("N6");
+
+
+
+        test.Simulate();
+
+        test.PrintComponents();
 
     }
 

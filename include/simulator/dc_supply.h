@@ -11,7 +11,7 @@ struct DCSupply: public CircuitComponent{
     // Resistor(std::string nameInput, std::shared_ptr<Node> positiveNode, std::shared_ptr<Node> negativeNode);
     // ~Resistor();
 
-    const int passiveIoPins = 2;
+    const int ioPins = 2;
 
     void Print() const;
     

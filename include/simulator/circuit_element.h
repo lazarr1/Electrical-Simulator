@@ -36,9 +36,6 @@ class CircuitComponent{
 
         std::string GetName() const;
 
-        
-        virtual void Update() = 0;
-
 
         //each component has a constant number of pins
         const int ioPins;
@@ -70,10 +67,8 @@ class Resistor: public CircuitComponent{
 
         double resistance;
 
-        void Update();
 
-
-        const int passiveIoPins = 2;
+        const int ioPins = 2;
 
         // void Print() const;
         

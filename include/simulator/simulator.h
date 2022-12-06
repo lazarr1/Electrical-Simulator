@@ -47,6 +47,8 @@ class Simulator{
 
         void CreateInductor(const double inductance);
 
+        void CreateVccs(const double conductance);
+
         void GroundNode(std::string NodeName);
 
         void CreateConnection(std::string NodeName1, std::string NodeName2);

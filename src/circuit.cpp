@@ -10,7 +10,7 @@ Circuit::Circuit(CircuitSolver* solver)
 }
 
 
-#ifdef _TIME__
+#ifdef __TIMER__
     // #include <time.h>
     #include <chrono>
 #endif
@@ -131,7 +131,7 @@ void Circuit::AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Nod
 void Circuit::BuildCircuitMatrix(){
 
 
-    #ifdef _TIME__
+    #ifdef __TIMER__
         static double time = 0.0;
         auto start = std::chrono::steady_clock::now();
     #endif
@@ -142,7 +142,7 @@ void Circuit::BuildCircuitMatrix(){
     bool grounded = false;
     std::vector<std::shared_ptr<Node>> parentNodes;
 
-    std::shared_ptr<Node> groundedNode;
+    std::vector<std::shared_ptr<Node>> groundedNodes;
 
     for(std::shared_ptr<Node> iNode : _nodes){
 
@@ -154,7 +154,7 @@ void Circuit::BuildCircuitMatrix(){
 
         //find the grounded node
         if(iNode->parent->grounded){
-            groundedNode = iNode->parent;
+            groundedNodes.push_back(iNode->parent);
             grounded = true;
         }
     }
@@ -163,8 +163,12 @@ void Circuit::BuildCircuitMatrix(){
     if(grounded){
         
         //add grounded node to the end
-        parentNodes.push_back(groundedNode);
-        groundedNode->id = idGenerator;
+
+        for(int iGrounded = 0; iGrounded < groundedNodes.size(); iGrounded++)
+        {
+            parentNodes.push_back(groundedNodes[iGrounded]);
+            groundedNodes[iGrounded]->id = idGenerator + iGrounded;
+        }
 
 
         //resize square matrix, do not keep the previous values
@@ -177,7 +181,7 @@ void Circuit::BuildCircuitMatrix(){
         }
 
     }
-    #ifdef _TIME__
+    #ifdef __TIMER__
 
         auto end = std::chrono::steady_clock::now();
         auto timediff = start-end;

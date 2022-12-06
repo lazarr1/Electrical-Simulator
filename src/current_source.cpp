@@ -20,6 +20,3 @@ void CurrentSource::Stamp(){
 
 }
 
-void CurrentSource::Update(){
-    //Do nothing, current source does not change
-}

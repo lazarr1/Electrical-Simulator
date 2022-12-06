@@ -19,7 +19,7 @@ if (${IS_DEBUG_BUILD})
 
     # Add to the code that this is a time
     if (${IS_TIME_BUILD})
-      add_compile_definitions(_TIME__)
+      add_compile_definitions(__TIMER__)
     endif ()
 endif ()
 
@@ -66,6 +66,7 @@ set(elec_sim_SOURCES
     src/current_source.cpp
     src/capacitor.cpp
     src/inductor.cpp
+    src/vccs.cpp
 
 )
 

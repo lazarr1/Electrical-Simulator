@@ -10,6 +10,7 @@
 
 #include "simulator/capacitor.h"
 #include "simulator/inductor.h"
+#include "simulator/vccs.h"
 
 
 
@@ -124,6 +125,31 @@ void Simulator::CreateCurrentSource(const double current){
     _presentComponents[cs->GetName()] = cs;
 
 }
+
+void Simulator::CreateVccs(const double conductance){
+    
+    //Increment the count of current components;
+    _numComponents++;
+
+    //create a name for the resistor
+    std::string name("vccs" + std::to_string(_numComponents));
+
+    //create a resistor with the given name
+    std::shared_ptr<VCCS> vccs = std::make_shared<VCCS>(name, &_solver);
+
+    AllocateNodes(vccs);
+
+    vccs->SetConductance(conductance);
+
+    //update the circuit to include the new component
+    _circuit.AddComponent(vccs);
+
+    //update the simulator to store the new component
+    _presentComponents[vccs->GetName()] = vccs;
+
+
+}
+
 
 
 

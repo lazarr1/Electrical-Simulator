@@ -44,6 +44,3 @@ void Resistor::Stamp(){
 
 }
 
-void Resistor::Update(){
-    //Do nothing, a resistor does not change with time
-}

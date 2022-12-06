@@ -16,7 +16,7 @@ class Capacitor : public CircuitComponent{
 
         void SetCapacitance(const double capacitance);
 
-        const int passiveIoPins = 2;
+        const int ioPins = 2;
 
         void Update();
 

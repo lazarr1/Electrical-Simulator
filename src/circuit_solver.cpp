@@ -8,13 +8,13 @@
 
 #include <algorithm>
 
-#ifdef _TIME__
+#ifdef __TIMER__
     #include <chrono>
 #endif
 
 CircuitSolver::CircuitSolver(){
     _finished = false;
-    _TIME = 0;
+    _time = 0;
 }
 CircuitSolver::~CircuitSolver(){
 
@@ -32,7 +32,9 @@ void CircuitSolver::Resize(const int size, const bool keepOld){
     }
 }
 
+//ith row, jth coloumn
 void CircuitSolver::StampMatrix(const int i, const int j, const double x){
+
     if((_parentNodes[i]->parent->grounded == false) &&  (_parentNodes[j]->parent->grounded == false)){
         _circuitMatrix(i,j) += x;
     }
@@ -53,7 +55,7 @@ void CircuitSolver::SetParentNodes(std::vector<std::shared_ptr<Node>> parentNode
 
 void CircuitSolver::Solve(){
 
-    #ifdef _TIME__
+    #ifdef __TIMER__
         static double time = 0.0;
         auto start = std::chrono::steady_clock::now();
     #endif
@@ -79,7 +81,7 @@ void CircuitSolver::Solve(){
 
     IncrementTime();
 
-    #ifdef _TIME__
+    #ifdef __TIMER__
 
         auto end = std::chrono::steady_clock::now();
         auto timediff = start-end;
@@ -90,7 +92,7 @@ void CircuitSolver::Solve(){
 }
 
 const double CircuitSolver::GetTimestep() const{
-    return _TIMEstep;
+    return _timestep;
 }
 
 bool CircuitSolver::GetFinishedState() const{
@@ -98,8 +100,8 @@ bool CircuitSolver::GetFinishedState() const{
 }
 
 void CircuitSolver::IncrementTime(){
-    _TIME += _TIMEstep;
-    if(_TIME >= _runtime){
+    _time += _timestep;
+    if(_time >= _runtime){
         _finished = true;
     }
 }

@@ -16,7 +16,7 @@ class Inductor : public CircuitComponent{
 
         void SetInductance(const double inductance);
 
-        const int passiveIoPins = 2;
+        const int ioPins = 2;
 
         void Update();
 
