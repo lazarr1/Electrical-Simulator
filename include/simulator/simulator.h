@@ -7,7 +7,7 @@
 #include "circuit_element.h"
 #include "circuit.h"
 
-
+#include "circuit_solver.h"
 
 
 
@@ -41,6 +41,14 @@ class Simulator{
 
         void CreateResistor(const double resistanceInput);
 
+        void CreateCurrentSource(const double current);
+
+        void CreateCapacitor(const double capacitance);
+
+        void CreateInductor(const double inductance);
+
+        void CreateVccs(const double conductance);
+
         void GroundNode(std::string NodeName);
 
         void CreateConnection(std::string NodeName1, std::string NodeName2);
@@ -53,11 +61,16 @@ class Simulator{
 
     private:
 
+        void AllocateNodes(std::shared_ptr<CircuitComponent> component);
+
+
         //The simulator keeps track of all its components
         int _numComponents;
         int _numNodes;
         std::unordered_map<std::string, std::shared_ptr<CircuitComponent>> _presentComponents;
         std::unordered_map<std::string, std::shared_ptr<Node>> _nodes;
+
+        CircuitSolver _solver;
 
         
         Circuit _circuit;

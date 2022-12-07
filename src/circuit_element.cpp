@@ -3,14 +3,8 @@
 #include "simulator/node.h"
 
 
-Impedance::Impedance(){
-    resistance = 0.0;
-    capacitance = 0.0 ;
-    inductance = 0.0;
-}
-
-CircuitComponent::CircuitComponent(std::string nameInput, int numioPins, const Direction * connectionDirections)
-    : name(nameInput), ioPins(numioPins), connectionDirection(connectionDirections)
+CircuitComponent::CircuitComponent(std::string nameInput, int numioPins, const Direction * connectionDirections, CircuitSolver* sim)
+    : ioPins(numioPins), connectionDirection(connectionDirections), name(nameInput), _solver(sim)
 {
 
 }
@@ -18,29 +12,35 @@ CircuitComponent::CircuitComponent(std::string nameInput, int numioPins, const D
 CircuitComponent::~CircuitComponent(){
 }
 
+std::string CircuitComponent::GetName() const{
+    return name;
+}
 
-
-// void CircuitComponent::Print() const{
-//     std::cout << name << std::endl;
-// }
-
-
-
-
-PassiveComponent::PassiveComponent(std::string nameInput)
-    : CircuitComponent::CircuitComponent(nameInput, 2, passiveDirection)  
+Resistor::Resistor(std::string nameInput, CircuitSolver* sim)
+    : CircuitComponent::CircuitComponent(nameInput, 2, passiveDirection, sim)  
 {
 
 }
 
 
-PassiveComponent::~PassiveComponent(){
+Resistor::~Resistor(){
     
 }
 void CircuitComponent::Print() const{
     std::cout << "Name: " << name << std::endl;
-    std::cout << "Resistance: " << impedance.resistance << std::endl;
-    std::cout << "Capacitance: " << impedance.capacitance << std::endl;
-    std::cout << "Inductance: " << impedance.inductance << std::endl;
+}
+
+void Resistor::Stamp(){
+
+    if(resistance != 0){
+        double addmittance = 1/resistance;
+
+        _solver->StampMatrix(connectedNodes[0]->parent->id, connectedNodes[0]->parent->id ,addmittance);
+        _solver->StampMatrix(connectedNodes[0]->parent->id, connectedNodes[1]->parent->id ,-addmittance);
+        _solver->StampMatrix(connectedNodes[1]->parent->id, connectedNodes[0]->parent->id ,-addmittance);
+        _solver->StampMatrix(connectedNodes[1]->parent->id, connectedNodes[1]->parent->id ,addmittance);
+
+    }
 
 }
+

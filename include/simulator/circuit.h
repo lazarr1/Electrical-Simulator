@@ -13,27 +13,23 @@
 
 #include "node.h"
 
-#include <boost/numeric/ublas/matrix.hpp>
 
 /*  Class: Circuit
- *      This class manages all the connections, it is a graph. It also builds the stamp matrices that must be solved
- *      to solve the circuit.
- *
+ *      This class manages all the connections, it is a graph. It also instructs the components to build the matrices for the circuit solver
+ *          It is how the computer envisions and understands how the circuit is connected.
  * 
  * 
  *      Member functions:
  *          -
  * 
  *  
- *     TOBE implemented:
- *          - Split into a circuit solver? this should just manage the connections maybe?
  * 
  */
 class Circuit{
 
     public:
 
-        Circuit();
+        Circuit(CircuitSolver* solver);
 
         void AddComponent(std::shared_ptr<CircuitComponent> component);
 
@@ -45,11 +41,11 @@ class Circuit{
 
         void BuildCircuitMatrix();
 
+        // void StampMatrix(const int i, const int j, const double x);
+
 
     private:
 
-        void StampResistor(const CircuitComponent resistor);
-        void StampMatrix(const int i, const int j, const double x);
 
 
         void AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
@@ -67,18 +63,15 @@ class Circuit{
         */
         std::map< std::shared_ptr<Node>, std::map< std::shared_ptr<CircuitComponent>, Direction > > _incidenceMatrix;
 
-
-        //This is the stamp matrix
-        /*
-            Addmittance matrix
-        */
-        boost::numeric::ublas::matrix<double> _circuitMatrix;
+        CircuitSolver * _solver;
 
         //store all the nodes and components
         std::unordered_set<std::shared_ptr<Node>> _nodes;
         std::unordered_set<std::shared_ptr<CircuitComponent>> _components;
 
-        std::vector<std::shared_ptr<Node>> _parentNodes;
+
+
+        // std::vector<std::shared_ptr<Node>> _parentNodes;
 
 
 };

@@ -7,6 +7,8 @@
 #include <iostream>
 // #include "node.h"
 
+#include "circuit_solver.h"
+
 
 enum Direction{
     In = -1,
@@ -16,69 +18,63 @@ enum Direction{
 
 struct Node;
 
-//Struct defining the impedance of a component
-struct Impedance{    
-
-    //default all values to 0
-    Impedance();
-
-
-    double resistance;
-    double capacitance;
-    double inductance;
-};
-
 
 
 
 //A abstract class for all circuit components to store all types of circuit elements in a circuit
 //All circuit components derive from this class
-struct CircuitComponent{
+class CircuitComponent{
+
+    public:
+        //Requires a name for every element
+        CircuitComponent(std::string nameInput, int numioPins, const Direction * connectionDirections, CircuitSolver* sim);
+
+        virtual ~CircuitComponent();
+        virtual void Stamp() = 0;
+
+        virtual void Print() const;
+
+        std::string GetName() const;
 
 
-    //Requires a name for every element
-    CircuitComponent(std::string nameInput, int numioPins, const Direction * connectionDirections);
+        //each component has a constant number of pins
+        const int ioPins;
 
-    virtual ~CircuitComponent();
+        //This porvides the interface for external classes like the nodes to know
+        //What direction things flow in the component and to know what nodes are connected.
+        const Direction * connectionDirection;
+        std::vector<std::shared_ptr<Node>> connectedNodes;
 
-    virtual void Print() const;
+    protected:
 
-    std::string name;
+        std::string name;
 
-
-    const int ioPins;
-    Impedance impedance;
-
-
-    const Direction * connectionDirection;
-    std::vector<std::shared_ptr<Node>> connectedNodes;
-
-
+        CircuitSolver* _solver;
 
 };
 
 
-// TO be moved to PassiveElement.h
+// TO be moved to resistor.h
 
-// class containing a passive component's properties
-struct PassiveComponent: public CircuitComponent{
+// class containing a resitor  properties
+class Resistor: public CircuitComponent{
 
+    public:
+        Resistor(std::string nameInput, CircuitSolver* sim);
+        ~Resistor();
 
-    PassiveComponent(std::string nameInput);
-    ~PassiveComponent();
+        void Stamp();
 
-    const int passiveIoPins = 2;
-
-    // void Print() const;
-    
-    //A node flows in a node flows out
-    const Direction passiveDirection[2] {In, Out};
+        double resistance;
 
 
-    // Impedance impedance;
+        const int ioPins = 2;
 
-    // const int positiveTerminal = 0;
-    // const int negativeTerminal = 1;
+        // void Print() const;
+        
+    private:
+        //A node flows in a node flows out
+        const Direction passiveDirection[2] {In, Out};
 
 };
 

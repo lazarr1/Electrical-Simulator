@@ -4,9 +4,16 @@
 #include <iomanip>
 #include <algorithm>
 
-Circuit::Circuit(){
+Circuit::Circuit(CircuitSolver* solver)
+{
+    _solver = solver;
 }
 
+
+#ifdef __TIMER__
+    // #include <time.h>
+    #include <chrono>
+#endif
 
 
 void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
@@ -118,105 +125,82 @@ void Circuit::AddNodeConnection(std::shared_ptr<Node> node1, std::shared_ptr<Nod
         _incidenceMatrix[node1][node2->connection] = node2->direction;
     }
 
-    // node2->parent = node1->parent;
 }
 
 
 void Circuit::BuildCircuitMatrix(){
 
+
+    #ifdef __TIMER__
+        static double time = 0.0;
+        auto start = std::chrono::steady_clock::now();
+    #endif
+
     //map each parent node in a consecutively numbered way to build the stamp matrix
     int idGenerator = 0;
 
     bool grounded = false;
-    _parentNodes.clear();
+    std::vector<std::shared_ptr<Node>> parentNodes;
 
-    std::shared_ptr<Node> groundedNode;
+    std::vector<std::shared_ptr<Node>> groundedNodes;
 
     for(std::shared_ptr<Node> iNode : _nodes){
 
         //only add parents and non-grounded nodes
         if(iNode->parent == iNode && iNode->parent->grounded == false){
             iNode->id = idGenerator++;
-            _parentNodes.push_back(iNode);
+            parentNodes.push_back(iNode);
         }
 
         //find the grounded node
         if(iNode->parent->grounded){
-            groundedNode = iNode->parent;
+            groundedNodes.push_back(iNode->parent);
             grounded = true;
         }
     }
-
-
-    //This is simply to check that the matrix is correct before grounding
-    #ifdef __DEBUG__
-        if(!grounded){
-        _circuitMatrix.resize(idGenerator,idGenerator, false);
-
-        for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
-            //if the component is a resistor
-            if(iComponent->name[0] == 'R'){
-                StampResistor(*iComponent);
-            }
-        }
-        }
-    #endif
 
     //If the circuit has not been grounded, then the simualtion cannot run
     if(grounded){
         
         //add grounded node to the end
-        _parentNodes.push_back(groundedNode);
-        groundedNode->id = idGenerator;
+
+        for(int iGrounded = 0; iGrounded < groundedNodes.size(); iGrounded++)
+        {
+            parentNodes.push_back(groundedNodes[iGrounded]);
+            groundedNodes[iGrounded]->id = idGenerator + iGrounded;
+        }
 
 
         //resize square matrix, do not keep the previous values
-        _circuitMatrix.resize(idGenerator,idGenerator, false);
+        _solver->Resize(idGenerator, false);
+        _solver->SetParentNodes(parentNodes);
 
 
         for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
-                //if the component is a resistor
-                if(iComponent->name[0] == 'R'){
-                    StampResistor(*iComponent);
-                }
+                iComponent->Stamp();
         }
+
     }
-    // std::cout << _circuitMatrix(0,0) << std::endl;
+    #ifdef __TIMER__
+
+        auto end = std::chrono::steady_clock::now();
+        auto timediff = start-end;
+        
+        time += std::chrono::duration <double, std::milli> (timediff).count();
+        // std::cout << time << std::endl;
+    #endif
+
+
 
 }
 
-void Circuit::StampResistor(const CircuitComponent resistor){
-
-    if(resistor.impedance.resistance == 0){
-        std::cout << "bad resistance" << std::endl;
-    }
-    else{
-        double addmittance = 1/resistor.impedance.resistance;
-
-        StampMatrix(resistor.connectedNodes[0]->parent->id, resistor.connectedNodes[0]->parent->id ,addmittance);
-        StampMatrix(resistor.connectedNodes[0]->parent->id, resistor.connectedNodes[1]->parent->id ,-addmittance);
-        StampMatrix(resistor.connectedNodes[1]->parent->id, resistor.connectedNodes[0]->parent->id ,-addmittance);
-        StampMatrix(resistor.connectedNodes[1]->parent->id, resistor.connectedNodes[1]->parent->id ,addmittance);
-    }
-
-}
-
-void Circuit::StampMatrix(const int i, const int j, const double x){
-
-
-    //Make sure that the node is not grounded:
-    if((_parentNodes[i]->parent->grounded == false) &&  (_parentNodes[j]->parent->grounded == false)){
-        _circuitMatrix(i,j) += x;
-    }
-
-}
 
 
 void Circuit::PrintIM(){
 
     std::cout << "__" ;
     for(auto j : _components){
-        std::cout <<" "<< j->name;
+        std::cout <<" "<< j->GetName();
     }
     std::cout << std::endl;
     for(auto i : _nodes){
@@ -242,17 +226,6 @@ void Circuit::PrintIM(){
             std::cout<<std::endl;
     }
 
-    std::cout << std::endl;
-
-    std::cout << _circuitMatrix.size1() << std::endl;
-    std::cout << _circuitMatrix.size2() << std::endl;
-
-    for(int i = 0; i < _circuitMatrix.size1(); i ++){
-        for(int j = 0; j < _circuitMatrix.size2(); j++){
-            std::cout << std::setprecision(4) << std::fixed;
-            std::cout << _circuitMatrix(i,j)<< " "; 
-        }
-        std::cout << std::endl;
-    }
+    _solver->Print();
 }
 
