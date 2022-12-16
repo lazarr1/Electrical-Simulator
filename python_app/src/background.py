@@ -14,7 +14,7 @@ class Background(Widget):
 
     
     def on_size(self, *args):
-        with self.canvas:
+        with self.canvas.before:
             Color(self._GREY,self._GREY,self._GREY,1)
 
             for iHLine in range(0, self.height, self._GAP):
