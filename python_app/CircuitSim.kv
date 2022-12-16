@@ -1,4 +1,4 @@
-Draw:
+MainWidget:
 
 <Background>:
 
@@ -9,8 +9,10 @@ Draw:
             pos: self.pos
             size: self.size
 
+#Where all the components will go
+<Workspace>:
 
-
+#Draw layer
 <Draw>:
 
     canvas:
@@ -19,5 +21,11 @@ Draw:
         size: root.width,root.height
 
 
+<MainWidget>:
+    Draw:
+        size: root.width,root.height
 
-    
+
+    Workspace:
+        id: workspace
+        size: root.width/3.5,root.height
