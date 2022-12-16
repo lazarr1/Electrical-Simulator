@@ -26,5 +26,7 @@ class Background(Widget):
                 lwidth = dp(1)
                 Line(points=(iVLine, 0, iVLine, self.height), width = lwidth)
             # for iVLine in range(0, self.height, 5):
+    def GetGap(self):
+        return self._GAP
 
 
