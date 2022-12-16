@@ -4,6 +4,7 @@ kivy.require('2.1.0')
 from kivy.app import App
 
 import src.background
+import src.draw
 
 
 
