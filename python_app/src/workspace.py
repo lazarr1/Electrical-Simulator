@@ -9,38 +9,65 @@ from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty
 from kivy.effects.scroll import ScrollEffect
 
+from kivy.uix.image import Image
+from kivy.uix.behaviors import ButtonBehavior  
+
+
+
+
+
 
 class Workspace(Widget):
+
     layout_content=ObjectProperty(None)
     layout = GridLayout(cols=3)
     scroll = ScrollView(size_hint=(1, None))
 
-
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+
         self.scroll.do_scroll_x = False
 
+        #Does not allow scrolling beyond the ScrollView boundaries.
         self.scroll.effect_cls = ScrollEffect
 
+        #Allow scrolling on the grid layout
         self.layout.size_hint = 1, None
-
         self.layout.bind(minimum_height=self.layout.setter('height'))
+
+        #Add widgets 
         self.scroll.add_widget(self.layout)
         self.add_widget(self.scroll)
-        for i in range(100):
-            btn = Button(text=str(i), size_hint_y=None, height=40)
-            self.layout.add_widget(btn)
+
+
+        self.layout.add_widget(Tools("src/images/current_source.png"))
+        self.layout.add_widget(Tools("src/images/resistor.png"))
+
 
 
     def on_size(self, *args):
         self.scroll.size = self.width, self.height
-        #test
 
-        pass
+    
 
-        
 
-# class Scroll(ScrollView):
-#     def __init__(self, **kwargs):
-#         super().__init__(**kwargs)
+class Tools(ButtonBehavior, Image):
+    
+
+    def __init__(self, src, **kwargs):
+        super().__init__(**kwargs)
+        self.source = src
+
+    def on_size(self, *args):
+        self.size_hint = None, None
+        self.size = self.width, dp(100)
+
+    def on_press(self):
+        print("Test")
+
+
+
+
+
+  

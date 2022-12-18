@@ -11,6 +11,12 @@ MainWidget:
 
 #Where all the components will go
 <Workspace>:
+    canvas.before:
+        Color:
+            rgba: (50, 50, 50 , 0.5)
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
 #Draw layer
 <Draw>:
@@ -26,6 +32,8 @@ MainWidget:
         size: root.width,root.height
 
 
+
     Workspace:
         id: workspace
         size: root.width/3.5,root.height
+
