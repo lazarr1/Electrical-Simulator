@@ -17,6 +17,7 @@ class Background(Widget):
         with self.canvas.before:
             Color(self._GREY,self._GREY,self._GREY,1)
 
+            #Draw grid lines
             for iHLine in range(0, self.height, self._GAP):
                 lwidth = dp(1)
                 Line(points=(0, iHLine, self.width, iHLine), width = lwidth)
@@ -25,7 +26,7 @@ class Background(Widget):
             for iVLine in range(0, self.width, self._GAP):
                 lwidth = dp(1)
                 Line(points=(iVLine, 0, iVLine, self.height), width = lwidth)
-            # for iVLine in range(0, self.height, 5):
+
     def GetGap(self):
         return self._GAP
 

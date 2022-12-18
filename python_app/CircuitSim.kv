@@ -23,14 +23,20 @@ MainWidget:
 
     canvas:
 
-    Background:
-        size: root.width,root.height
+<ComponentGraphic>:
+
 
 
 <MainWidget>:
-    Draw:
+    Background:
         size: root.width,root.height
+    
+    # Draw:
+    #     size: root.width,root.height
 
+    Graphics:
+        id: graphics
+        size: root.width,root.height
 
 
     Workspace:

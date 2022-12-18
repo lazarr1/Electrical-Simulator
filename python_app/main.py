@@ -8,6 +8,8 @@ from kivy.uix.widget import Widget
 import src.background
 import src.draw
 import src.workspace
+import src.component
+
 
 
 class MainWidget(Widget):
