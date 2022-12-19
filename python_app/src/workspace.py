@@ -1,9 +1,8 @@
 from kivy.uix.gridlayout import GridLayout
 from kivy.metrics import dp
-from kivy.graphics.vertex_instructions import Line
 from kivy.graphics import Color
 from kivy.uix.widget import Widget
-from kivy.uix.button import Button
+
 
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty
@@ -12,7 +11,7 @@ from kivy.effects.scroll import ScrollEffect
 from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior  
 
-
+from kivy.app import App
 
 
 
@@ -43,6 +42,7 @@ class Workspace(Widget):
 
         self.layout.add_widget(Tools("src/images/current_source.png"))
         self.layout.add_widget(Tools("src/images/resistor.png"))
+
 
 
 

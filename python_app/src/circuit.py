@@ -1,6 +1,6 @@
 from kivy.uix.floatlayout import FloatLayout
 from kivy.clock import Clock
-
+from .simulator import Simulator
 
 
 class CircuitGraphics(FloatLayout):
@@ -8,8 +8,10 @@ class CircuitGraphics(FloatLayout):
     _components = []
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
         Clock.schedule_interval(self.Update, 1/self._FPS)
+        sim = Simulator()
+        sim.SetCircuitGraph(self)
+
 
 
     def on_size(self, *args):
