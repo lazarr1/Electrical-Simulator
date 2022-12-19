@@ -20,6 +20,8 @@ class Simulator():
         #Ensures that is only initialised once
         if(self.__initialized): return
         self.__initialized = True
+
+        #Set up the frame update timer
         Clock.schedule_interval(self.Update, 1/self.__FPS)
 
     def Run(self):
@@ -32,11 +34,9 @@ class Simulator():
         pass
 
     def Update(self,dt):
+        self._circuitGraph.SetComponents(self.__components)
         if(self._circuitGraph):
             self._circuitGraph.Update(dt)
-
-    def AddComponent(self):
-        pass
 
     def SetCircuitGraph(self, graphics):
         self._circuitGraph = graphics

@@ -13,6 +13,8 @@ from kivy.uix.behaviors import ButtonBehavior
 
 from kivy.app import App
 
+from .component import Component
+
 
 
 
@@ -54,17 +56,19 @@ class Workspace(Widget):
 
 class Tools(ButtonBehavior, Image):
     
+    __src = None
 
     def __init__(self, src, **kwargs):
         super().__init__(**kwargs)
         self.source = src
+        self.__src = src
 
     def on_size(self, *args):
         self.size_hint = None, None
         self.size = self.width, dp(100)
 
     def on_press(self):
-        print("Test")
+        Component(self.__src)
 
 
 

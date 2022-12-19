@@ -6,13 +6,13 @@ from .simulator import Simulator
 class CircuitGraphics(FloatLayout):
     _FPS = 60
     _components = []
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        Clock.schedule_interval(self.Update, 1/self._FPS)
+
+        #inform the simulator of the graphical interface
         sim = Simulator()
         sim.SetCircuitGraph(self)
-
-
 
     def on_size(self, *args):
         pass
