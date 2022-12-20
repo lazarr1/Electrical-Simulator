@@ -11,6 +11,8 @@ class ComponentGraphic(DragBehavior, Image):
     __width = dp(50)
     __height = dp(100)
 
+    __spawn = (dp(100))
+
     def __init__(self,src, **kwargs):
         super(ComponentGraphic, self).__init__(**kwargs)
         self.source = src
