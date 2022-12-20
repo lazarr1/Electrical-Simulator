@@ -4,7 +4,6 @@ from .simulator import Simulator
 
 
 class CircuitGraphics(FloatLayout):
-    _FPS = 60
     _components = []
 
     def __init__(self, **kwargs):

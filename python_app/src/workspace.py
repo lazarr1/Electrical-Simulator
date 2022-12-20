@@ -44,6 +44,7 @@ class Workspace(Widget):
 
         self.layout.add_widget(Tools("src/images/current_source.png"))
         self.layout.add_widget(Tools("src/images/resistor.png"))
+        self.layout.add_widget(Tools("src/images/node.png"))
 
 
 

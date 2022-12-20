@@ -24,8 +24,6 @@ class Simulator():
         #Set up the frame update timer
         Clock.schedule_interval(self.Update, 1/self.__FPS)
 
-    def Run(self):
-        self._circuitGraph.SetComponents(self.__components)
 
     def AddComponents(self, Component):
         self.__components.append(Component)
@@ -34,10 +32,10 @@ class Simulator():
         pass
 
     def Update(self,dt):
-        self._circuitGraph.SetComponents(self.__components)
-        if(self._circuitGraph):
-            self._circuitGraph.Update(dt)
+        self.__circuitGraph.SetComponents(self.__components)
+        if(self.__circuitGraph):
+            self.__circuitGraph.Update(dt)
 
     def SetCircuitGraph(self, graphics):
-        self._circuitGraph = graphics
+        self.__circuitGraph = graphics
 
