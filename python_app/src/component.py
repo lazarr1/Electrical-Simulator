@@ -18,7 +18,7 @@ class ComponentGraphic(DragBehavior, Image):
         self.source = src
         # self.pos_hint = None
 
-        self.pos = (110,0)
+        self.pos = (dp(220),0)
    
    
     def on_size(self, *args):
