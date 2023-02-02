@@ -23,13 +23,18 @@ class CircuitComponent {
 
     
     this.id = id;
+    this.terminals = terminals
     this.circles = [];
-    for (let i = 0; i < terminals; i++) {
-      let x = 10 + i * 20;
-      let y = 10 + i * 20;
-      this.circles.push(new CircleComponent(x, y));
-    }
 
+    this.offsetLeft = 20;
+    this.offsetTop = 20;
+    this.offsetHeight = 20;
+
+    for (let i = 0; i < this.terminals; i++) {
+      let x = this.offsetLeft + (i + 1) * 20;
+      let y = this.offsetTop + this.offsetHeight + 20;
+      this.circles.push(new Circle(x, y));
+    }
 
     this.element = document.createElement("div");
     this.element.innerHTML = `Circuit Component ${this.id}`;
@@ -63,23 +68,34 @@ class CircuitComponent {
   onMouseMove(event) {
     this.element.style.left = `${event.clientX - this.initialX}px`;
     this.element.style.top = `${event.clientY - this.initialY}px`;
+
+
+    for (let i = 0; i < this.terminals; i++) {
+      this.circles[i].follow(event);
+    }
   }
 }
   
 
   
-class CircleComponent {
+class Circle {
   constructor(x, y) {
-    this.x = x;
-    this.y = y;
+    this.xoffset = x;
+    this.yoffset = y;
     this.element = document.createElement("div");
-    this.element.style.backgroundColor = "white";
+    this.element.classList.add('node');
+    this.element.style.backgroundColor = "red";
     this.element.style.borderRadius = "50%";
     this.element.style.width = "10px";
     this.element.style.height = "10px";
     this.element.style.position = "absolute";
-    this.element.style.left = `${x}px`;
-    this.element.style.top = `${y}px`;
+    this.element.style.left = `${this.xoffset}px`;
+    this.element.style.top = `${this.yoffset}px`;
     document.body.appendChild(this.element);
+  }
+
+  follow(event) {
+    this.element.style.left = `${event.clientX  + this.xoffset}px`;
+    this.element.style.top = `${event.clientY  + this.yoffset}px`;
   }
 }
