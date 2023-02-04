@@ -1,8 +1,22 @@
-.div{
-    background-color : blue;
-    /* padding : "10px";
-    margin :"10px";
-    cursor : "pointer";
-    position : "absolute"; */
-    border : lightblue;
+.node{
+    background-color : red;
+    border-radius : 50%;
+    width : 10px;
+    height : 10px;
+    position : absolute;
+}
+
+.StaticCircuitComponent{
+    background-color : lightgray;
+    padding : 10px;
+    margin : 10px;
+    cursor : pointer;
+}
+
+.CircuitComponent{
+    background-color:  lightgray;
+    padding : 10px;
+    margin : 10px;
+    cursor : pointer;
+    position : absolute;
 }
