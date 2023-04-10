@@ -70,12 +70,12 @@ class CircuitComponent {
   }
 
   onMouseMove(event) {
+
     this.element.style.left = `${event.clientX - this.initialX}px`;
     this.element.style.top = `${event.clientY - this.initialY}px`;
 
-
     for (let i = 0; i < this.terminals; i++) {
-      this.circles[i].follow(event);
+      this.circles[i].updatePos(event.clientX - this.initialX, event.clientY - this.initialY);
     }
   }
 }

@@ -13,11 +13,16 @@ class Node {
 
       document.body.appendChild(this.element);
     }
-  
-    follow(event) {
-      this.element.style.left = `${event.clientX  + this.xoffset}px`;
-      this.element.style.top = `${event.clientY  + this.yoffset}px`;
+
+    updatePos(x,y){
+      this.element.style.left = `${x  + this.xoffset}px`;
+      this.element.style.top = `${y  + this.yoffset}px`;
     }
+  
+    // follow(event) {
+    //   this.element.style.left = `${event.clientX  + this.xoffset}px`;
+    //   this.element.style.top = `${event.clientY  + this.yoffset}px`;
+    // }
 
     onClick(){
         
