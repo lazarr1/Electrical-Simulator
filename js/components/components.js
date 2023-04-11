@@ -1,21 +1,12 @@
 import Node from './nodes.js';
 
 class CircuitComponent {
-  constructor(id, type, terminals, wm) {
+  constructor(id, terminals, type) {
 
     this.id = id;
+    this.terminals = terminals;
 
-
-
-    this.terminals = terminals
-    this.circles = [];
-
-    for (let i = 0; i < this.terminals; i++) {
-      //Position Nodes Correctly
-      let x = (i) * 125;
-      let y = 30;
-      this.circles.push(new Node(x, y, this,wm));
-    }
+    this.nodes = [];
 
     this.element = document.createElement("div");
     this.element.classList.add("CircuitComponent");
@@ -52,7 +43,7 @@ class CircuitComponent {
     this.element.style.top = `${event.clientY - this.initialY}px`;
 
     for (let i = 0; i < this.terminals; i++) {
-      this.circles[i].updatePos(event.clientX - this.initialX, event.clientY - this.initialY);
+      this.nodes[i].updatePos(event.clientX - this.initialX, event.clientY - this.initialY);
     }
   }
 }

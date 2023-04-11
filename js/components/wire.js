@@ -1,9 +1,6 @@
 class WireManager{
 
     constructor(){
-
-
-
         this.node1 = undefined;
         this.node2 = undefined;
         this.drawing = false;
@@ -17,13 +14,7 @@ class WireManager{
     }
 
     mouseDown(event){
-        // if(this.drawing){
-        //     this.drawing = false;
-        //     return;
-        // }
-        // else{
-        //     this.drawing = true;
-        // }
+
     }
 
     mouseUp(event){
@@ -63,8 +54,6 @@ export default WireManager
 class Wire{
 
     constructor(node1,node2){
-        // this.canvas = document.getElementById("canvas");
-        // this.ctx = this.canvas.getContext('2d');  
 
         this.xline = document.createElement("div");
         this.xline.classList.add('wire');
@@ -92,9 +81,6 @@ class Wire{
         const deltaX = this.end[0] - this.start[0];
         const deltaY = this.end[1] - this.start[1];
 
-        // console.log(this.xline.style.top);
-        // console.log(deltaY);
-
         if(deltaX >= 0){        
             this.xline.style.top = `${this.end[1]}px`;
             this.xline.style.left = `${this.start[0]}px`;
@@ -118,10 +104,6 @@ class Wire{
         this.xline.style.width = `${Math.abs(deltaX)}px`;
         this.yline.style.height = `${Math.abs(deltaY)}px`;
 
-        // this.ctx.beginPath();
-        // this.ctx.moveTo(this.start[0], this.start[1]);
-        // this.ctx.lineTo(this.end[0], this.end[1]);
-        // this.ctx.stroke();
     }
 
     handleMove(event){

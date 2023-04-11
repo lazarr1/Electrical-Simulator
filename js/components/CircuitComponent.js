@@ -18,7 +18,7 @@ class StaticCircuitComponent {
 
 
   onClick() {
-    this.crc.createNewComponent(this.type, 2);
+    // this.crc.createNewComponent(this.type, 2);
   }
 }
 
@@ -30,8 +30,22 @@ class Resistor extends StaticCircuitComponent{
     // this.element.classList.add("Resistor");
   }
 
+  onClick(){
+    this.crc.createNewResistor();
+  }
+
 }
 
-export {StaticCircuitComponent, Resistor}
+class DCurrent extends StaticCircuitComponent{
+  constructor(id, circuit){
+    super(id,circuit,"DCurrent");
+  }
+
+  onClick(){
+    this.crc.createNewDCurrent();
+  }
+}
+
+export {StaticCircuitComponent, Resistor, DCurrent}
 
   

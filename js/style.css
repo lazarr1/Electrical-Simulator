@@ -7,13 +7,9 @@
 }
 
 .StaticCircuitComponent{
-    /* background-color : lightgray;  */
     padding : 10px;
     margin : 10px;
     cursor : pointer;
-
-    /* background-image : url('components/images/resistor.png'); */
-
 }
 
 .Resistor{
@@ -23,8 +19,14 @@
     height: 25px;
 }
 
+.DCurrent{
+    background-image : url('components/images/currentsource.png');
+    background-size: 75px;
+    width: 65px;
+    height: 55px;
+}
+
 .CircuitComponent{
-    /* background-color:  lightgray; */
     padding : 10px;
     margin : 15px;
     cursor : pointer;
