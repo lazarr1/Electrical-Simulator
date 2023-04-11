@@ -1,0 +1,44 @@
+.node{
+    background-color : black;
+    border-radius : 50%;
+    width : 10px;
+    height : 10px;
+    position : absolute;
+}
+
+.StaticCircuitComponent{
+    padding : 10px;
+    margin : 10px;
+    cursor : pointer;
+}
+
+.Resistor{
+    background-image : url('components/images/resistor.png');
+    background-size: 100px;
+    width: 75px;
+    height: 25px;
+}
+
+.DCurrent{
+    background-image : url('components/images/currentsource.png');
+    background-size: 75px;
+    width: 65px;
+    height: 55px;
+}
+
+.CircuitComponent{
+    padding : 10px;
+    margin : 15px;
+    cursor : pointer;
+    position : absolute;
+}
+
+.wire {
+    position: fixed;
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+
+}
+div:active {
+    background-color: rgb(19, 122, 163);
+  }
