@@ -19,7 +19,7 @@ class Circuit{
 
         //str(type + idGenerator++)
 
-        this.Components[this.idGenerator +1] = new CircuitComponent(++this.idGenerator, 2, this.wireManager)
+        this.Components[this.idGenerator +1] = new CircuitComponent(++this.idGenerator,type, 2, this.wireManager)
     }
 
     

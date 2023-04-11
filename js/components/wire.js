@@ -2,36 +2,57 @@ class WireManager{
 
     constructor(){
 
-        // this.element = document.createElement("div");
-        // this.element.classList.add("WireManager");
 
-        this.startX = undefined;
-        this.startY = undefined;
-        
-        this.canvas = document.getElementById("canvas");
+
+        this.node1 = undefined;
+        this.node2 = undefined;
+        this.drawing = false;
 
         this.connections = {};
 
-        //listen to all mouse ups
-        // document.addEventListener('mouseup', this.mouseUp);
+        //listen to all mouse ups and downs
+        document.addEventListener('mousedown', this.mouseDown);
+        document.addEventListener('mouseup', this.mouseUp);
 
     }
-    mouseUp(event){
 
+    mouseDown(event){
+        // if(this.drawing){
+        //     this.drawing = false;
+        //     return;
+        // }
+        // else{
+        //     this.drawing = true;
+        // }
+    }
+
+    mouseUp(event){
+        this.drawing = false;
     }
 
     Start(node1){
+        if(this.drawing){
+            this.drawing = false;
+            return;
+        }
+        else{
+            this.drawing = true;
+        }
         this.node1 = node1
     }
 
     End(node2){
+        if(!this.drawing){
+            return;
+        }
+
+        this.drawing = false;
         this.node2 = node2;
 
         // console.log(node2);
-        if(this.node1 && this.node2){
-            console.log("good");
-            this.connections[this.node1] = new Wire(this.node1,this.node2);
-        }
+
+        this.connections[this.node1] = new Wire(this.node1,this.node2);
+
         // this.connections[node2] = new Wire(node1,node2);
 
     }
