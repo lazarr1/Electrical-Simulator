@@ -28,17 +28,24 @@ class Node {
 
     }
 
+    getPos(){
+      return [parseInt(this.element.style.left),parseInt(this.element.style.top)];
+    }
+
     updatePos(x,y){
       //Keep the position relative to the component constant
       this.element.style.left = `${x  + this.xoffset}px`;
       this.element.style.top = `${y  + this.yoffset}px`;
 
-      this.startX = this.element.style.left;
-      this.startY = this.element.style.top;
+      // this.startX = this.element.style.left;
+      // this.startY = this.element.style.top;
+
+        const nodeMove = new CustomEvent("node_move", {detail:{ pos: this.getPos() }});
+        this.element.dispatchEvent(nodeMove);
     }
 
     mouseDown(event){
-      this.wm.Start(this.startX, this.startY);
+      this.wm.Start(this);
         // console.log("click");
         // const StartDrawing = new CustomEvent("draw", {detail:{ startX: this.startX, startY : this.startY }});
         // this.element.dispatchEvent(StartDrawing);
@@ -46,6 +53,10 @@ class Node {
         
     }
 
+    listenNodeMove(wire){
+      this.element.addEventListener("node_move", wire.handleMove.bind(wire));
+
+    }
     // handleDraw(event){
     //   // console.log("drawing");
     //   // console.log(event.detail.startX);
@@ -56,7 +67,7 @@ class Node {
     // }
 
     mouseUp(event) {
-      this.wm.End(this.startX, this.startY);
+      this.wm.End(this);
 
       // console.log("Drawin");
       // const endX = this.element.style.left;
