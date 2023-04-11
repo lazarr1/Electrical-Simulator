@@ -11,36 +11,35 @@ class WireManager{
         document.addEventListener('mousedown', this.mouseDown);
         document.addEventListener('mouseup', this.mouseUp);
 
-    }
+        document.addEventListener('mousemove', this.mouseMove);
 
-    mouseDown(event){
 
     }
+    // mouseMove(event){
 
-    mouseUp(event){
-        this.drawing = false;
-    }
+    // }
+
+    // mouseDown(event){
+
+    // }
+
+    // mouseUp(event){
+    //     this.drawing = false;
+    // }
 
     Start(node1){
-        if(this.drawing){
-            this.drawing = false;
-            return;
-        }
-        else{
-            this.drawing = true;
-        }
+        // this.drawing = true;
         this.node1 = node1
     }
 
     End(node2){
-        if(!this.drawing){
-            return;
-        }
+        // if(!this.drawing){
+        //     return;
+        // }
 
-        this.drawing = false;
+        // this.drawing = false;
         this.node2 = node2;
 
-        // console.log(node2);
 
         this.connections[this.node1] = new Wire(this.node1,this.node2);
 
