@@ -8,8 +8,9 @@ cmake_minimum_required(VERSION 3.10)
 project(Circuit-Simulator)
 
 
-set(IS_DEBUG_BUILD CMAKE_BUILD_TYPE STREQUAL "Debug")
-# set(IS_TIME_BUILD CMAKE_BUILD_TYPE STREQUAL "Timing")
+#Change 1 to 0 if not debug
+set(IS_DEBUG_BUILD 1)
+# set(IS_TIME_BUILD 1)
 
 
 # Indication to the code that this is a debug build
