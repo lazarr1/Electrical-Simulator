@@ -15,36 +15,16 @@ class WireManager{
 
 
     }
-    // mouseMove(event){
-
-    // }
-
-    // mouseDown(event){
-
-    // }
-
-    // mouseUp(event){
-    //     this.drawing = false;
-    // }
 
     Start(node1){
-        // this.drawing = true;
         this.node1 = node1
+
+        
     }
 
     End(node2){
-        // if(!this.drawing){
-        //     return;
-        // }
-
-        // this.drawing = false;
         this.node2 = node2;
-
-
         this.connections[this.node1] = new Wire(this.node1,this.node2);
-
-        // this.connections[node2] = new Wire(node1,node2);
-
     }
 }
 
@@ -115,3 +95,4 @@ class Wire{
 
 
 }
+

@@ -1,9 +1,9 @@
 import WireManager from "./wire.js";
 
 class Node {
-    constructor(x, y, component, wireManager) {
+    constructor(x, y, component, wireManager, id) {
 
-
+      this.id = id
       this.xoffset = x;
       this.yoffset = y;
 
@@ -43,6 +43,15 @@ class Node {
       //Send node location to the wire Manager
       this.wm.Start(this);
         
+    }
+
+    rotateNodes(){
+      let temp = this.xoffset;
+      this.xoffset = this.yoffset;
+      this.yoffset = temp;
+
+      // this.updatePos(0,0);
+
     }
 
     listenNodeMove(wire){
