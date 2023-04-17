@@ -80,10 +80,12 @@ add_library(circ_sim_lib ${elec_sim_SOURCES})
 add_executable(simulator src/main.cpp)
 target_link_libraries(simulator circ_sim_lib ${Boost_LIBRARIES}) 
 
+add_executable(websocket src/websocket.cpp)
+target_link_libraries(websocket ${Boost_LIBRARIES})
 
 ###################
 #BUILD 
 install(TARGETS simulator DESTINATION ${DIVISIBLE_INSTALL_BIN_DIR} )
 
-
+install(TARGETS websocket DESTINATION ${DIVISIBLE_INSTALL_BIN_DIR})
 
