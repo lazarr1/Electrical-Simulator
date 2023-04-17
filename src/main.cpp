@@ -1,6 +1,6 @@
 #include <iostream>
-#include "simulator/circuit_element.h"
-#include "simulator/circuit.h"
+// #include "simulator/circuit_element.h"
+// #include "simulator/circuit.h"
 #include "simulator/simulator.h"
 #include <string>
 
