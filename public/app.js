@@ -5,5 +5,3 @@ const circuit = new Circuit();
 
 const component = new Resistor(1, circuit);
 const DCurrentTool = new DCurrent(2, circuit);
-
-

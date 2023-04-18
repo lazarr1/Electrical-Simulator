@@ -22,8 +22,8 @@ class Circuit{
 
         for (let i = 0; i < 2; i++) {
             //Position Nodes Correctly
-            let x = (i) * 125;
-            let y = 30;
+            let x = (i) * 90;
+            let y = 12.5;
             let nNode = new Node(x,y, newComp, this.wireManager, this.nodeIDGenerator++);
             newComp.nodes.push(nNode);
             this.nodes[this.nodeIDGenerator++] = nNode
@@ -38,8 +38,8 @@ class Circuit{
 
         for (let i = 0; i < 2; i++) {
             //Position Nodes Correctly
-            let x = 47.5;
-            let y = (i) * 100;
+            let x = 32.5;
+            let y = (i) * 75;
             let nNode = new Node(x,y, newComp, this.wireManager, this.nodeIDGenerator++);
             newComp.nodes.push(nNode);
             this.nodes[this.nodeIDGenerator++] = nNode

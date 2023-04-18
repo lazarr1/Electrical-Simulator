@@ -34,10 +34,9 @@ class CircuitComponent {
       this.rotation += 90;
       this.element.style.transform = `rotate(${this.rotation}deg)`;
 
-      this.nodes.forEach(function(node){
-        console.log("test");
-        node.rotateNodes();
-      })
+      // this.nodes.forEach(function(node){
+      //   node.rotateNodes();
+      // })
 
     }
   }
@@ -74,7 +73,7 @@ class CircuitComponent {
     this.element.style.top = `${event.clientY - this.initialY}px`;
 
     for (let i = 0; i < this.terminals; i++) {
-      this.nodes[i].updatePos(event.clientX - this.initialX, event.clientY - this.initialY);
+      this.nodes[i].updatePos();
     }
   }
 }
