@@ -4,8 +4,8 @@ class Node {
     constructor(x, y, component, wireManager, id) {
 
       this.id = id
-      // this.x = x;
-      // this.y = y;
+      this.x = x;
+      this.y = y;
 
       this.element = document.createElement("div");
       this.element.classList.add('node');
@@ -25,9 +25,8 @@ class Node {
 
     getPos(){
 
-      let x = parseInt(this.parent.element.style.left);
-      let y = parseInt(this.parent.element.style.top);
-
+      let x = parseInt(this.parent.element.offsetLeft) + this.x;
+      let y = parseInt(this.parent.element.offsetTop) + this.y
       return [x,y];
     }
 
@@ -43,13 +42,13 @@ class Node {
       this.wm.Start(this);
     }
 
-    // rotateNodes(){
+    rotateNodes(){
+      // let temp = this.x;
+      // this.x = this.y;
+      // this.y = temp;
+
       
-    //   // let temp = this.xoffset;
-    //   // this.xoffset = this.yoffset;
-    //   // this.yoffset = temp;
-      
-    // }
+    }
 
     listenNodeMove(wire){
 

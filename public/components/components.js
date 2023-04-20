@@ -34,9 +34,9 @@ class CircuitComponent {
       this.rotation += 90;
       this.element.style.transform = `rotate(${this.rotation}deg)`;
 
-      // this.nodes.forEach(function(node){
-      //   node.rotateNodes();
-      // })
+      this.nodes.forEach(function(node){
+        node.rotateNodes();
+      })
 
     }
   }
