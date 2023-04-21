@@ -2,7 +2,7 @@
 #include <boost/beast/websocket.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <iostream>
-#include "simulator/simulator.h"
+#include "simulator/router.h"
 
 namespace beast = boost::beast;             // from <boost/beast.hpp>
 namespace http = beast::http;               // from <boost/beast/http.hpp>
@@ -10,8 +10,18 @@ namespace websocket = beast::websocket;     // from <boost/beast/websocket.hpp>
 namespace net = boost::asio;                // from <boost/asio.hpp>
 using tcp = boost::asio::ip::tcp;           // from <boost/asio/ip/tcp.hpp>
 
-int main()
-{
+
+void ProcessMessage(std::string message){
+
+
+
+
+}
+
+
+int main(){
+    
+    Router router;
     // The io_context is required for all I/O
     net::io_context ioc;
 
@@ -31,16 +41,15 @@ int main()
             // Accept the WebSocket handshake
             ws.accept();
 
-            // Receive a message
-            beast::flat_buffer buffer;
-            ws.read(buffer);
-            std::cout << "Received message: " << beast::make_printable(buffer.data()) << std::endl;
+            while(ws.is_open()){
+                // Receive a message
+                beast::flat_buffer buffer;
+                ws.read(buffer);
+                std::cout << "Received message: " << beast::make_printable(buffer.data()) << std::endl;
 
-            // Send a message back to the client
-            ws.write(net::buffer("Hello, world!"));
-
-            // Close the WebSocket session
-            ws.close(websocket::close_code::normal);
+                // Send a message back to the client
+                // ws.write(net::buffer("Hello, world!"));
+            }
         } catch (const std::exception& e) {
             std::cerr << "Error: " << e.what() << std::endl;
         }

@@ -30,7 +30,7 @@ endif ()
 
 
 
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++20)
 
 # Enable group projects in folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -68,6 +68,8 @@ set(elec_sim_SOURCES
     src/capacitor.cpp
     src/inductor.cpp
     src/vccs.cpp
+    src/router.cpp
+    src/circuithandler.cpp
 
 )
 
