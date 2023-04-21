@@ -39,6 +39,7 @@
     border-left: 2px solid black;
 
 }
+
 div:active {
     background-color: rgb(19, 122, 163);
-  }
+}

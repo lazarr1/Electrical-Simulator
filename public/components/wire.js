@@ -1,3 +1,4 @@
+import {hline, vline} from './line.js'
 class WireManager{
 
     constructor(){
@@ -15,36 +16,16 @@ class WireManager{
 
 
     }
-    // mouseMove(event){
-
-    // }
-
-    // mouseDown(event){
-
-    // }
-
-    // mouseUp(event){
-    //     this.drawing = false;
-    // }
 
     Start(node1){
-        // this.drawing = true;
         this.node1 = node1
+
+        
     }
 
     End(node2){
-        // if(!this.drawing){
-        //     return;
-        // }
-
-        // this.drawing = false;
         this.node2 = node2;
-
-
         this.connections[this.node1] = new Wire(this.node1,this.node2);
-
-        // this.connections[node2] = new Wire(node1,node2);
-
     }
 }
 
@@ -54,19 +35,17 @@ class Wire{
 
     constructor(node1,node2){
 
-        this.xline = document.createElement("div");
-        this.xline.classList.add('wire');
-        document.body.appendChild(this.xline);
 
-        this.yline = document.createElement("div");
-        this.yline.classList.add('wire');
-        document.body.appendChild(this.yline);
 
         this.node1 = node1;
         this.node2 = node2;
         
         this.start = node1.getPos();
         this.end = node2.getPos();
+
+        this.xline = new hline(this.start, this.end);
+        this.yline = new vline(this.start, this.end);
+
 
         node1.listenNodeMove(this);
         node2.listenNodeMove(this);
@@ -77,32 +56,8 @@ class Wire{
 
     Draw(){
 
-        const deltaX = this.end[0] - this.start[0];
-        const deltaY = this.end[1] - this.start[1];
-
-        if(deltaX >= 0){        
-            this.xline.style.top = `${this.end[1]}px`;
-            this.xline.style.left = `${this.start[0]}px`;
-        }
-        else{
-            this.xline.style.top = `${this.end[1]}px`;
-            this.xline.style.left = `${this.end[0]}px`;
-        }
-
-        if(deltaY <= 0){
-            this.yline.style.left = `${this.start[0]}px`;
-            this.yline.style.top = `${this.end[1]}px`;
-        }
-        else{
-            this.yline.style.left = `${this.start[0]}px`;
-            this.yline.style.top = `${this.start[1]}px`;
-        }
-
-
-    
-        this.xline.style.width = `${Math.abs(deltaX)}px`;
-        this.yline.style.height = `${Math.abs(deltaY)}px`;
-
+        this.xline.Draw();
+        this.yline.Draw();
     }
 
     handleMove(event){
@@ -110,8 +65,14 @@ class Wire{
         this.start = this.node1.getPos();
         this.end = this.node2.getPos();
 
+        this.xline.updateStart(this.start);
+        this.xline.updateEnd(this.end);
+        this.yline.updateStart(this.start);
+        this.yline.updateEnd(this.end);
+
         this.Draw();
     }
 
 
 }
+

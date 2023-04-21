@@ -12,10 +12,38 @@ class CircuitComponent {
     this.element.classList.add("CircuitComponent");
     this.element.classList.add(type);
 
+    this.rotation = 0;
+
+    this.handleKeyDown = this.handleKeyDown.bind(this);
 
     this.element.addEventListener("mousedown", this.onMouseDown.bind(this));
     document.body.appendChild(this.element);
 
+    this.element.addEventListener("mouseover", this.OnMouseOver.bind(this));
+
+  }
+
+  OnMouseOver(){
+    document.addEventListener("keydown", this.handleKeyDown);
+    this.element.addEventListener("mouseleave", this.onMouseLeave.bind(this));
+  }
+
+  handleKeyDown(event){
+
+    if(event.keyCode === 82){
+      this.rotation += 90;
+      this.element.style.transform = `rotate(${this.rotation}deg)`;
+
+      this.nodes.forEach(function(node){
+        node.rotateNodes();
+      })
+
+    }
+  }
+
+  onMouseLeave(){
+    document.removeEventListener("keydown",this.handleKeyDown);
+    this.element.removeEventListener("mouseleave", this.onMouseLeave.bind(this));
   }
 
   onMouseDown(event) {
@@ -28,6 +56,8 @@ class CircuitComponent {
 
     document.addEventListener("mouseup", this.mouseUpListener);
     document.addEventListener("mousemove", this.mouseMoveListener);
+
+
   }
 
 
@@ -43,7 +73,7 @@ class CircuitComponent {
     this.element.style.top = `${event.clientY - this.initialY}px`;
 
     for (let i = 0; i < this.terminals; i++) {
-      this.nodes[i].updatePos(event.clientX - this.initialX, event.clientY - this.initialY);
+      this.nodes[i].updatePos();
     }
   }
 }
