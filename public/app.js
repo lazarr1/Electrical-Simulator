@@ -1,28 +1,9 @@
 import  {Resistor, DCurrent} from './components/staticComponent.js';
 import Circuit from './components/circuit.js'; 
+import Client from './client/client.js';
 
-
-const socket = new WebSocket('ws://localhost:8080');
-
-socket.addEventListener('open', function (event) {
-  socket.send('Hello Server!');
-});
-
-socket.addEventListener('message', function (event) {
-  console.log('Message from server: ', event.data);
-});
-
-socket.addEventListener('close', function (event) {
-  console.log('Connection closed.');
-});
-
-socket.addEventListener('error', function (event) {
-  console.error('WebSocket error:', event);
-});
-
-// socket.send("Hello")
-
-const circuit = new Circuit();
+const client = new Client()
+const circuit = new Circuit(client);
 
 const component = new Resistor(1, circuit);
 const DCurrentTool = new DCurrent(2, circuit);

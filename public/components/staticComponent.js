@@ -35,7 +35,7 @@ class Resistor extends StaticCircuitComponent{
 
 class DCurrent extends StaticCircuitComponent{
   constructor(id, circuit){
-    super(id,circuit,"DCurrent");
+    super(id,circuit,"DCCurrent");
   }
 
   onClick(){

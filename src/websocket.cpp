@@ -11,16 +11,10 @@ namespace net = boost::asio;                // from <boost/asio.hpp>
 using tcp = boost::asio::ip::tcp;           // from <boost/asio/ip/tcp.hpp>
 
 
-void ProcessMessage(std::string message){
-
-
-
-
-}
 
 
 int main(){
-    
+
     Router router;
     // The io_context is required for all I/O
     net::io_context ioc;
@@ -45,11 +39,19 @@ int main(){
                 // Receive a message
                 beast::flat_buffer buffer;
                 ws.read(buffer);
+
                 std::cout << "Received message: " << beast::make_printable(buffer.data()) << std::endl;
+
+                
+                std::string message = beast::buffers_to_string(buffer.data());
+
+                router.RouteMessage(message);
 
                 // Send a message back to the client
                 // ws.write(net::buffer("Hello, world!"));
             }
+
+
         } catch (const std::exception& e) {
             std::cerr << "Error: " << e.what() << std::endl;
         }

@@ -11,10 +11,15 @@ class CircuitHandler{
 
         void HandleAddConnection(std::string& message );
 
+        void GetVoltage(std::string& message);
 
 
     private:
         Simulator _sim;
+
+        const double defaultResistance = 100;
+
+        const double defaultDCC = 1;
 };
 
 

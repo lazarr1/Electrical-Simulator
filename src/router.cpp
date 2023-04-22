@@ -19,10 +19,10 @@ void Router::RouteMessage(std::string& message ){
         message_type = message.substr(0, colon_pos);
         message_data = message.substr(colon_pos + 1);
 
-        if(message_type == "add_component"){
+        if(message_type == "add component"){
             _circuit.HandleAddComponent(message_data);
         }
-        if(message_type == "add_connection"){
+        if(message_type == "add connection"){
             _circuit.HandleAddConnection(message_data);
         }
         else{
