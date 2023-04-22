@@ -55,6 +55,8 @@ class Simulator{
 
         void RemoveConnection(std::string NodeName);
 
+        double GetNodeVoltage(std::string NodeName);
+
         void PrintComponents();
 
         void Simulate();

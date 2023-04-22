@@ -214,35 +214,6 @@ int main(){
 
 
 
-
-    #ifdef __RELEASE__
-
-    Simulator test;
-    char x[100];
-
-    while(std::cin >> x){
-        if(x[0]== 'r'){
-            test.CreateResistor(100.0);
-        }
-        else if(x[0] == 'c'){
-            test.CreateConnection(std::string("N" + std::to_string( x[1]-48 )), std::string("N" + std::to_string( x[2]-48 )));
-        }
-        else if(x[0] == 'p'){
-            test.PrintComponents();
-        }
-        else if(x[0] == 'd'){
-            test.RemoveConnection(std::string("N" + std::to_string(x[1] - 48)));
-        }
-        
-        test.Simulate();
-        
-    }
-    #endif
-
-
-
-
-
     return 0;
 
 }

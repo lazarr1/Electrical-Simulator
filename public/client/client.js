@@ -33,7 +33,7 @@ class Client{
     }
 
     SendCreateMessage(ComponentType){
-        this.socket.send("Create"+ComponentType);
+        this.socket.send("add component:"+ComponentType);
     }
 
 

@@ -11,8 +11,9 @@ class CircuitHandler{
 
         void HandleAddConnection(std::string& message );
 
-        void GetVoltage(std::string& message);
+        void GetNodeVoltage(std::string& message);
 
+        void GroundNode(std::string& message);
 
     private:
         Simulator _sim;

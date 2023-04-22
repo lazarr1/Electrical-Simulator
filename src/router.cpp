@@ -15,6 +15,8 @@ void Router::RouteMessage(std::string& message ){
     //message_type:data
     std::size_t colon_pos = message.find(':');
 
+
+
     if (colon_pos != std::string::npos) {
         message_type = message.substr(0, colon_pos);
         message_data = message.substr(colon_pos + 1);
@@ -22,16 +24,16 @@ void Router::RouteMessage(std::string& message ){
         if(message_type == "add component"){
             _circuit.HandleAddComponent(message_data);
         }
-        if(message_type == "add connection"){
+        else if(message_type == "add connection"){
             _circuit.HandleAddConnection(message_data);
         }
         else{
-            std::cout << "Received invalid message: " << message << std::endl; 
+            std::cout << "Received invalid message, unkown command: " << message << std::endl; 
         }
 
     } 
     else {
         // Handle invalid messages
-        std::cerr << "Received invalid message: " << message << std::endl;
+        std::cerr << "Received invalid message, missing colon: " << message << std::endl;
     }
 }
