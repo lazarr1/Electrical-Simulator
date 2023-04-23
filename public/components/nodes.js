@@ -59,7 +59,7 @@ class Node {
 
     mouseUp(event) {
       event.stopPropagation();
-      //Tell the wire manager the location of the wire
+      // Tell the wire manager the location of the node
       this.wm.End(this);
     }
 }

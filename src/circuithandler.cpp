@@ -41,7 +41,7 @@ void CircuitHandler::HandleAddConnection(std::string& message){
 }
 
 void CircuitHandler::GetNodeVoltage(std::string& message){
-    _sim.GetNodeVoltage(message);
+    std::cout << _sim.GetNodeVoltage(message) << std::endl;
 
     
 }
