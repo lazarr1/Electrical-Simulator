@@ -181,6 +181,11 @@ void Simulator::RemoveConnection(std::string NodeName){
 
 }
 
+double Simulator::GetNodeVoltage(std::string NodeName){
+    if(_nodes.count(NodeName))
+        return _nodes[NodeName]->parent->voltage;
+}
+
 void Simulator::Simulate(){
 
     while(!_solver.GetFinishedState()){

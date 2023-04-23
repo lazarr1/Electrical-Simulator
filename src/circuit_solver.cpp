@@ -67,8 +67,10 @@ void CircuitSolver::Solve(){
     lu_substitute(_circuitMatrix, pm, _currentVector);
 
     int i = 0;
+    //Getting the voltage of nodes from the vector 
     for(std::shared_ptr<Node> iNodes : _parentNodes){
         if(iNodes->grounded == false){
+
             iNodes->parent->voltage = _currentVector[i++];
             // std::cout << iNodes->parent->voltage << std::endl;
 

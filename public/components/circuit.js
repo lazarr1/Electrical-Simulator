@@ -4,7 +4,8 @@ import Node from "./nodes.js";
 
 class Circuit{
 
-    constructor(){
+    constructor(client){
+        this.client = client;
         this.idGenerator = 1;
         this.nodeIDGenerator = 1;
 
@@ -17,7 +18,8 @@ class Circuit{
     }
 
     createNewResistor(){
-        let newComp = new CircuitComponent(this.idGenerator++,2,"Resistor");
+        const type = "Resistor"
+        let newComp = new CircuitComponent(this.idGenerator++,2,type);
         this.Components[this.idGenerator -1] = newComp;
 
         for (let i = 0; i < 2; i++) {
@@ -29,11 +31,13 @@ class Circuit{
             this.nodes[this.nodeIDGenerator++] = nNode
         }
 
+        this.client.SendCreateMessage(type);
+
     }
 
     createNewDCurrent(){
-        
-        let newComp = new CircuitComponent(this.idGenerator++,2,"DCurrent");
+        const type = "DCCurrent"
+        let newComp = new CircuitComponent(this.idGenerator++,2,type);
         this.Components[this.idGenerator -1] = newComp;
 
         for (let i = 0; i < 2; i++) {
@@ -45,6 +49,7 @@ class Circuit{
             this.nodes[this.nodeIDGenerator++] = nNode
         }
 
+        this.client.SendCreateMessage(type);
 
     }
 
