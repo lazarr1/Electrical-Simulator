@@ -68,9 +68,9 @@ class CircuitComponent {
   }
 
   onMouseMove(event) {
-
-    this.element.style.left = `${event.clientX - this.initialX}px`;
-    this.element.style.top = `${event.clientY - this.initialY}px`;
+    
+    this.element.style.left = `${Math.round((event.clientX - this.initialX)/20) *20}px`;
+    this.element.style.top = `${Math.round((event.clientY - this.initialY)/20)*20}px`;
 
     for (let i = 0; i < this.terminals; i++) {
       this.nodes[i].updatePos();
