@@ -34,7 +34,7 @@
 }
 
 .wire {
-    position: fixed;
+    position: absolute;
     border-top: 2px solid black;
     border-left: 2px solid black;
 

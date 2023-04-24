@@ -1,11 +1,12 @@
 import {hline, vline} from './line.js'
+
 class WireManager{
 
     constructor(){
-        this.node1 = undefined;
-        this.node2 = undefined;
-        this.drawing = false;
 
+        //This will store the node that is currently being drawn
+
+        this.currentlyDrawing = undefined;
         this.connections = {};
 
         //listen to all mouse ups and downs
@@ -18,14 +19,13 @@ class WireManager{
     }
 
     Start(node1){
-        this.node1 = node1
 
-        
+        this.connections[node1] = new Wire(node1);
     }
 
     End(node2){
-        this.node2 = node2;
-        this.connections[this.node1] = new Wire(this.node1,this.node2);
+        // this.node2 = node2;
+        // this.connections[this.node1] = new Wire(this.node1,this.node2);
     }
 }
 
@@ -33,45 +33,67 @@ export default WireManager
 
 class Wire{
 
-    constructor(node1,node2){
+    constructor(node1){
+        this.connections = {}
+        if(node1 !== undefined){
+            this.connections[node1] = node1;
+        }
+        this.defined = false;
+        this.drawing = true;
 
-
-
-        this.node1 = node1;
-        this.node2 = node2;
-        
         this.start = node1.getPos();
-        this.end = node2.getPos();
 
-        this.xline = new hline(this.start, this.end);
-        this.yline = new vline(this.start, this.end);
+        this.handleMouseMoveBound = this.handleMouseMove.bind(this);
+        this.handleMouseUpBound = this.handleMouseUp.bind(this);
 
-
-        node1.listenNodeMove(this);
-        node2.listenNodeMove(this);
-
-        this.Draw();
+        document.addEventListener("mouseup",  this.handleMouseUpBound);
+        document.addEventListener("mousemove", this.handleMouseMoveBound);
+        this.element = document.createElement('wireParent');
 
     }
+    handleMouseUp(){
+        this.drawing = false;
+        document.removeEventListener("mouseup",  this.handleMouseUpBound);
+        document.removeEventListener("mousemove",this.handleMouseMoveBound);
 
+    }
     Draw(){
-
-        this.xline.Draw();
-        this.yline.Draw();
+        if(this.hline !== undefined){
+            this.hline.Draw();
+        }
+        if(this.vline !== undefined){
+            this.vline.Draw();
+        }
     }
 
-    handleMove(event){
+    handleMouseMove(event){
+        this.end = [event.clientX, event.clientY];
 
-        this.start = this.node1.getPos();
-        this.end = this.node2.getPos();
+        if(!this.defined){
+            if(this.end[0] !== this.start[0]){
 
-        this.xline.updateStart(this.start);
-        this.xline.updateEnd(this.end);
-        this.yline.updateStart(this.start);
-        this.yline.updateEnd(this.end);
+                this.defined = true;
+                this.hline = new hline(this.start,this.end,this,true);
+                this.vline = new vline(this.start,this.end,this,false);
+            }
+            else if(this.end[1] !== this.start[1]){
+                this.vline = new vline(this.start,this.end,this,true);
+                this.hline = new hline(this.start,this.end,this,false);
+                this.defined = true;
+            }
+        }
+        else{
 
+            this.hline.updateEnd(this.end);
+            this.vline.updateEnd(this.end);
+        }
+
+  
         this.Draw();
+
     }
+
+
 
 
 }

@@ -27,6 +27,8 @@ class Node {
 
       let x = parseInt(this.parent.element.offsetLeft) + this.x;
       let y = parseInt(this.parent.element.offsetTop) + this.y
+
+
       return [x,y];
     }
 
@@ -43,10 +45,9 @@ class Node {
     }
 
     rotateNodes(){
-      // let temp = this.x;
-      // this.x = this.y;
-      // this.y = temp;
-
+      // let temp = this.y;
+      // this.y = this.x;
+      // this.x = temp;
       
     }
 
