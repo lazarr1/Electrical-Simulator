@@ -41,7 +41,10 @@ class Wire{
         this.defined = false;
         this.drawing = true;
 
-        this.start = node1.getPos();
+        let x = node1.getPos()[0]; 
+        let y = node1.getPos()[1];
+
+        this.start = [Math.round(x/20)*20, Math.round(y/20)*20]
 
         this.handleMouseMoveBound = this.handleMouseMove.bind(this);
         this.handleMouseUpBound = this.handleMouseUp.bind(this);
@@ -67,7 +70,9 @@ class Wire{
     }
 
     handleMouseMove(event){
-        this.end = [event.clientX, event.clientY];
+        this.end = [Math.round(event.clientX/20)*20, Math.round(event.clientY/20)*20];
+        console.log(this.end);
+        console.log(this.start);
 
         if(!this.defined){
             if(this.end[0] !== this.start[0]){

@@ -43,3 +43,10 @@
 div:active {
     background-color: rgb(19, 122, 163);
 }
+
+body {
+    background-size: 20px 20px;
+    background-image:
+      linear-gradient(to right, rgb(189, 189, 193) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(189, 189, 193) 1px, transparent 1px);
+  }
