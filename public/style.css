@@ -7,8 +7,8 @@
 }
 
 .StaticCircuitComponent{
-    padding : 10px;
-    margin : 10px;
+    /* padding : 10px;
+    margin : 10px; */
     cursor : pointer;
 }
 
@@ -20,15 +20,15 @@
 }
 
 .DCCurrent{
-    background-image : url('components/images/currentsource.png');
-    background-size: 75px;
-    width: 65px;
-    height: 55px;
+    background-image : url('components/images/DCCurrent.png');
+    /* background-size: 41px 80px; */
+    width: 41px;
+    height: 80px;
 }
 
 .CircuitComponent{
-    padding : 10px;
-    margin : 15px;
+    /* padding : 10px;
+    margin : 15px; */
     cursor : pointer;
     position : absolute;
 }
