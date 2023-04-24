@@ -17,9 +17,9 @@
 
 .Resistor{
     background-image : url('components/images/resistor.png');
-    background-size: 100px;
-    width: 75px;
-    height: 25px;
+
+    width: 41px;
+    height: 80px;
 }
 
 .DCCurrent{
