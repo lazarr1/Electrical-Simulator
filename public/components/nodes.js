@@ -24,29 +24,29 @@ class Node {
     }
 
     getPos(){
-
-      let x = parseInt(this.parent.element.offsetLeft) + this.x;
-      let y = parseInt(this.parent.element.offsetTop) + this.y
-      return [x,y];
+      return [this.x,this.y];
     }
 
-    updatePos(){
+    updatePos(event){
       //Tell any wires attatched, that the node has moved
+      this.x = Math.round(event.clientX/20) * 20;
+      this.y = Math.round(event.clientY/20) * 20;
       const nodeMove = new CustomEvent("node_move", {detail:{ pos: this.getPos() }});
       this.element.dispatchEvent(nodeMove);
     }
 
     mouseDown(event){
       event.stopPropagation();
+      this.x = Math.round(event.clientX/20) * 20;
+      this.y = Math.round(event.clientY/20) * 20;
       //Send node location to the wire Manager
       this.wm.Start(this);
     }
 
     rotateNodes(){
-      // let temp = this.x;
-      // this.x = this.y;
-      // this.y = temp;
-
+      // let temp = this.y;
+      // this.y = this.x;
+      // this.x = temp;
       
     }
 
