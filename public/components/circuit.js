@@ -4,9 +4,10 @@ import Node from "./nodes.js";
 
 class Circuit{
 
-    constructor(){
-        this.idGenerator = 0;
-        this.nodeIDGenerator = 0;
+    constructor(client){
+        this.client = client;
+        this.idGenerator = 1;
+        this.nodeIDGenerator = 1;
 
         this.Components = {};
         this.nodes = {};
@@ -16,41 +17,39 @@ class Circuit{
 
     }
 
-    createNewComponent(type, nodeCount){
-
-        this.Components[this.idGenerator +1] = new CircuitComponent(++this.idGenerator,type, 2, this.wireManager)
-
-    }
-
     createNewResistor(){
-        let newComp = new CircuitComponent(this.idGenerator++,2,"Resistor");
+        const type = "Resistor"
+        let newComp = new CircuitComponent(this.idGenerator++,2,type);
         this.Components[this.idGenerator -1] = newComp;
 
         for (let i = 0; i < 2; i++) {
             //Position Nodes Correctly
-            let x = (i) * 125;
-            let y = 30;
-            let nNode = new Node(x,y, newComp, this.wireManager);
+            let x = 20.5;
+            let y = i * 80;
+            let nNode = new Node(x,y, newComp, this.wireManager, this.nodeIDGenerator++);
             newComp.nodes.push(nNode);
-            this.nodes[this.nodeIDGenerator++] = nNode
+            this.nodes[this.nodeIDGenerator] = nNode
         }
+
+        this.client.SendCreateMessage(type);
 
     }
 
     createNewDCurrent(){
-        
-        let newComp = new CircuitComponent(this.idGenerator++,2,"DCurrent");
+        const type = "DCCurrent"
+        let newComp = new CircuitComponent(this.idGenerator++,2,type);
         this.Components[this.idGenerator -1] = newComp;
 
         for (let i = 0; i < 2; i++) {
             //Position Nodes Correctly
-            let x = 47.5;
-            let y = (i) * 100;
-            let nNode = new Node(x,y, newComp, this.wireManager);
+            let x = 20.5;
+            let y = (i) * 80;
+            let nNode = new Node(x,y, newComp, this.wireManager, this.nodeIDGenerator++);
             newComp.nodes.push(nNode);
-            this.nodes[this.nodeIDGenerator++] = nNode
+            this.nodes[this.nodeIDGenerator] = nNode
         }
 
+        this.client.SendCreateMessage(type);
 
     }
 

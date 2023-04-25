@@ -1,10 +1,12 @@
+import {hline, vline} from './line.js'
+
 class WireManager{
 
     constructor(){
-        this.node1 = undefined;
-        this.node2 = undefined;
-        this.drawing = false;
 
+        //This will store the node that is currently being drawn
+
+        this.currentlyDrawing = undefined;
         this.connections = {};
 
         //listen to all mouse ups and downs
@@ -15,36 +17,15 @@ class WireManager{
 
 
     }
-    // mouseMove(event){
-
-    // }
-
-    // mouseDown(event){
-
-    // }
-
-    // mouseUp(event){
-    //     this.drawing = false;
-    // }
 
     Start(node1){
-        // this.drawing = true;
-        this.node1 = node1
+
+        this.connections[node1] = new Wire(node1);
     }
 
     End(node2){
-        // if(!this.drawing){
-        //     return;
-        // }
-
-        // this.drawing = false;
-        this.node2 = node2;
-
-
-        this.connections[this.node1] = new Wire(this.node1,this.node2);
-
-        // this.connections[node2] = new Wire(node1,node2);
-
+        // this.node2 = node2;
+        // this.connections[this.node1] = new Wire(this.node1,this.node2);
     }
 }
 
@@ -52,66 +33,72 @@ export default WireManager
 
 class Wire{
 
-    constructor(node1,node2){
+    constructor(node1){
+        this.connections = {}
+        if(node1 !== undefined){
+            this.connections[node1] = node1;
+        }
+        this.defined = false;
+        this.drawing = true;
 
-        this.xline = document.createElement("div");
-        this.xline.classList.add('wire');
-        document.body.appendChild(this.xline);
+        let x = node1.getPos()[0]; 
+        let y = node1.getPos()[1];
 
-        this.yline = document.createElement("div");
-        this.yline.classList.add('wire');
-        document.body.appendChild(this.yline);
+        this.start = [Math.round(x/20)*20, Math.round(y/20)*20]
 
-        this.node1 = node1;
-        this.node2 = node2;
-        
-        this.start = node1.getPos();
-        this.end = node2.getPos();
+        this.handleMouseMoveBound = this.handleMouseMove.bind(this);
+        this.handleMouseUpBound = this.handleMouseUp.bind(this);
 
-        node1.listenNodeMove(this);
-        node2.listenNodeMove(this);
-
-        this.Draw();
+        document.addEventListener("mouseup",  this.handleMouseUpBound);
+        document.addEventListener("mousemove", this.handleMouseMoveBound);
+        this.element = document.createElement('wireParent');
 
     }
+    handleMouseUp(){
+        this.drawing = false;
+        document.removeEventListener("mouseup",  this.handleMouseUpBound);
+        document.removeEventListener("mousemove",this.handleMouseMoveBound);
 
+    }
     Draw(){
-
-        const deltaX = this.end[0] - this.start[0];
-        const deltaY = this.end[1] - this.start[1];
-
-        if(deltaX >= 0){        
-            this.xline.style.top = `${this.end[1]}px`;
-            this.xline.style.left = `${this.start[0]}px`;
+        if(this.hline !== undefined){
+            this.hline.Draw();
         }
-        else{
-            this.xline.style.top = `${this.end[1]}px`;
-            this.xline.style.left = `${this.end[0]}px`;
+        if(this.vline !== undefined){
+            this.vline.Draw();
         }
-
-        if(deltaY <= 0){
-            this.yline.style.left = `${this.start[0]}px`;
-            this.yline.style.top = `${this.end[1]}px`;
-        }
-        else{
-            this.yline.style.left = `${this.start[0]}px`;
-            this.yline.style.top = `${this.start[1]}px`;
-        }
-
-
-    
-        this.xline.style.width = `${Math.abs(deltaX)}px`;
-        this.yline.style.height = `${Math.abs(deltaY)}px`;
-
     }
 
-    handleMove(event){
+    handleMouseMove(event){
+        this.end = [Math.round(event.clientX/20)*20, Math.round(event.clientY/20)*20];
 
-        this.start = this.node1.getPos();
-        this.end = this.node2.getPos();
 
+        if(!this.defined){
+            if(this.end[0] !== this.start[0]){
+
+                this.defined = true;
+                this.hline = new hline(this.start,this.end,this,true);
+                this.vline = new vline(this.start,this.end,this,false);
+            }
+            else if(this.end[1] !== this.start[1]){
+                this.vline = new vline(this.start,this.end,this,true);
+                this.hline = new hline(this.start,this.end,this,false);
+                this.defined = true;
+            }
+        }
+        else{
+
+            this.hline.updateEnd(this.end);
+            this.vline.updateEnd(this.end);
+        }
+
+  
         this.Draw();
+
     }
+
+
 
 
 }
+

@@ -1,15 +1,15 @@
 import WireManager from "./wire.js";
 
 class Node {
-    constructor(x, y, component, wireManager) {
+    constructor(x, y, component, wireManager, id) {
 
-
-      this.xoffset = x;
-      this.yoffset = y;
+      this.id = id
+      this.x = x;
+      this.y = y;
 
       this.element = document.createElement("div");
       this.element.classList.add('node');
-      document.body.appendChild(this.element);
+      component.element.appendChild(this.element);
 
 
       this.element.style.left = `${x}px`;
@@ -21,28 +21,33 @@ class Node {
       this.parent = component;
       this.wm = wireManager;
 
-
-
     }
 
     getPos(){
-      return [parseInt(this.element.style.left),parseInt(this.element.style.top)];
+      return [this.x,this.y];
     }
 
-    updatePos(x,y){
-      //Keep the position relative to the component constant
-      this.element.style.left = `${x  + this.xoffset}px`;
-      this.element.style.top = `${y  + this.yoffset}px`;
-
+    updatePos(event){
       //Tell any wires attatched, that the node has moved
+      this.x = Math.round(event.clientX/20) * 20;
+      this.y = Math.round(event.clientY/20) * 20;
       const nodeMove = new CustomEvent("node_move", {detail:{ pos: this.getPos() }});
       this.element.dispatchEvent(nodeMove);
     }
 
     mouseDown(event){
+      event.stopPropagation();
+      this.x = Math.round(event.clientX/20) * 20;
+      this.y = Math.round(event.clientY/20) * 20;
       //Send node location to the wire Manager
       this.wm.Start(this);
-        
+    }
+
+    rotateNodes(){
+      // let temp = this.y;
+      // this.y = this.x;
+      // this.x = temp;
+      
     }
 
     listenNodeMove(wire){
@@ -53,7 +58,8 @@ class Node {
     }
 
     mouseUp(event) {
-      //Tell the wire manager the location of the wire
+      event.stopPropagation();
+      // Tell the wire manager the location of the node
       this.wm.End(this);
     }
 }
