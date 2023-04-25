@@ -31,7 +31,12 @@ class CircuitComponent {
   handleKeyDown(event){
 
     if(event.keyCode === 82){
-      this.rotation += 90;
+      if(this.rotation == 360){
+        this.rotation = 0
+      }
+      else{
+        this.rotation += 90;
+      }
       this.element.style.transform = `rotate(${this.rotation}deg)`;
 
       this.nodes.forEach(function(node){
@@ -73,7 +78,7 @@ class CircuitComponent {
     this.element.style.top = `${Math.round((event.clientY - this.initialY)/20)*20}px`;
 
     for (let i = 0; i < this.terminals; i++) {
-      this.nodes[i].updatePos();
+      this.nodes[i].updatePos(event);
     }
   }
 }

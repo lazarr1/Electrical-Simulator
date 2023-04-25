@@ -28,7 +28,7 @@ class Circuit{
             let y = i * 80;
             let nNode = new Node(x,y, newComp, this.wireManager, this.nodeIDGenerator++);
             newComp.nodes.push(nNode);
-            this.nodes[this.nodeIDGenerator++] = nNode
+            this.nodes[this.nodeIDGenerator] = nNode
         }
 
         this.client.SendCreateMessage(type);
@@ -46,7 +46,7 @@ class Circuit{
             let y = (i) * 80;
             let nNode = new Node(x,y, newComp, this.wireManager, this.nodeIDGenerator++);
             newComp.nodes.push(nNode);
-            this.nodes[this.nodeIDGenerator++] = nNode
+            this.nodes[this.nodeIDGenerator] = nNode
         }
 
         this.client.SendCreateMessage(type);

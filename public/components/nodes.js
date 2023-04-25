@@ -24,12 +24,7 @@ class Node {
     }
 
     getPos(){
-
-      let x = parseInt(this.parent.element.offsetLeft) + this.x;
-      let y = parseInt(this.parent.element.offsetTop) + this.y
-
-
-      return [x,y];
+      return [this.x,this.y];
     }
 
     updatePos(){
@@ -40,6 +35,8 @@ class Node {
 
     mouseDown(event){
       event.stopPropagation();
+      this.x = Math.round(event.clientX/20) * 20;
+      this.y = Math.round(event.clientY/20) * 20;
       //Send node location to the wire Manager
       this.wm.Start(this);
     }

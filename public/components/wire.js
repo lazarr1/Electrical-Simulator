@@ -71,8 +71,7 @@ class Wire{
 
     handleMouseMove(event){
         this.end = [Math.round(event.clientX/20)*20, Math.round(event.clientY/20)*20];
-        console.log(this.end);
-        console.log(this.start);
+
 
         if(!this.defined){
             if(this.end[0] !== this.start[0]){
