@@ -27,8 +27,10 @@ class Node {
       return [this.x,this.y];
     }
 
-    updatePos(){
+    updatePos(event){
       //Tell any wires attatched, that the node has moved
+      this.x = Math.round(event.clientX/20) * 20;
+      this.y = Math.round(event.clientY/20) * 20;
       const nodeMove = new CustomEvent("node_move", {detail:{ pos: this.getPos() }});
       this.element.dispatchEvent(nodeMove);
     }

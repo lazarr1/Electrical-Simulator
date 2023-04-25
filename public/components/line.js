@@ -8,13 +8,23 @@ class line{
         this.start = start;
         this.end = end;
 
+        this.wire = wire;
+
         this.offset = offset;
         // wire.element.appendChild(this.line);
 
         // this.element.addEventListener("mousedown", this.onMouseDown.bind(this))
+        this.line.addEventListener("mouseover", this.OnMouseOver.bind(this));
 
     }
+    OnMouseOver(){
+        this.line.addEventListener("mouseleave", this.onMouseLeave.bind(this));
+    }
 
+
+    onMouseLeave(){
+        this.line.removeEventListener("mouseleave", this.onMouseLeave.bind(this));
+    }
     Draw(){
         //Virtual function
     }

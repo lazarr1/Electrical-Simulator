@@ -47,6 +47,15 @@ div:active {
     background-color: rgb(19, 122, 163);
 }
 
+.node:hover{
+    background-color: rgb(19, 122, 163);
+}
+
+.wire:hover{
+    border-top: 2px solid blue;
+    border-left: 2px solid blue;
+}
+
 body {
     background-size: 20px 20px;
     background-image:
