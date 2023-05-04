@@ -1,5 +1,13 @@
 import {hline, vline} from './line.js'
 
+class wireNode{
+    constructor(x,y,nodes){
+        this.x = x;
+        this.y = y;
+        
+    }
+}
+
 class WireManager{
 
     constructor(){
@@ -7,13 +15,14 @@ class WireManager{
         //This will store the node that is currently being drawn
 
         this.currentlyDrawing = undefined;
-        this.connections = {};
+        this.connections = {}; // Key : (x,y) --> Value: representative node
 
         //listen to all mouse ups and downs
         document.addEventListener('mousedown', this.mouseDown);
         document.addEventListener('mouseup', this.mouseUp);
 
         document.addEventListener('mousemove', this.mouseMove);
+
 
 
     }
@@ -34,12 +43,12 @@ export default WireManager
 class Wire{
 
     constructor(node1){
+
         this.connections = {}
-        if(node1 !== undefined){
-            this.connections[node1] = node1;
-        }
+
+        this.connections[node1] = node1;
+
         this.defined = false;
-        this.drawing = true;
 
         let x = node1.getPos()[0]; 
         let y = node1.getPos()[1];
@@ -52,10 +61,19 @@ class Wire{
         document.addEventListener("mouseup",  this.handleMouseUpBound);
         document.addEventListener("mousemove", this.handleMouseMoveBound);
         this.element = document.createElement('wireParent');
+        
+        this.element.addEventListener("mousedown", this.handleMouseDown.bind(this));
+
+        document.body.appendChild(this.element);
+
 
     }
+    handleMouseDown(){
+        document.addEventListener("mouseup",  this.handleMouseUpBound);
+        document.addEventListener("mousemove", this.handleMouseMoveBound);
+    }
+
     handleMouseUp(){
-        this.drawing = false;
         document.removeEventListener("mouseup",  this.handleMouseUpBound);
         document.removeEventListener("mousemove",this.handleMouseMoveBound);
 
@@ -75,7 +93,6 @@ class Wire{
 
         if(!this.defined){
             if(this.end[0] !== this.start[0]){
-
                 this.defined = true;
                 this.hline = new hline(this.start,this.end,this,true);
                 this.vline = new vline(this.start,this.end,this,false);

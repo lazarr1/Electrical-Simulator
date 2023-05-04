@@ -3,7 +3,8 @@ class line{
     constructor(start, end, wire,offset){
         this.line = document.createElement("div");
         this.line.classList.add('wire');
-        document.body.appendChild(this.line);
+        // document.body.appendChild(this.line);
+
 
         this.start = start;
         this.end = end;
@@ -11,20 +12,33 @@ class line{
         this.wire = wire;
 
         this.offset = offset;
-        // wire.element.appendChild(this.line);
 
+        wire.element.appendChild(this.line);
+
+        this.handleKeyDown = this.handleKeyDown.bind(this)
         // this.element.addEventListener("mousedown", this.onMouseDown.bind(this))
-        this.line.addEventListener("mouseover", this.OnMouseOver.bind(this));
+        this.line.addEventListener("mouseover", this.onMouseOver.bind(this));
 
     }
-    OnMouseOver(){
+    onMouseOver(){
         this.line.addEventListener("mouseleave", this.onMouseLeave.bind(this));
+        document.addEventListener("keydown", this.handleKeyDown);
     }
 
+    handleKeyDown(event){
+        if( event.keyCode === 8){
+            this.line.remove();
+            delete this;
+        }
 
+    }
     onMouseLeave(){
+        document.removeEventListener("keydown",this.handleKeyDown);
         this.line.removeEventListener("mouseleave", this.onMouseLeave.bind(this));
     }
+
+
+
     Draw(){
         //Virtual function
     }
