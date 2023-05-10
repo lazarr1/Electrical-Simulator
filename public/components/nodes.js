@@ -27,31 +27,33 @@ class Node {
       return [this.x,this.y];
     }
 
-    updatePos(event){
+    updatePos(){
+      let pos = this.element.getBoundingClientRect();
+
       //Tell any wires attatched, that the node has moved
-      this.x = Math.round(event.clientX/20) * 20;
-      this.y = Math.round(event.clientY/20) * 20;
+      this.x = Math.round(pos.x/20) * 20;
+      this.y = Math.round(pos.y/20) * 20;
       const nodeMove = new CustomEvent("node_move", {detail:{ pos: this.getPos() }});
       this.element.dispatchEvent(nodeMove);
     }
 
     mouseDown(event){
       event.stopPropagation();
-      this.x = Math.round(event.clientX/20) * 20;
-      this.y = Math.round(event.clientY/20) * 20;
+
       //Send node location to the wire Manager
       this.wm.Start(this);
     }
 
     rotateNodes(){
-      // let temp = this.y;
-      // this.y = this.x;
-      // this.x = temp;
-      
+      //update stored x and y position
+      let pos = this.element.getBoundingClientRect();
+
+      this.x = Math.round(pos.x/20) * 20; 
+      this.y = Math.round(pos.y/20) * 20;
+
     }
 
     listenNodeMove(wire){
-
       //Attach a wire to the node
       this.element.addEventListener("node_move", wire.handleMove.bind(wire));
 

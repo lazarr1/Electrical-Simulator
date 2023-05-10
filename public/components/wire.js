@@ -24,11 +24,12 @@ class WireManager{
         document.addEventListener('mousemove', this.mouseMove);
 
 
-
     }
 
     Start(node1){
 
+        const collection = document.getElementsByClassName("wire");
+        console.log(collection);
         this.connections[node1] = new Wire(node1);
     }
 
