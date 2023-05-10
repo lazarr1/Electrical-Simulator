@@ -8,6 +8,11 @@ class wireNode{
     }
 }
 
+function roundCoords(x,y){
+    return [Math.round(x/20)*20, Math.round(y/20)*20];
+}
+
+
 class WireManager{
 
     constructor(){
@@ -26,17 +31,42 @@ class WireManager{
 
     }
 
-    Start(node1){
+    getConnections(){
 
         const collection = document.getElementsByClassName("wire");
-        console.log(collection);
+        
+        for (let i =0; i < collection.length; i++){
+            
+            console.log(collection[i]);
+            this.mapWireLine(collection[i]);
+        }
+
+        console.log(this.connections);
+
+    }
+    Start(node1){
+
         this.connections[node1] = new Wire(node1);
+        this.getConnections();
+
     }
 
-    End(node2){
-        // this.node2 = node2;
-        // this.connections[this.node1] = new Wire(this.node1,this.node2);
+    mapWireLine(wire){
+        const pos = wire.getBoundingClientRect();
+
+
+        // console.log(0,10);
+        for (let i = pos.x; i <= pos.x+pos.width- pos.height; i+=20){
+        console.log(i,pos.y);
+            this.connections[ [i,pos.y] ] = true;
+        }
+
+        for (let i = pos.y; i <= pos.y+pos.height-pos.width; i+=20){
+        console.log(pos.x,i);
+            this.connections[ [pos.x,i ]] = true;
+        }
     }
+
 }
 
 export default WireManager
