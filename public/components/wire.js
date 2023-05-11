@@ -22,26 +22,19 @@ class WireManager{
         this.currentlyDrawing = undefined;
         this.connections = {}; // Key : (x,y) --> Value: representative node
 
-        //listen to all mouse ups and downs
-        document.addEventListener('mousedown', this.mouseDown);
-        document.addEventListener('mouseup', this.mouseUp);
-
-        document.addEventListener('mousemove', this.mouseMove);
-
 
     }
 
     getConnections(){
 
         const collection = document.getElementsByClassName("wire");
+        this.connections = {};
         
         for (let i =0; i < collection.length; i++){
-            
-            console.log(collection[i]);
+            collection[i].connectedNodes = [];
             this.mapWireLine(collection[i]);
         }
 
-        console.log(this.connections);
 
     }
     Start(node1){
@@ -52,18 +45,29 @@ class WireManager{
     }
 
     mapWireLine(wire){
-        const pos = wire.getBoundingClientRect();
+        const pos = wire.getBoundingClientRect();   
+        // console.log(wire);
 
 
-        // console.log(0,10);
         for (let i = pos.x; i <= pos.x+pos.width- pos.height; i+=20){
-        console.log(i,pos.y);
-            this.connections[ [i,pos.y] ] = true;
+            if(!([i,pos.y] in this.connections)){
+
+                this.connections[ [i,pos.y] ] = wire;
+            }
+            else{
+                // console.log(this.connections[i,pos.y])
+                wire.connectedNodes = this.connections[[i,pos.y]].connectedNodes;
+                
+            }
         }
 
         for (let i = pos.y; i <= pos.y+pos.height-pos.width; i+=20){
-        console.log(pos.x,i);
-            this.connections[ [pos.x,i ]] = true;
+            if(!( [pos.x, i] in this.connections)){
+                this.connections[ [pos.x,i ]] = wire;
+            }
+            else{
+                wire.connectedNodes = this.connections[[pos.x,i]].connectedNodes;
+            }
         }
     }
 
@@ -71,13 +75,14 @@ class WireManager{
 
 export default WireManager
 
+//This class initially draws the wire, and then keeps track of all nodes connected to the wire
 class Wire{
 
     constructor(node1){
 
-        this.connections = {}
+        this.connectedNodes = []
 
-        this.connections[node1] = node1;
+        // this.connections.push(node1);
 
         this.defined = false;
 
@@ -93,15 +98,11 @@ class Wire{
         document.addEventListener("mousemove", this.handleMouseMoveBound);
         this.element = document.createElement('wireParent');
         
-        this.element.addEventListener("mousedown", this.handleMouseDown.bind(this));
+        // this.element.addEventListener("mousedown", this.handleMouseDown.bind(this));
 
         document.body.appendChild(this.element);
 
 
-    }
-    handleMouseDown(){
-        document.addEventListener("mouseup",  this.handleMouseUpBound);
-        document.addEventListener("mousemove", this.handleMouseMoveBound);
     }
 
     handleMouseUp(){

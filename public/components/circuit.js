@@ -14,8 +14,9 @@ class Circuit{
 
         this.wireManager = new WireManager();
 
-
+        document.addEventListener('mousedown', this.mouseDown.bind(this));
     }
+
 
     createNewResistor(){
         const type = "Resistor"
@@ -53,7 +54,34 @@ class Circuit{
 
     }
 
+    ConnectWires(){
+
+        this.wireManager.getConnections();
+        for(const i in this.Components){
+            const component = this.Components[i];
+            // console.log(component);
+            for(const iNode in component.nodes){
+                const node = component.nodes[iNode];
+                const pos = node.getPos();
+
+                if (pos in this.wireManager.connections){
+                 
+                    const wire =this.wireManager.connections[pos];
+                    // console.log(wire);
+                    // console.log(wire.connectedNodes);
+                    wire.connectedNodes.push(component);
+                    console.log(wire.connectedNodes);
+
+                } 
+
+            }
+        }
+
+    }
     
+    mouseDown(){
+        this.ConnectWires();
+    }
 
 
 

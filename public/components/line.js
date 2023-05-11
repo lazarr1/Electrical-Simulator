@@ -4,7 +4,7 @@ class line{
         this.line = document.createElement("div");
         this.line.classList.add('wire');
         // document.body.appendChild(this.line);
-
+        this.line.connectedNodes = [];
 
         this.start = start;
         this.end = end;
