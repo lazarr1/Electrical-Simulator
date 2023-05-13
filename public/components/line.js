@@ -1,3 +1,8 @@
+
+function roundCoords(x,y){
+    return [Math.round(x/20)*20, Math.round(y/20)*20];
+}
+
 class line{
     // Start and End are coordinates [x1,y1] and [x2,y2]
     constructor(start, end, wire,offset){
@@ -5,7 +10,7 @@ class line{
         this.line.classList.add('wire');
         // document.body.appendChild(this.line);
         this.line.connectedNodes = [];
-
+        
         this.start = start;
         this.end = end;
 
@@ -55,13 +60,19 @@ class line{
         //Virtual Function
     }
 
+    delete(){
+        this.line.remove();
+        delete this;
+    }
+
+
 
 }
 
 class hline extends line{
 
     Draw(){
-        
+
         if(!this.offset){
             this.line.style.top = `${this.end[1]}px`;
         }
@@ -69,7 +80,7 @@ class hline extends line{
             this.line.style.top = `${this.start[1]}px`;
         }
 
-        let delta = this.end[0]-this.start[0];
+        const delta = this.end[0]-this.start[0];
 
         if(delta >= 0){        
             this.line.style.left = `${this.start[0]}px`;
@@ -79,15 +90,18 @@ class hline extends line{
         }
 
         this.line.style.width = `${Math.abs(delta)}px`;
+
+    }
+    
+    Merge(wire){
         
     }
-
 
 }
 
 class vline extends line{
     Draw(){
-        let delta = this.end[1] - this.start[1]
+        const delta = this.end[1] - this.start[1]
         this.line.style.height = `${Math.abs(delta)}px`;
 
         if(!this.offset){
