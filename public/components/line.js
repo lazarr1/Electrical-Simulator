@@ -1,11 +1,20 @@
 
+/*  Class: line 
+    * Base class for the hline and vline class. Defines the common functionality and key values
+    *  for each and allows the hline and vline class to handle their own method of drawing.
+    *      
+    * The line class is used to represent the wires of the circuit.
+    *      Member functions:
+*/
 function roundCoords(x,y){
     return [Math.round(x/20)*20, Math.round(y/20)*20];
 }
 
 class line{
     // Start and End are coordinates [x1,y1] and [x2,y2]
-    constructor(start, end, wire,offset){
+    constructor(start, end, wire, offset){
+        
+        //Create html element
         this.line = document.createElement("div");
         this.line.classList.add('wire');
         // document.body.appendChild(this.line);
@@ -18,6 +27,7 @@ class line{
 
         this.offset = offset;
 
+        //Each line is a part of a bigger grouping of other lines known as a "wire"
         wire.element.appendChild(this.line);
 
         this.handleKeyDown = this.handleKeyDown.bind(this)
@@ -31,6 +41,7 @@ class line{
     }
 
     handleKeyDown(event){
+        //If backspace while hovering
         if( event.keyCode === 8){
             this.line.remove();
             delete this;
