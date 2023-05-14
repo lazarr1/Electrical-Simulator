@@ -107,7 +107,7 @@ class hline extends line{
 
     Draw(){
 
-        if(!this.offset){
+        if(this.offset){
             this.line.style.top = `${this.end[1]}px`;
         }
         else{
@@ -138,7 +138,7 @@ class vline extends line{
         const delta = this.end[1] - this.start[1]
         this.line.style.height = `${Math.abs(delta)}px`;
 
-        if(!this.offset){
+        if(this.offset){
             this.line.style.left = `${this.end[0]}px`;
         }
         else{

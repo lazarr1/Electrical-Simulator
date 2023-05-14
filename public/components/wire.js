@@ -61,11 +61,11 @@ class WireManager {
         if(this.defined == false){
             if(end[0] !== start[0]){
                 this.defined = true;
-                hline.offset = true; //Offset the hline to start at the end of vline
+                vline.offset = true; //Offset the vline to start at the end of hline
             }
             else if(start[1] !== end[1]){
                 this.defined = true;
-                vline.offset = true; //Offset the vline to start at the end of the hline
+                hline.offset = true; //Offset the hline to start at the end of the vline
             }
 
         }
@@ -84,7 +84,7 @@ class WireManager {
         const vline = this.wires[this.wireIdGenerator];
 
         if(start[0] === end[0]){
-            //Delete the wire in the case that the end did not vary from the start
+            //Delete the wire in the case that the x coordinate did not vary from the start
             hline.delete();
             delete this[this.wireIdGenerator-1];
         }
@@ -93,6 +93,7 @@ class WireManager {
         }
 
         if(start[1] === end[1]){
+            //Delete the wire in the case that the y coordinate did not change
             vline.delete();
             delete this.wires[this.wireIdGenerator];
         }
