@@ -7,26 +7,101 @@ function roundCoords(x, y) {
 class WireManager {
     constructor() {
         //This will store the node that is currently being drawn
-
+        this.wireIdGenerator = 1;
         this.currentlyDrawing = undefined;
-        this.connections = {}; // Key : (x,y) --> Value: representative node
-        this.wires = [];
+        this.wires = {}; // Key : (x,y) --> Value: representative node
+        this.handleMouseMoveBound = this.handleMouseMove.bind(this);
+        this.handleMouseUpBound = this.handleMouseUp.bind(this);
+        this.drawing = false;
+
     }
 
     getConnections() {
-        const collection = document.getElementsByClassName("wire");
-        this.connections = {};
         this.mergeWires();
-        for (let i = 0; i < collection.length; i++) {
-            collection[i].connectedNodes = [];
-            this.mapWireLine(collection[i]);
-        }
+//        for (let i = 0; i < wires.length; i++) {
+//            wires[i].connectednodes = [];
+//            this.mapwireline(collection[i]);
+//        }
     }
     Start(node1) {
-        this.wires.push(new Wire(node1));
+        this.drawing = true;
+        this.InitialiseWire(node1.getPos());
+//        this.getConnections();
+//       this.mergeWires();
+    }
 
-        this.getConnections();
-        this.mergeWires();
+    InitialiseWire(start){
+        //This Parameter will define if the the wire will come out like an L or an F (without the middle line)
+        //Based on the users mouse movements
+        this.defined = false;
+
+        const nHWire = new hline(start,start,this,false,this.wireIdGenerator++);
+        this.wires[this.wireIdGenerator] = nHWire;
+
+        const nVWire = new vline(start,start,this,false,this.wireIdGenerator++);
+        this.wires[this.wireIdGenerator] = nVWire;
+
+        nHWire.addEndPointWire(nVWire);
+        nVWire.addEndPointWire(nHWire);
+
+        document.addEventListener("mouseup", this.handleMouseUpBound);
+        document.addEventListener("mousemove", this.handleMouseMoveBound);
+
+
+
+    }
+
+    handleMouseMove(event){
+        const end = roundCoords(event.clientX, event.clientY);  
+        const hline = this.wires[this.wireIdGenerator-1];
+        const vline = this.wires[this.wireIdGenerator];
+        const start = hline.start;
+
+        //If the user has not moved sufficiently far enough to determine the shape of the wire
+        if(this.defined == false){
+            if(end[0] !== start[0]){
+                this.defined = true;
+                hline.offset = true; //Offset the hline to start at the end of vline
+            }
+            else if(start[1] !== end[1]){
+                this.defined = true;
+                vline.offset = true; //Offset the vline to start at the end of the hline
+            }
+
+        }
+        hline.updateEnd(end);
+        vline.updateEnd(end);
+    }
+
+    handleMouseUp(event){
+        document.removeEventListener("mouseup",this.handleMouseUpBound);
+        document.removeEventListener("mousemove",this.handleMouseMoveBound);
+
+        const end = roundCoords(event.clientX, event.clientY);
+        const start = this.wires[this.wireIdGenerator].start;
+       
+        const hline = this.wires[this.wireIdGenerator-1];
+        const vline = this.wires[this.wireIdGenerator];
+
+        if(start[0] === end[0]){
+            //Delete the wire in the case that the end did not vary from the start
+            hline.delete();
+            delete this[this.wireIdGenerator-1];
+        }
+        else{
+            hline.updateEnd(end);
+        }
+
+        if(start[1] === end[1]){
+            vline.delete();
+            delete this.wires[this.wireIdGenerator];
+        }
+        else{
+            vline.updateEnd(end);
+        }
+        
+//        vline && this.mapWireLine(vline.line);
+//        hline && this.mapWireLine(hline.line);
     }
 
     mapWireLine(wire) {
@@ -52,69 +127,10 @@ class WireManager {
     }
 
     mergeWires() {
-    
+
     }
 
 }
 
 export default WireManager;
 
-//This class initially draws the wire, and then keeps track of all nodes connected to the wire
-class Wire {
-    constructor(node1) {
-        this.defined = false;
-
-        let x = node1.getPos()[0];
-        let y = node1.getPos()[1];
-
-        this.start = [Math.round(x / 20) * 20, Math.round(y / 20) * 20];
-
-        this.handleMouseMoveBound = this.handleMouseMove.bind(this);
-        this.handleMouseUpBound = this.handleMouseUp.bind(this);
-
-        document.addEventListener("mouseup", this.handleMouseUpBound);
-        document.addEventListener("mousemove", this.handleMouseMoveBound);
-        this.element = document.createElement("wireParent");
-
-        // this.element.addEventListener("mousedown", this.handleMouseDown.bind(this));
-
-        document.body.appendChild(this.element);
-    }
-
-    handleMouseUp() {
-        document.removeEventListener("mouseup", this.handleMouseUpBound);
-        document.removeEventListener("mousemove", this.handleMouseMoveBound);
-    }
-    Draw() {
-        if (this.hline !== undefined) {
-            this.hline.Draw();
-        }
-        if (this.vline !== undefined) {
-            this.vline.Draw();
-        }
-    }
-
-    handleMouseMove(event) {
-        this.end = [
-            Math.round(event.clientX / 20) * 20,
-            Math.round(event.clientY / 20) * 20,
-        ];
-
-        if (!this.defined) {
-            if (this.end[0] !== this.start[0]) {
-                this.defined = true;
-                this.hline = new hline(this.start, this.end, this, true);
-                this.vline = new vline(this.start, this.end, this, false);
-            } else if (this.end[1] !== this.start[1]) {
-                this.vline = new vline(this.start, this.end, this, true);
-                this.hline = new hline(this.start, this.end, this, false);
-                this.defined = true;
-            }
-        } else {
-            this.hline.updateEnd(this.end);
-            this.vline.updateEnd(this.end);
-        }
-
-        this.Draw();
-    }
-}

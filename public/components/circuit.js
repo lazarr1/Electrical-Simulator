@@ -109,7 +109,7 @@ class Circuit{
     }
 
     mouseDown(){
-        this.ConnectWires();
+//        this.ConnectWires();
     }
 
 

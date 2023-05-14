@@ -2,24 +2,26 @@
 /*  Class: line 
     * Base class for the hline and vline class. Defines the common functionality and key values
     *  for each and allows the hline and vline class to handle their own method of drawing.
+    *  Each wire will store the two wires connected at end points and ensure it is connected to Each
+    *  of them
     *      
     * The line class is used to represent the wires of the circuit.
     *      Member functions:
-*/
-function roundCoords(x,y){
-    return [Math.round(x/20)*20, Math.round(y/20)*20];
-}
+    */
+    function roundCoords(x,y){
+        return [Math.round(x/20)*20, Math.round(y/20)*20];
+    }
 
 class line{
     // Start and End are coordinates [x1,y1] and [x2,y2]
-    constructor(start, end, wire, offset){
-        
+    constructor(start, end, wire, offset,id){
+        this.id = id; 
         //Create html element
         this.line = document.createElement("div");
         this.line.classList.add('wire');
-        // document.body.appendChild(this.line);
+        document.body.appendChild(this.line);
         this.line.connectedNodes = [];
-        
+        this.endPointWires = []; 
         this.start = start;
         this.end = end;
 
@@ -28,7 +30,7 @@ class line{
         this.offset = offset;
 
         //Each line is a part of a bigger grouping of other lines known as a "wire"
-        wire.element.appendChild(this.line);
+//        wire.element.appendChild(this.line);
 
         this.handleKeyDown = this.handleKeyDown.bind(this)
         // this.element.addEventListener("mousedown", this.onMouseDown.bind(this))
@@ -61,10 +63,12 @@ class line{
 
     updateStart(start){
         this.start = start;
+        this.Draw();
     }
 
     updateEnd(end){
         this.end = end;
+        this.Draw();
     }
 
     onMouseDown(){
@@ -72,13 +76,32 @@ class line{
     }
 
     delete(){
+        //Update any wires that are following this wire, that it no longer exits
+        for (let i =0; i < this.endPointWires.length; i++){
+            this.endPointWires[i].deleteEndPointWire(this);
+        }
+
         this.line.remove();
         delete this;
     }
-
-
+    addEndPointWire(line){
+        this.endPointWires.push(line); 
+        if(this.endPointWires.length > 2){
+            console.error("Too many end points!");   
+        }
+    }
+    deleteEndPointWire(line){
+        const index = this.endPointWires.indexOf(line);
+        if (index > -1) { // only splice array when item is found
+            this.endPointWires.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        else{
+            console.error("No line defined to remove");
+        }
+    }
 
 }
+
 
 class hline extends line{
 
@@ -103,9 +126,9 @@ class hline extends line{
         this.line.style.width = `${Math.abs(delta)}px`;
 
     }
-    
+
     Merge(wire){
-        
+
     }
 
 }
