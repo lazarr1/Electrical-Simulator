@@ -14,18 +14,17 @@
 
 class line{
     // Start and End are coordinates [x1,y1] and [x2,y2]
-    constructor(start, end, wire, offset,id){
+    constructor(start, end, offset,id, wm){
         this.id = id; 
         //Create html element
         this.line = document.createElement("div");
         this.line.classList.add('wire');
         document.body.appendChild(this.line);
-        this.line.connectedNodes = [];
+        this.connectedNodes = [];
         this.endPointWires = []; 
         this.start = start;
         this.end = end;
-
-        this.wire = wire;
+        this.wm = wm;
 
         this.offset = offset;
 
@@ -45,8 +44,7 @@ class line{
     handleKeyDown(event){
         //If backspace while hovering
         if( event.keyCode === 8){
-            this.line.remove();
-            delete this;
+            this.delete();
         }
 
     }
@@ -63,6 +61,8 @@ class line{
 
     updateStart(start){
         this.start = start;
+       
+
         this.Draw();
     }
 
@@ -82,6 +82,7 @@ class line{
         }
 
         this.line.remove();
+        this.wm.deleteWire(this.id);
         delete this;
     }
     addEndPointWire(line){
@@ -98,6 +99,10 @@ class line{
         else{
             console.error("No line defined to remove");
         }
+    }
+
+    merge(){
+        //Virtual Function
     }
 
 }
@@ -127,7 +132,21 @@ class hline extends line{
 
     }
 
-    Merge(wire){
+    merge(wire){
+        if(wire.line.width == this.line.width){
+            const minX = Math.min(wire.start[0], wire.end[0], this.start[0], this.end[0]); 
+            const maxX = Math.max(wire.start[0], wire.end[0], this.start[0], this.end[0]);
+
+            const start = [minX, this.start[1]];
+            const end = [maxX, this.end[1]];
+
+            this.updateEnd(end);
+            this.updateStart(start);
+
+
+            wire.delete();
+            
+        }
 
     }
 
@@ -147,13 +166,31 @@ class vline extends line{
         }
 
 
-        if(delta <= 0){
+        if(delta <  0){
             this.line.style.top = `${this.end[1]}px`;
         }
         else{
             this.line.style.top = `${this.start[1]}px`;
         }
 
+
+    }
+    merge(wire){
+
+        if(wire.line.height == this.line.height){
+            const minY = Math.min(wire.start[1], wire.end[1], this.start[1], this.end[1]); 
+            const maxY = Math.max(wire.start[1], wire.end[1], this.start[1], this.end[1]);
+
+            const start = [this.start[0], minY];
+            const end = [this.end[0], maxY];
+
+            this.updateEnd(end);
+            this.updateStart(start);
+
+
+            wire.delete();
+            
+        }
     }
 }
 

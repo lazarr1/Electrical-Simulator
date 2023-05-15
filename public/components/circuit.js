@@ -96,20 +96,21 @@ class Circuit{
                 const node = component.nodes[iNode];
                 const pos = node.getPos();
 
-                if (pos in this.wireManager.connections){
+                if (pos in this.wireManager.wireGrid){
                     //If a wire was found to be connected, append this component to the wires' list of connected components
-                    const wire =this.wireManager.connections[pos];
+                    const wire =this.wireManager.wireGrid[pos];
                     wire.connectedNodes.push(node);
 
                 } 
 
             }
         }
+        console.log(this.wireManager.wireGrid);
 
     }
 
     mouseDown(){
-//        this.ConnectWires();
+        this.ConnectWires();
     }
 
 
