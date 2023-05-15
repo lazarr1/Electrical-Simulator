@@ -38,8 +38,8 @@
 
 .wire {
     position: absolute;
-    border-top: 2px solid black;
-    border-left: 2px solid black;
+    border-top: 3px solid black;
+    border-left: 3px solid black;
 
 }
 
@@ -52,8 +52,8 @@ div:active {
 }
 
 .wire:hover{
-    border-top: 2px solid blue;
-    border-left: 2px solid blue;
+    border-top: 3px solid blue;
+    border-left: 3px solid blue;
 }
 
 body {
@@ -61,4 +61,4 @@ body {
     background-image:
       linear-gradient(to right, rgb(189, 189, 193) 1px, transparent 1px),
       linear-gradient(to bottom, rgb(189, 189, 193) 1px, transparent 1px);
-  }
+}
