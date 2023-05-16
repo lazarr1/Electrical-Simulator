@@ -51,6 +51,16 @@ class DCurrent extends StaticCircuitComponent{
     }
 }
 
-export {StaticCircuitComponent, Resistor, DCurrent}
+class Ground extends StaticCircuitComponent{
+    constructor(id, circuit){
+        super(id,circuit,"Ground");
+    }
+
+    onClick(){
+        this.crc.createGroundNode();
+    }
+}
+
+export {StaticCircuitComponent, Resistor, DCurrent, Ground}
 
 

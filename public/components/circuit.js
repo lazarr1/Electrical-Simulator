@@ -28,6 +28,7 @@ class Circuit{
         //Store all components in a dictionary.
         this.Components = {}; //key : component name, val: component
         this.nodes = {}; //key : node name, val: node
+        this.grounds = [];
 
         //Manages all the connections between components
         this.wireManager = new WireManager();
@@ -83,7 +84,23 @@ class Circuit{
 
     }
 
-    ConnectWires(){
+    createGroundNode(){
+        const type = "Ground";
+        //Do not associate a unique id to ground nodes and "components"
+        const newComp = new CircuitComponent("G",1, type); 
+
+        const x = 20.5;
+        const y = 0;
+
+        const nNode = new Node(x,y,newComp, this.wireManager, "G");
+
+        newComp.nodes.push(nNode);
+        //Store grounded nodes sperately
+        this.grounds.push(newComp);
+
+        
+    }
+    GetConnections(){
         //Iterates through every node in the Circuit and checks if the node is connected to any wires
         this.wireManager.getConnections();
         for(const i in this.Components){
@@ -105,12 +122,38 @@ class Circuit{
 
             }
         }
+        
         console.log(this.wireManager.wireGrid);
 
+
+    }
+    sendCircuitInfo(){
+        for(const wireID in this.wireManager.wires){
+            const wire = this.wireManager.wires[wireID];
+
+            const [baseNode, ...toConnectNodes] = wire.wireManager.wires;
+
+            toConnectNodes.forEach(n => 
+                
+                this.client.SendConnectNodesMSG(baseNode.id, n.id)
+            );
+        }
+
+        for(const ground in this.grounds){
+            const node = ground.nodes[0];
+            const pos = node.getPos();
+
+            if(pos in this.wireManager.wireGrid){
+                const wire = this.wireManager.wireGrid[pos];
+                //Ground the first node, this should ground all the others
+                const nodeToGround = wire.connectedNodes[0];
+                this.client.SendGroundNodeMSG(nodeToGround.id);
+            }
+        }
     }
 
     mouseDown(){
-        this.ConnectWires();
+        this.GetConnections();
     }
 
 

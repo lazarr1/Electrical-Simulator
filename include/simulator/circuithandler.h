@@ -9,7 +9,7 @@ class CircuitHandler{
 
         void HandleAddComponent(std::string& message );
 
-        void HandleAddConnection(std::string& message );
+        void HandleAddConnection(std::string message );
 
         void GetNodeVoltage(std::string& message);
 
