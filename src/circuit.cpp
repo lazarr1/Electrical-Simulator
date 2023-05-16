@@ -158,10 +158,8 @@ void Circuit::BuildCircuitMatrix(){
             grounded = true;
         }
     }
-
     //If the circuit has not been grounded, then the simualtion cannot run
     if(grounded){
-        
         //add grounded node to the end
 
         for(int iGrounded = 0; iGrounded < groundedNodes.size(); iGrounded++)

@@ -36,27 +36,16 @@ class Client{
         this.socket.send("add component:"+ComponentType);
     }
 
-
+    SendGroundNodeMSG(NodeName){
+        this.socket.send("GROUND:" +NodeName);
+    }
+    SendConnectNodesMSG(Node1, Node2){
+        this.socket.send("CONNECT:"+ Node1 +"," + Node2);
+    }
+    SendRunMSG(){
+        this.socket.send("SIMULATE:");
+    }
 }
 
 export default Client;
 
-// const socket = new WebSocket('ws://localhost:8080');
-
-// socket.addEventListener('open', function (event) {
-//   socket.send('Hello Server!');
-// });
-
-// socket.addEventListener('message', function (event) {
-//   console.log('Message from server: ', event.data);
-// });
-
-// socket.addEventListener('close', function (event) {
-//   console.log('Connection closed.');
-// });
-
-// socket.addEventListener('error', function (event) {
-//   console.error('WebSocket error:', event);
-// });
-
-// // socket.send("Hello")

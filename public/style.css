@@ -28,6 +28,13 @@
     width: 41px;
     height: 80px;
 }
+.Ground{
+    background-image: url('components/images/ground.png');
+
+    width: 41px;
+    height: 41px;
+
+}
 
 .CircuitComponent{
     /* padding : 10px;
