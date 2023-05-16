@@ -101,6 +101,10 @@ bool CircuitSolver::GetFinishedState() const{
     return _finished;
 }
 
+void CircuitSolver::ResetFinishedState(){
+    _finished = false;
+}
+
 void CircuitSolver::IncrementTime(){
     _time += _timestep;
     if(_time >= _runtime){

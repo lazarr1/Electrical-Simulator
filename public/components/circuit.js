@@ -131,29 +131,31 @@ class Circuit{
         for(const wireID in this.wireManager.wires){
             const wire = this.wireManager.wires[wireID];
 
-            const [baseNode, ...toConnectNodes] = wire.wireManager.wires;
+            const [baseNode, ...toConnectNodes] = wire.connectedNodes;
 
             toConnectNodes.forEach(n => 
-                
-                this.client.SendConnectNodesMSG(baseNode.id, n.id)
+                this.client.SendConnectNodesMSG("N" + baseNode.id, "N" + n.id)
             );
         }
 
         for(const ground in this.grounds){
-            const node = ground.nodes[0];
+            const node = this.grounds[ground].nodes[0];
             const pos = node.getPos();
 
             if(pos in this.wireManager.wireGrid){
-                const wire = this.wireManager.wireGrid[pos];
+                const nodes = this.wireManager.wireGrid[pos].connectedNodes;
+
                 //Ground the first node, this should ground all the others
-                const nodeToGround = wire.connectedNodes[0];
-                this.client.SendGroundNodeMSG(nodeToGround.id);
+                const nodeToGround = nodes[0];
+                nodeToGround && this.client.SendGroundNodeMSG("N" + nodeToGround.id);
             }
         }
     }
 
     mouseDown(){
         this.GetConnections();
+        this.sendCircuitInfo();
+        this.client.SendRunMSG();
     }
 
 

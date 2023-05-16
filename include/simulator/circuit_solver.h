@@ -34,6 +34,8 @@ class CircuitSolver{
         bool GetFinishedState() const;
         
         void Solve();
+        
+        void ResetFinishedState();
 
         void Print() const;
 

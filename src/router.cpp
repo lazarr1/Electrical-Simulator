@@ -24,8 +24,14 @@ void Router::RouteMessage(std::string& message ){
         if(message_type == "add component"){
             _circuit.HandleAddComponent(message_data);
         }
-        else if(message_type == "add connection"){
+       else if(message_type == "CONNECT"){
             _circuit.HandleAddConnection(message_data);
+        }
+        else if(message_type == "GROUND"){
+            _circuit.GroundNode(message_data);
+        }
+        else if(message_type == "SIMULATE"){
+            _circuit.Run();
         }
         else{
             std::cout << "Received invalid message, unkown command: " << message << std::endl; 

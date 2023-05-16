@@ -14,6 +14,8 @@ class CircuitHandler{
         void GetNodeVoltage(std::string& message);
 
         void GroundNode(std::string& message);
+        
+        void Run();
 
     private:
         Simulator _sim;

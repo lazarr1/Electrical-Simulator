@@ -187,7 +187,10 @@ double Simulator::GetNodeVoltage(std::string NodeName){
 }
 
 void Simulator::Simulate(){
+    //reset solver 
+    _solver.ResetFinishedState();
 
+    //Run simulation
     while(!_solver.GetFinishedState()){
         _circuit.BuildCircuitMatrix();
         _solver.Solve();

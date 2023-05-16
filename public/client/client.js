@@ -37,10 +37,13 @@ class Client{
     }
 
     SendGroundNodeMSG(NodeName){
-        this.socket.send("GROUND:", +NodeName);
+        this.socket.send("GROUND:" +NodeName);
     }
     SendConnectNodesMSG(Node1, Node2){
-        this.socket.send("CONNECT:"+Node1,Node2);
+        this.socket.send("CONNECT:"+ Node1 +"," + Node2);
+    }
+    SendRunMSG(){
+        this.socket.send("SIMULATE:");
     }
 }
 
