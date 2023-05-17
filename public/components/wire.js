@@ -30,8 +30,12 @@ class WireManager {
         
     }
     Start(node1) {
-        this.drawing = true;
-        this.InitialiseWire(node1.getPos());
+        //semaphore to prevent race condition if the user was to click on a node to end the
+        //drawing of another node
+        if(!this.drawing){
+            this.drawing = true;
+            this.InitialiseWire(node1.getPos());
+        }   
     }
 
     InitialiseWire(start){
@@ -50,8 +54,6 @@ class WireManager {
 
         document.addEventListener("mouseup", this.handleMouseUpBound);
         document.addEventListener("mousemove", this.handleMouseMoveBound);
-
-
 
     }
 
@@ -83,7 +85,6 @@ class WireManager {
     handleMouseUp(event){
         document.removeEventListener("mouseup",this.handleMouseUpBound);
         document.removeEventListener("mousemove",this.handleMouseMoveBound);
-       
 
         const end = roundCoords(event.clientX, event.clientY);  
         const hline = this.wires[this.wireIdGenerator-1];
@@ -96,6 +97,8 @@ class WireManager {
         if(vline && start[1] === end[1]){
             vline.delete();
         }
+
+        this.drawing = false;
     }
 
     mapWireLine(wire) {

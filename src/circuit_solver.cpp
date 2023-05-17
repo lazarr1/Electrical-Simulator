@@ -112,6 +112,7 @@ void CircuitSolver::IncrementTime(){
     }
 }
 
+#ifdef __DEBUG__
 void CircuitSolver::Print() const{
     std::cout << std::endl;
 
@@ -134,4 +135,4 @@ void CircuitSolver::Print() const{
     }
     
 }
-
+#endif

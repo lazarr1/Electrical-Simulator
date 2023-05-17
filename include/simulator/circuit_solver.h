@@ -4,7 +4,11 @@
 #include <iomanip>
 
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 #include <boost/numeric/ublas/matrix.hpp>
+#pragma GCC diagnostic pop
+
 #include <list>
 
 
@@ -20,6 +24,7 @@ class CircuitSolver{
     public:
         CircuitSolver();
         ~CircuitSolver();
+
         //The matrix must be a square matrix
         void Resize(const int size, const bool keepOld);
 

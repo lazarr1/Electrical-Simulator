@@ -25,7 +25,6 @@ class Node {
         this.element.style.top = `${y}px`;
 
         this.element.addEventListener("mousedown", this.mouseDown.bind(this));
-        this.element.addEventListener("mouseup", this.mouseUp.bind(this));
 
         //Store the associated component and wire manager
         this.parent = component;
@@ -52,7 +51,6 @@ class Node {
     mouseDown(event){
         event.stopPropagation();
         //Tells the wiremanager to create a new wire starting at this node
-
         //Send node location to the wire Manager
         this.wm.Start(this);
     }
@@ -66,15 +64,8 @@ class Node {
 
     }
 
-    listenNodeMove(wire){
-        //Attach a wire to the node
-        //this.element.addEventListener("node_move", wire.handleMove.bind(wire));
 
-    }
-
-    mouseUp(event) {
-        event.stopPropagation();
-    }
+        
 }
 
 export default Node
