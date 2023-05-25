@@ -7,7 +7,7 @@
     *       - onClick: Tells the circuit to create the real required component
 */
 class StaticCircuitComponent {
-    constructor(id, circuit, type) {
+    constructor(id, circuit, type, componentBox) {
         this.id = id;
 
         this.crc = circuit;
@@ -18,7 +18,8 @@ class StaticCircuitComponent {
         this.type = type;
 
         this.element.addEventListener("click", this.onClick.bind(this));
-        document.body.appendChild(this.element);
+       // document.body.appendChild(this.element);
+        componentBox.appendChild(this.element);
     }
 
 
@@ -30,8 +31,8 @@ class StaticCircuitComponent {
 //To define a new component pass the base class the type of component as a string, and define the 
 //virutal onClick function.
 class Resistor extends StaticCircuitComponent{
-    constructor(id, circuit){
-        super(id,circuit, "Resistor");
+    constructor(id, circuit, componentBox){
+        super(id,circuit, "Resistor", componentBox);
 
     }
 
@@ -42,8 +43,8 @@ class Resistor extends StaticCircuitComponent{
 }
 
 class DCurrent extends StaticCircuitComponent{
-    constructor(id, circuit){
-        super(id,circuit,"DCCurrent");
+    constructor(id, circuit, componentBox){
+        super(id,circuit,"DCCurrent", componentBox);
     }
 
     onClick(){
@@ -52,8 +53,8 @@ class DCurrent extends StaticCircuitComponent{
 }
 
 class Ground extends StaticCircuitComponent{
-    constructor(id, circuit){
-        super(id,circuit,"Ground");
+    constructor(id, circuit, componentBox){
+        super(id,circuit,"Ground", componentBox);
     }
 
     onClick(){

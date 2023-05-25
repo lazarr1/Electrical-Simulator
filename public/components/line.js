@@ -8,6 +8,7 @@
     * The line class is used to represent the wires of the circuit.
     *      Member functions:
     */
+
     function roundCoords(x,y){
         return [Math.round(x/20)*20, Math.round(y/20)*20];
     }
@@ -25,11 +26,9 @@ class line{
         this.start = start;
         this.end = end;
         this.wm = wm;
-
         this.offset = offset;
 
         //Each line is a part of a bigger grouping of other lines known as a "wire"
-//        wire.element.appendChild(this.line);
 
         this.handleKeyDown = this.handleKeyDown.bind(this)
         // this.element.addEventListener("mousedown", this.onMouseDown.bind(this))
@@ -80,24 +79,22 @@ class line{
         for (let i =0; i < this.endPointWires.length; i++){
             this.endPointWires[i].deleteEndPointWire(this);
         }
-
         this.line.remove();
         this.wm.deleteWire(this.id);
         delete this;
     }
+    
     addEndPointWire(line){
         this.endPointWires.push(line); 
         if(this.endPointWires.length > 2){
             console.error("Too many end points!");   
         }
     }
+
     deleteEndPointWire(line){
         const index = this.endPointWires.indexOf(line);
         if (index > -1) { // only splice array when item is found
             this.endPointWires.splice(index, 1); // 2nd parameter means remove one item only
-        }
-        else{
-            console.error("No line defined to remove");
         }
     }
 

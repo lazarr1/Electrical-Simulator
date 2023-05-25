@@ -2,16 +2,8 @@
 #define CIRCUIT_SOLVER_H
 
 #include <iomanip>
-
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
 #include <boost/numeric/ublas/matrix.hpp>
-#pragma GCC diagnostic pop
-
 #include <list>
-
-
 #include <iostream>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix_sparse.hpp>
@@ -24,7 +16,6 @@ class CircuitSolver{
     public:
         CircuitSolver();
         ~CircuitSolver();
-
         //The matrix must be a square matrix
         void Resize(const int size, const bool keepOld);
 

@@ -1,8 +1,6 @@
 #include "simulator/circuithandler.h"
 
-CircuitHandler::CircuitHandler()
-    :_sim()
-{ 
+CircuitHandler::CircuitHandler(){ 
 
 }
 

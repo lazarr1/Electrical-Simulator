@@ -70,3 +70,29 @@ body {
       linear-gradient(to right, rgb(189, 189, 193) 1px, transparent 1px),
       linear-gradient(to bottom, rgb(189, 189, 193) 1px, transparent 1px);
 }
+
+.grid-container {
+    padding : 20px;
+    position: absolute;
+    height: 40vh;
+    overflow-y: auto;
+    width : 20vw;
+    top: 100px;
+    display: grid;
+    column-gap: 5px;
+    grid-template-columns: repeat(3, 1fr); 
+    background-color: rgb(224, 224, 224);
+    opacity: 90%;
+    border-radius: 5px;
+}
+
+
+.closingButton{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.hidden {
+  display: none;
+}
