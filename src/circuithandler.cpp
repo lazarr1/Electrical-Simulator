@@ -44,3 +44,7 @@ void CircuitHandler::Run(){
 void CircuitHandler::GetNodeVoltage(std::string& message){
     std::cout << _sim.GetNodeVoltage(message) << std::endl;
 }
+
+void CircuitHandler::SendNodeInformation(){
+
+}

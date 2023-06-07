@@ -9,19 +9,15 @@
 class StaticCircuitComponent {
     constructor(id, circuit, type, componentBox) {
         this.id = id;
-
         this.crc = circuit;
         this.element = document.createElement("div");
         this.element.classList.add("StaticCircuitComponent");
         this.element.classList.add(type);
-
         this.type = type;
-
         this.element.addEventListener("click", this.onClick.bind(this));
        // document.body.appendChild(this.element);
         componentBox.appendChild(this.element);
     }
-
 
     onClick() {
         //Virtual Function
@@ -33,7 +29,6 @@ class StaticCircuitComponent {
 class Resistor extends StaticCircuitComponent{
     constructor(id, circuit, componentBox){
         super(id,circuit, "Resistor", componentBox);
-
     }
 
     onClick(){
@@ -63,5 +58,3 @@ class Ground extends StaticCircuitComponent{
 }
 
 export {StaticCircuitComponent, Resistor, DCurrent, Ground}
-
-

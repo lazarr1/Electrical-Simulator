@@ -8,7 +8,10 @@ const components = [
   { name: Ground, id: 3}
 ];
 
-    const componentBox = document.getElementById("componentBox");
+    const componentBox = document.createElement("div");
+    componentBox.classList = "grid-container";
+    document.body.appendChild(componentBox);
+
     function generateClassImages() {
         // Generate and append the image elements
         for (const component of components) {
@@ -17,9 +20,9 @@ const components = [
     }
 
     // Function to open or close the box
-    function toggleBox() {
-        componentBox.classList.toggle("hidden"); // Apply a CSS class for hiding/showing the box
-    }
+ //   function toggleBox() {
+ //       componentBox.classList.toggle("hidden"); // Apply a CSS class for hiding/showing the box
+ //   }
     
     // Call the function to generate initial class images
     generateClassImages();
@@ -27,7 +30,7 @@ const components = [
     //Give the x button the toggle close function
 //    componentBox.children.item(0).onclick = toggleBox;
     //Closures are cool
-    return toggleBox;
+//    return toggleBox;
 }
 
 export default fillComponentBox; 

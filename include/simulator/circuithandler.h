@@ -2,6 +2,8 @@
 #define CIRCUITHANDLER_H
 
 #include "simulator.h"
+#include <nlohmann/json.hpp>
+
 
 class CircuitHandler{
     public:
@@ -16,6 +18,8 @@ class CircuitHandler{
         void GroundNode(std::string& message);
         
         void Run();
+
+        void SendNodeInformation();
 
     private:
         Simulator _sim;

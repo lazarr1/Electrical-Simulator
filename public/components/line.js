@@ -27,17 +27,29 @@ class line{
         this.end = end;
         this.wm = wm;
         this.offset = offset;
+        this.DC_voltage = 0;
+
+        //Implement hover over, showing voltage at the wire functionality
+        // The css will handle the display of the tooltip text
+        this.line.classList.add('tooltip');
+        this.hover_info = document.createElement("span");
+        this.hover_info.classList.add('tooltiptext');
+        this.hover_info.innerHTML = "DC: " + this.DC_voltage;
+        this.line.appendChild(this.hover_info);
 
         //Each line is a part of a bigger grouping of other lines known as a "wire"
-
         this.handleKeyDown = this.handleKeyDown.bind(this)
         // this.element.addEventListener("mousedown", this.onMouseDown.bind(this))
         this.line.addEventListener("mouseover", this.onMouseOver.bind(this));
 
+
     }
-    onMouseOver(){
+    onMouseOver(event){
         this.line.addEventListener("mouseleave", this.onMouseLeave.bind(this));
         document.addEventListener("keydown", this.handleKeyDown);
+
+        this.hover_info.style.left = `${event.clientX}px`;
+        this.hover_info.style.top = `${event.clientY}px`;
     }
 
     handleKeyDown(event){

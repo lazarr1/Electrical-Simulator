@@ -24,15 +24,12 @@ class CircuitComponent {
     this.element = document.createElement("div");
     this.element.classList.add("CircuitComponent");
     this.element.classList.add(type);
-
     this.rotation = 0;
-
     this.handleKeyDown = this.handleKeyDown.bind(this);
 
-    this.element.addEventListener("mousedown", this.onMouseDown.bind(this));
     document.body.appendChild(this.element);
-
     this.element.addEventListener("mouseover", this.OnMouseOver.bind(this));
+    this.element.addEventListener("mousedown", this.onMouseDown.bind(this));
 
   }
 
@@ -77,9 +74,7 @@ class CircuitComponent {
     document.addEventListener("mouseup", this.mouseUpListener);
     document.addEventListener("mousemove", this.mouseMoveListener);
 
-
   }
-
 
   onMouseUp() {
     //Stop following cursor
