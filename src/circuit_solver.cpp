@@ -61,25 +61,29 @@ void CircuitSolver::Solve(){
     #endif
 
     using namespace boost::numeric::ublas;
+    try{
+        permutation_matrix<size_t> pm(_circuitMatrix.size1());
+        lu_factorize(_circuitMatrix, pm);
+        lu_substitute(_circuitMatrix, pm, _currentVector);
 
-    permutation_matrix<size_t> pm(_circuitMatrix.size1());
-    lu_factorize(_circuitMatrix, pm);
-    lu_substitute(_circuitMatrix, pm, _currentVector);
+        int i = 0;
+        //Getting the voltage of nodes from the vector 
+        for(std::shared_ptr<Node> iNodes : _parentNodes){
+            if(iNodes->grounded == false){
 
-    int i = 0;
-    //Getting the voltage of nodes from the vector 
-    for(std::shared_ptr<Node> iNodes : _parentNodes){
-        if(iNodes->grounded == false){
+                iNodes->parent->voltage = _currentVector[i++];
+                // std::cout << iNodes->parent->voltage << std::endl;
 
-            iNodes->parent->voltage = _currentVector[i++];
-            // std::cout << iNodes->parent->voltage << std::endl;
-
+            }
+            else{
+                iNodes->parent->voltage = 0;
+                i++;
+            }
         }
-        else{
-            iNodes->parent->voltage = 0;
-            i++;
-        }
-    } 
+    }
+    catch(const std::exception& e){
+        std::cout << "Cannot Solve" << std::endl;
+    }
 
     IncrementTime();
 

@@ -67,14 +67,14 @@ body {
 .grid-container {
     padding : 10px;
     position: absolute;
-    height: 40vh;
+    height: 70vh;
     overflow-y: auto;
     width : 15vw;
     top: 100px;
     display: grid;
     column-gap: 5px;
     grid-template-columns: repeat(3, 1fr); 
-    background-color: rgb(224, 224, 224);
+    background-color: rgb(204, 204, 204);
     opacity: 90%;
     border-radius: 5px;
 }

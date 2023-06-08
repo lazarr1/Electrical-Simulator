@@ -205,7 +205,8 @@ void Simulator::GroundNode(std::string NodeName){
 json Simulator::GetNodeVoltagesJSON(){
     json nodeInfo;
     for(auto [key,iNode] : _nodes){
-        nodeInfo[key] = iNode->parent->voltage;
+        //round to 4 d.p.
+        nodeInfo[key] = std::round(iNode->parent->voltage*10000) /10000;
 
     }
     return nodeInfo;
