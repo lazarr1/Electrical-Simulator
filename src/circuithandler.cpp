@@ -45,6 +45,7 @@ void CircuitHandler::GetNodeVoltage(std::string& message){
     std::cout << _sim.GetNodeVoltage(message) << std::endl;
 }
 
-void CircuitHandler::SendNodeInformation(){
-
+json CircuitHandler::GetNodeVoltagesJSON(){
+    return _sim.GetNodeVoltagesJSON();
+//    ws.write(net::buffer("voltages/" + circuitInfo));
 }

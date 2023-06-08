@@ -4,6 +4,7 @@
 #include "simulator.h"
 #include <nlohmann/json.hpp>
 
+using json = nlohmann::json;
 
 class CircuitHandler{
     public:
@@ -19,7 +20,7 @@ class CircuitHandler{
         
         void Run();
 
-        void SendNodeInformation();
+        json GetNodeVoltagesJSON();
 
     private:
         Simulator _sim;
@@ -27,6 +28,8 @@ class CircuitHandler{
         const double defaultResistance = 100;
 
         const double defaultDCC = 1;
+
+//        json circuitInfo;
 };
 
 

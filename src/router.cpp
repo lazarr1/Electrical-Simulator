@@ -43,3 +43,7 @@ void Router::RouteMessage(std::string& message ){
         std::cerr << "Received invalid message, missing colon: " << message << std::endl;
     }
 }
+
+std::string Router::GetResponse(){
+    return std::string("voltages/") + _circuit.GetNodeVoltagesJSON().dump();
+}

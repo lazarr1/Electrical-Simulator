@@ -7,6 +7,7 @@ class Router{
         Router();
 
         void RouteMessage(std::string& message );
+        std::string GetResponse();
 
     private:
         CircuitHandler _circuit;

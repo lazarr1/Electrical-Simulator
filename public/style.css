@@ -98,7 +98,7 @@ body {
   text-align: center;
   padding: 5px 0;
   border-radius: 6px;
- 
+  word-wrap: normal;
   /* Position the tooltip text - see examples below! */
   position: fixed;
   z-index: 1;

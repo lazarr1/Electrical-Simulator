@@ -3,9 +3,8 @@ const address = 'ws://localhost:8080';
 
 class Client{
 
-    constructor(){
+    constructor(circuit){
         this.socket = new WebSocket('ws://localhost:8080');
-
         this.socket.addEventListener('open', this.ProcessServerMessage.bind(this));
 
         //TESTING FUNCTIONALITY OF THE SERVER
@@ -13,9 +12,7 @@ class Client{
             socket.send('Hello Server!');
         });
 
-        this.socket.addEventListener('message', function (event) {
-            console.log('Message from server: ', event.data);
-        });
+        this.socket.addEventListener('message', this.ProcessServerMessage.bind(this));
 
         this.socket.addEventListener('close', function (event) {
             console.log('Connection closed.');
@@ -24,12 +21,22 @@ class Client{
         this.socket.addEventListener('error', function (event) {
             console.error('WebSocket error:', event);
         });
-        
+        this.reponse = null; 
+        this.circuit = circuit;
     }
 
     
-    ProcessServerMessage(){
-        
+    ProcessServerMessage(event){
+        const msg = event.data;
+
+        if(msg != null){
+            const breakdown_msg = msg.split('/');
+
+            if(breakdown_msg[0] == 'voltages'){
+                this.reponse = JSON.parse(breakdown_msg[1]);
+                this.circuit.setNodes(this.reponse);
+            }
+        }
     }
 
     SendCreateMessage(ComponentType){

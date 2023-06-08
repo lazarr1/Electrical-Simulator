@@ -1,7 +1,7 @@
 import WireManager from "./wire.js";
 import CircuitComponent from "./components.js";
 import Node from "./nodes.js";
-
+import Client from "../client/client.js";
 
 /*  Class: Circuit
     *      This class manages all the components, manages any changes to the components and 
@@ -16,10 +16,9 @@ import Node from "./nodes.js";
     *       - ConnectWires: Uses WireManager to sense anywire connections, and sends information to server
 */
 class Circuit{
-    //Param : client: the server the circuit will be communicating with 
-    constructor(client){
+    constructor(){
         
-        this.client = client;
+        this.client = new Client(this);
         //This ensures that the ids of the server and client are the same. Will be updated, so the ids can
         //be aliased.
         this.idGenerator = 1;
@@ -37,6 +36,14 @@ class Circuit{
         document.addEventListener('mousedown', this.mouseDown.bind(this));
     }
 
+    setNodes(nodeVoltages){
+        for (const nodeName in nodeVoltages){
+            const nodeID = nodeName.split('N')[1];
+            if(nodeID in this.nodes){
+                this.nodes[nodeID].setVoltage(nodeVoltages[nodeName]);
+            }
+        }
+    }
 
     createNewResistor(){
         const type = "Resistor"
@@ -53,7 +60,7 @@ class Circuit{
             
             //Store the node in the circuit's list of nodes 
             newComp.nodes.push(nNode);
-            this.nodes[this.nodeIDGenerator] = nNode
+            this.nodes[this.nodeIDGenerator-1] = nNode
         }
 
         //Tell the server to create a resistor
@@ -77,7 +84,7 @@ class Circuit{
 
             //Store the node in the circuit's list of nodes 
             newComp.nodes.push(nNode);
-            this.nodes[this.nodeIDGenerator] = nNode
+            this.nodes[this.nodeIDGenerator-1] = nNode
         }
         //Tell the server to create a DCCurrent
         this.client.SendCreateMessage(type);

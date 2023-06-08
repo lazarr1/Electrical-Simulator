@@ -50,3 +50,5 @@ build/
 bin/
 
 __pycache__/
+
+json/

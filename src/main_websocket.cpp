@@ -47,6 +47,7 @@ int main(){
 
                 router.RouteMessage(message);
 
+                ws.write(net::buffer(router.GetResponse()));
                 // Send a message back to the client
                 // ws.write(net::buffer("Hello, world!"));
             }

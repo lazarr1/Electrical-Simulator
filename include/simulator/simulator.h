@@ -8,8 +8,9 @@
 #include "circuit.h"
 
 #include "circuit_solver.h"
+#include <nlohmann/json.hpp>
 
-
+using json = nlohmann::json;
 
 /*  Class: Simulator
  *      This class manages all the components, manages any changes to the components and 
@@ -54,6 +55,8 @@ class Simulator{
         void CreateConnection(std::string NodeName1, std::string NodeName2);
 
         void RemoveConnection(std::string NodeName);
+        
+        json GetNodeVoltagesJSON();
 
         double GetNodeVoltage(std::string NodeName);
 

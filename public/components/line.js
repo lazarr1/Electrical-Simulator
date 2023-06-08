@@ -42,13 +42,24 @@ class line{
         // this.element.addEventListener("mousedown", this.onMouseDown.bind(this))
         this.line.addEventListener("mouseover", this.onMouseOver.bind(this));
 
-
+    }
+    
+    getNodeVoltage(){
+        if(this.connectedNodes.length > 0){
+            this.DC_voltage = this.connectedNodes[0].getVoltage();
+        }
+        else{
+            this.DC_voltage = 0;
+        }
     }
     onMouseOver(event){
         this.line.addEventListener("mouseleave", this.onMouseLeave.bind(this));
         document.addEventListener("keydown", this.handleKeyDown);
+        this.line.addEventListener("mousemove", this.handleMouseMove.bind(this));
 
-        this.hover_info.style.left = `${event.clientX}px`;
+        this.getNodeVoltage();
+        this.hover_info.innerHTML = "DC: " + this.DC_voltage;
+        this.hover_info.style.left = `${event.clientX - 10}px`;
         this.hover_info.style.top = `${event.clientY}px`;
     }
 
@@ -62,9 +73,13 @@ class line{
     onMouseLeave(){
         document.removeEventListener("keydown",this.handleKeyDown);
         this.line.removeEventListener("mouseleave", this.onMouseLeave.bind(this));
+        this.line.removeEventListener("mousemove", this.handleMouseMove.bind(this));
     }
 
-
+    handleMouseMove(event){
+        this.hover_info.style.left = `${event.clientX + 10}px`; 
+        this.hover_info.style.top = `${event.clientY}px`;
+    }
 
     Draw(){
         //Virtual function

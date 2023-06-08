@@ -15,6 +15,7 @@ class Node {
         this.x = x;
         this.y = y;
 
+        this.voltage = 0;
         //Create html element
         this.element = document.createElement("div");
         this.element.classList.add('node');
@@ -32,6 +33,12 @@ class Node {
 
     }
 
+    setVoltage(volts){
+        this.voltage = volts;
+    }
+    getVoltage(){
+        return this.voltage;
+    }
     getPos(){
         return [this.x,this.y];
     }
