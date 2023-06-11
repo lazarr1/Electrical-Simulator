@@ -11,6 +11,7 @@ class Router{
 
     private:
         CircuitHandler _circuit;
+        bool _simComplete;
 };
 
 #endif

@@ -1,18 +1,23 @@
 #include "simulator/circuithandler.h"
 
 CircuitHandler::CircuitHandler(){ 
+    
+    _sim = new Simulator();
 
+}
+CircuitHandler::~CircuitHandler(){
+    delete _sim;
 }
 
 void CircuitHandler::HandleAddComponent(std::string& message){
     if(message == "Resistor"){
         std::cout << "Creating Resistor" << std::endl;
-        _sim.CreateResistor(defaultResistance);
+        _sim->CreateResistor(defaultResistance);
     }
     else if(message == "DCCurrent"){
         std::cout << "Creating DCCurrent" << std::endl;
 
-        _sim.CreateCurrentSource(defaultDCC);
+        _sim->CreateCurrentSource(defaultDCC);
     }
     else{
         std::cout << "Unkown Command: " << message << std::endl;
@@ -22,7 +27,7 @@ void CircuitHandler::HandleAddComponent(std::string& message){
 
 void CircuitHandler::GroundNode(std::string& message){
     std::cout << "grounding node " << message << std::endl;
-    _sim.GroundNode(message);
+    _sim->GroundNode(message);
 }
 
 void CircuitHandler::HandleAddConnection(std::string message){
@@ -34,18 +39,24 @@ void CircuitHandler::HandleAddConnection(std::string message){
 
     std::cout << node2 << node1 << std::endl;
 
-    _sim.CreateConnection(node1,node2);
+    _sim->CreateConnection(node1,node2);
 }
 
 void CircuitHandler::Run(){
-    _sim.Simulate();
-    _sim.PrintComponents();
+    _sim->Simulate();
+    _sim->PrintComponents();
 }
 void CircuitHandler::GetNodeVoltage(std::string& message){
-    std::cout << _sim.GetNodeVoltage(message) << std::endl;
+    std::cout << _sim->GetNodeVoltage(message) << std::endl;
 }
 
 json CircuitHandler::GetNodeVoltagesJSON(){
-    return _sim.GetNodeVoltagesJSON();
+    return _sim->GetNodeVoltagesJSON();
 //    ws.write(net::buffer("voltages/" + circuitInfo));
+}
+
+void CircuitHandler::ClearCircuit(){
+    delete _sim;
+    _sim = new Simulator();
+
 }

@@ -30,6 +30,7 @@ class Client{
         const msg = event.data;
 
         if(msg != null){
+            console.log(msg);
             const breakdown_msg = msg.split('/');
 
             if(breakdown_msg[0] == 'voltages'){

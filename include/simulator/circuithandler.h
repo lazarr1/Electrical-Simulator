@@ -10,6 +10,8 @@ class CircuitHandler{
     public:
         CircuitHandler();
 
+        ~CircuitHandler();
+
         void HandleAddComponent(std::string& message );
 
         void HandleAddConnection(std::string message );
@@ -22,8 +24,10 @@ class CircuitHandler{
 
         json GetNodeVoltagesJSON();
 
+        void ClearCircuit();
+
     private:
-        Simulator _sim;
+        Simulator* _sim;
 
         const double defaultResistance = 100;
 

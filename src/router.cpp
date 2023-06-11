@@ -3,7 +3,7 @@
 
 
 Router::Router(){
-
+   _simComplete = false;
 }
 
 void Router::RouteMessage(std::string& message ){
@@ -32,6 +32,7 @@ void Router::RouteMessage(std::string& message ){
         }
         else if(message_type == "SIMULATE"){
             _circuit.Run();
+            _simComplete = true;
         }
         else{
             std::cout << "Received invalid message, unkown command: " << message << std::endl; 
@@ -45,5 +46,18 @@ void Router::RouteMessage(std::string& message ){
 }
 
 std::string Router::GetResponse(){
-    return std::string("voltages/") + _circuit.GetNodeVoltagesJSON().dump();
+    if(_simComplete == true){
+        _simComplete = false;
+
+        std::string response = std::string("voltages/") + _circuit.GetNodeVoltagesJSON().dump();
+
+        _circuit.ClearCircuit();
+
+        return response;
+
+    }
+    else{
+        return std::string("Error/1");
+    }
+
 }

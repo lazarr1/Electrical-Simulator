@@ -83,6 +83,7 @@ void CircuitSolver::Solve(){
     }
     catch(const std::exception& e){
         std::cout << "Cannot Solve" << std::endl;
+        _finished = true;
     }
 
     IncrementTime();

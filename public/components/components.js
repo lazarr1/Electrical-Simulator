@@ -10,90 +10,103 @@ import Node from './nodes.js';
     *       -onMouseOver - Starts listening to the users inputs to rotate/delete
     *       -onMouseClick/MouseMove - Moves the component to the user's curosr (keeping component lined up on the grid)
     *       -handleKeyDown - Rotates given mouse over and r key is pressed. (will soon be able to delete)
-*/
+    */
 class CircuitComponent {
-  constructor(id, terminals, type) {
-    //Store the id and the number of terminals/nodes it has
-    this.id = id;
-    this.terminals = terminals;
+    constructor(id, terminals, type, circuit) {
+        //Store the id and the number of terminals/nodes it has
+        this.id = id;
+        this.terminals = terminals;
+        this.type = type;
+        this.circuit = circuit;
 
-    //Store all nodes associated with the component
-    this.nodes = [];
+        //Store all nodes associated with the component
+        this.nodes = [];
 
-    //Create html element for class
-    this.element = document.createElement("div");
-    this.element.classList.add("CircuitComponent");
-    this.element.classList.add(type);
-    this.rotation = 0;
-    this.handleKeyDown = this.handleKeyDown.bind(this);
+        //Create html element for class
+        this.element = document.createElement("div");
+        this.element.classList.add("CircuitComponent");
+        this.element.classList.add(type);
+        this.rotation = 0;
+        this.handleKeyDown = this.handleKeyDown.bind(this);
 
-    document.body.appendChild(this.element);
-    this.element.addEventListener("mouseover", this.OnMouseOver.bind(this));
-    this.element.addEventListener("mousedown", this.onMouseDown.bind(this));
-
-  }
-
-  OnMouseOver(){
-    document.addEventListener("keydown", this.handleKeyDown);
-    this.element.addEventListener("mouseleave", this.onMouseLeave.bind(this));
-  }
-
-  handleKeyDown(event){
-    //If 'r' key is pressed, rotate the component
-    if(event.keyCode === 82){
-      if(this.rotation == 360){
-        this.rotation = 0 //reset rotation
-      }
-      else{
-        this.rotation += 90;
-      }
-      this.element.style.transform = `rotate(${this.rotation}deg)`;
-
-      this.nodes.forEach(function(node){
-        node.rotateNodes();
-      })
+        document.body.appendChild(this.element);
+        this.element.addEventListener("mouseover", this.OnMouseOver.bind(this));
+        this.element.addEventListener("mousedown", this.onMouseDown.bind(this));
 
     }
-  }
 
-  onMouseLeave(){
-    document.removeEventListener("keydown",this.handleKeyDown);
-    this.element.removeEventListener("mouseleave", this.onMouseLeave.bind(this));
-  }
-
-  onMouseDown(event) {
-    //Store initialX and Y position of the component, this ensures the component stays
-      //in the center of the user's mouse
-    this.initialX = event.clientX - this.element.offsetLeft;
-    this.initialY = event.clientY - this.element.offsetTop;
-
-    //follow the cursor
-    this.mouseUpListener = this.onMouseUp.bind(this);
-    this.mouseMoveListener = this.onMouseMove.bind(this);
-
-    document.addEventListener("mouseup", this.mouseUpListener);
-    document.addEventListener("mousemove", this.mouseMoveListener);
-
-  }
-
-  onMouseUp() {
-    //Stop following cursor
-    document.removeEventListener("mouseup", this.mouseUpListener );
-    document.removeEventListener("mousemove", this.mouseMoveListener);
-  }
-
-  onMouseMove(event) {
-   //Ensure the component stays on the grid 
-    this.element.style.left = `${Math.round((event.clientX - this.initialX)/20) *20}px`;
-    this.element.style.top = `${Math.round((event.clientY - this.initialY)/20)*20}px`;
-
-    //update the position of the nodes
-    for (let i = 0; i < this.terminals; i++) {
-      this.nodes[i].updatePos(event);
+    OnMouseOver(){
+        document.addEventListener("keydown", this.handleKeyDown);
+        this.element.addEventListener("mouseleave", this.onMouseLeave.bind(this));
     }
-  }
+
+    handleKeyDown(event){
+        //If 'r' key is pressed, rotate the component
+        if(event.keyCode === 82){
+            if(this.rotation == 360){
+                this.rotation = 0 //reset rotation
+            }
+            else{
+                this.rotation += 90;
+            }
+            this.element.style.transform = `rotate(${this.rotation}deg)`;
+
+            this.nodes.forEach(function(node){
+                node.rotateNodes();
+            })
+        }
+        else if(event.keyCode == 8){
+            this.onMouseLeave();
+            this.delete();
+        }
+    }
+
+    onMouseLeave(){
+        document.removeEventListener("keydown",this.handleKeyDown);
+        this.element.removeEventListener("mouseleave", this.onMouseLeave.bind(this));
+    }
+
+    onMouseDown(event) {
+        //Store initialX and Y position of the component, this ensures the component stays
+        //in the center of the user's mouse
+        this.initialX = event.clientX - this.element.offsetLeft;
+        this.initialY = event.clientY - this.element.offsetTop;
+
+        //follow the cursor
+        this.mouseUpListener = this.onMouseUp.bind(this);
+        this.mouseMoveListener = this.onMouseMove.bind(this);
+
+        document.addEventListener("mouseup", this.mouseUpListener);
+        document.addEventListener("mousemove", this.mouseMoveListener);
+
+    }
+
+    onMouseUp() {
+        //Stop following cursor
+        document.removeEventListener("mouseup", this.mouseUpListener );
+        document.removeEventListener("mousemove", this.mouseMoveListener);
+    }
+
+    onMouseMove(event) {
+        //Ensure the component stays on the grid 
+        this.element.style.left = `${Math.round((event.clientX - this.initialX)/20) *20}px`;
+        this.element.style.top = `${Math.round((event.clientY - this.initialY)/20)*20}px`;
+
+        //update the position of the nodes
+        for (let i = 0; i < this.terminals; i++) {
+            this.nodes[i].updatePos(event);
+        }
+    }
+
+    delete(){
+        this.element.remove(); 
+        this.circuit.DeleteComponent(this.id);
+        delete this;
+    }
 }
+
+
 
 export default CircuitComponent
 
-  
+
