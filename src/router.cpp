@@ -3,7 +3,7 @@
 
 
 Router::Router(){
-
+   _simComplete = false;
 }
 
 void Router::RouteMessage(std::string& message ){
@@ -32,6 +32,7 @@ void Router::RouteMessage(std::string& message ){
         }
         else if(message_type == "SIMULATE"){
             _circuit.Run();
+            _simComplete = true;
         }
         else{
             std::cout << "Received invalid message, unkown command: " << message << std::endl; 
@@ -42,4 +43,21 @@ void Router::RouteMessage(std::string& message ){
         // Handle invalid messages
         std::cerr << "Received invalid message, missing colon: " << message << std::endl;
     }
+}
+
+std::string Router::GetResponse(){
+    if(_simComplete == true){
+        _simComplete = false;
+
+        std::string response = std::string("voltages/") + _circuit.GetNodeVoltagesJSON().dump();
+
+        _circuit.ClearCircuit();
+
+        return response;
+
+    }
+    else{
+        return std::string("Error/simNotComplete");
+    }
+
 }

@@ -1,9 +1,8 @@
 import Circuit from './components/circuit.js'; 
-import Client from './client/client.js';
 import fillComponentBox from './components/componentTable.js';
 
 window.onload = function() {
-    const client = new Client()
-    const circuit = new Circuit(client);
+    const circuit = new Circuit();
     fillComponentBox(circuit);
+    setInterval(circuit.simulate.bind(circuit), 1000);
 }

@@ -24,12 +24,6 @@ if (${IS_DEBUG_BUILD})
     endif ()
 endif ()
 
-
-
-
-
-
-
 add_compile_options(-std=c++20)
 
 # Enable group projects in folders
@@ -45,16 +39,23 @@ set(CMAKE_CXX_STANDARD 11)
 
 FIND_PACKAGE( Boost 1.80 COMPONENTS program_options REQUIRED )
 
+
+
 include_directories(
   include
   ${Boost_INCLUDE_DIR}
+  #PRETEND THIS ISN'T HERE
+  build/_deps/json-src/single_include
 )
-
-
-
 # =========================================================
+include(FetchContent)
 
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+FetchContent_MakeAvailable(json)
 
+# CMakeLists.txt
+#add_library(foo ...)
+#target_link_libraries(foo PRIVATE nlohmann_json::nlohmann_json)
 # include_directories(dependencies/libraries/)
 
 set(elec_sim_SOURCES
@@ -70,7 +71,6 @@ set(elec_sim_SOURCES
     src/vccs.cpp
     src/router.cpp
     src/circuithandler.cpp
-
 )
 
 add_library(circ_sim_lib ${elec_sim_SOURCES})
@@ -78,12 +78,11 @@ add_library(circ_sim_lib ${elec_sim_SOURCES})
 #if ur library ends up including something use this:
 # target_link_libraries(major_lib ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
-
 add_executable(simulator src/main.cpp)
 target_link_libraries(simulator circ_sim_lib ${Boost_LIBRARIES}) 
 
-add_executable(websocket src/websocket.cpp)
-target_link_libraries(websocket circ_sim_lib ${Boost_LIBRARIES})
+add_executable(websocket src/main_websocket.cpp)
+target_link_libraries(websocket PUBLIC circ_sim_lib PRIVATE ${Boost_LIBRARIES}) 
 
 ###################
 #BUILD 

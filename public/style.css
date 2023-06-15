@@ -60,21 +60,21 @@ div:active {
 body {
     background-size: 20px 20px;
     background-image:
-      linear-gradient(to right, rgb(189, 189, 193) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(189, 189, 193) 1px, transparent 1px);
+    linear-gradient(to right, rgb(189, 189, 193) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(189, 189, 193) 1px, transparent 1px);
 }
 
 .grid-container {
     padding : 10px;
     position: absolute;
-    height: 40vh;
+    height: 70vh;
     overflow-y: auto;
     width : 15vw;
     top: 100px;
     display: grid;
     column-gap: 5px;
     grid-template-columns: repeat(3, 1fr); 
-    background-color: rgb(224, 224, 224);
+    background-color: rgb(204, 204, 204);
     opacity: 90%;
     border-radius: 5px;
 }
@@ -98,7 +98,7 @@ body {
   text-align: center;
   padding: 5px 0;
   border-radius: 6px;
- 
+  word-wrap: normal;
   /* Position the tooltip text - see examples below! */
   position: fixed;
   z-index: 1;

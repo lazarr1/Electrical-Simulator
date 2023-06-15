@@ -150,9 +150,6 @@ void Simulator::CreateVccs(const double conductance){
 
 }
 
-
-
-
 void Simulator::CreateConnection(std::string NodeName1, std::string NodeName2){
 
     if(_nodes.count(NodeName1) && _nodes.count(NodeName2)){
@@ -205,6 +202,15 @@ void Simulator::GroundNode(std::string NodeName){
         _nodes[NodeName]->parent->grounded = true;
 }
 
+json Simulator::GetNodeVoltagesJSON(){
+    json nodeInfo;
+    for(auto [key,iNode] : _nodes){
+        //round to 4 d.p.
+        nodeInfo[key] = std::round(iNode->parent->voltage*10000) /10000;
+
+    }
+    return nodeInfo;
+}
 
 
 #ifdef __DEBUG__

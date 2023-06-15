@@ -49,9 +49,6 @@ class WireManager {
         const nVWire = new vline(start,start,false,++this.wireIdGenerator, this);
         this.wires[nVWire.id] = nVWire;
 
-        nHWire.addEndPointWire(nVWire);
-        nVWire.addEndPointWire(nHWire);
-
         document.addEventListener("mouseup", this.handleMouseUpBound);
         document.addEventListener("mousemove", this.handleMouseMoveBound);
 
