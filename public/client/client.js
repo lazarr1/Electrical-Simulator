@@ -5,16 +5,14 @@ class Client{
 
     constructor(circuit){
         this.socket = new WebSocket('ws://localhost:8080');
+
         this.socket.addEventListener('open', this.ProcessServerMessage.bind(this));
 
         //TESTING FUNCTIONALITY OF THE SERVER
-        this.socket.addEventListener('open', function (event) {
-            socket.send('Hello Server!');
-        });
 
         this.socket.addEventListener('message', this.ProcessServerMessage.bind(this));
 
-        this.socket.addEventListener('close', function (event) {
+        this.socket.addEventListener('close', function () {
             console.log('Connection closed.');
         });
 
@@ -40,18 +38,30 @@ class Client{
         }
     }
 
+    sendMsg(msg){
+        if (this.socket.readyState !== this.socket.OPEN) {
+            try {
+                console.log(this.socket.readyState);
+              //  this.waitForOpenConnection(this.socket)
+               // this.socket.send(msg)
+            } catch (err) { console.error(err) }
+        } else {
+            this.socket.send(msg)
+        }
+    }
+
     SendCreateMessage(ComponentType){
-        this.socket.send("add component:"+ComponentType);
+        this.sendMsg("add component:"+ComponentType);
     }
 
     SendGroundNodeMSG(NodeName){
-        this.socket.send("GROUND:" +NodeName);
+        this.sendMsg("GROUND:" +NodeName);
     }
     SendConnectNodesMSG(Node1, Node2){
-        this.socket.send("CONNECT:"+ Node1 +"," + Node2);
+        this.sendMsg("CONNECT:"+ Node1 +"," + Node2);
     }
     SendRunMSG(){
-        this.socket.send("SIMULATE:");
+        this.sendMsg("SIMULATE:");
     }
 }
 

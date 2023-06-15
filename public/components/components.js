@@ -28,10 +28,12 @@ class CircuitComponent {
         this.element.classList.add(type);
         this.rotation = 0;
         this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.mouseDownBind = this.onMouseDown.bind(this);
+        this.mouseOverBind = this.OnMouseOver.bind(this);
 
         document.body.appendChild(this.element);
-        this.element.addEventListener("mouseover", this.OnMouseOver.bind(this));
-        this.element.addEventListener("mousedown", this.onMouseDown.bind(this));
+        this.element.addEventListener("mouseover", this.mouseOverBind);
+        this.element.addEventListener("mousedown", this.mouseDownBind);
 
     }
 
@@ -98,14 +100,31 @@ class CircuitComponent {
         }
     }
 
+
+    setId(id){
+        this.id = id;
+    }
+
     delete(){
         this.element.remove(); 
-        this.circuit.DeleteComponent(this.id);
+        this.element.removeEventListener("mousedown", this.mouseDownBind);
+        this.element.removeEventListener("mouseover", this.mouseOverBind);
+
+        if(this.type !== "Ground"){
+            this.circuit.DeleteComponent(this);
+        }
+        else{
+            this.circuit.DeleteGround(this);
+        }
+
+        for(const node of this.nodes){
+            node.delete();
+        }
+
+        this.nodes = [];
         delete this;
     }
 }
-
-
 
 export default CircuitComponent
 

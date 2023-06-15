@@ -57,7 +57,7 @@ std::string Router::GetResponse(){
 
     }
     else{
-        return std::string("Error/1");
+        return std::string("Error/simNotComplete");
     }
 
 }

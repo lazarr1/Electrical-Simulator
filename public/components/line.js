@@ -22,7 +22,6 @@ class line{
         this.line.classList.add('wire');
         document.body.appendChild(this.line);
         this.connectedNodes = [];
-        this.endPointWires = []; 
         this.start = start;
         this.end = end;
         this.wm = wm;
@@ -38,9 +37,9 @@ class line{
         this.line.appendChild(this.hover_info);
 
         //Each line is a part of a bigger grouping of other lines known as a "wire"
-        this.handleKeyDown = this.handleKeyDown.bind(this)
-        // this.element.addEventListener("mousedown", this.onMouseDown.bind(this))
-        this.line.addEventListener("mouseover", this.onMouseOver.bind(this));
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.mouseOverBind = this.onMouseOver.bind(this);
+        this.line.addEventListener("mouseover", this.mouseOverBind);
 
     }
     
@@ -87,8 +86,6 @@ class line{
 
     updateStart(start){
         this.start = start;
-       
-
         this.Draw();
     }
 
@@ -97,32 +94,15 @@ class line{
         this.Draw();
     }
 
-    onMouseDown(){
-        //Virtual Function
-    }
-
     delete(){
         //Update any wires that are following this wire, that it no longer exits
-        for (let i =0; i < this.endPointWires.length; i++){
-            this.endPointWires[i].deleteEndPointWire(this);
-        }
+
+        this.line.removeEventListener("mouseover",this.mouseOverBind);
+        this.onMouseLeave();
+        this.connectedNodes = [];
         this.line.remove();
         this.wm.deleteWire(this.id);
         delete this;
-    }
-    
-    addEndPointWire(line){
-        this.endPointWires.push(line); 
-        if(this.endPointWires.length > 2){
-            console.error("Too many end points!");   
-        }
-    }
-
-    deleteEndPointWire(line){
-        const index = this.endPointWires.indexOf(line);
-        if (index > -1) { // only splice array when item is found
-            this.endPointWires.splice(index, 1); // 2nd parameter means remove one item only
-        }
     }
 
     merge(){

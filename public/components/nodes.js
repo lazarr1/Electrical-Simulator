@@ -25,7 +25,8 @@ class Node {
         this.element.style.left = `${x}px`;
         this.element.style.top = `${y}px`;
 
-        this.element.addEventListener("mousedown", this.mouseDown.bind(this));
+        this.mouseDownBind = this.mouseDown.bind(this);
+        this.element.addEventListener("mousedown", this.mouseDownBind );
 
         //Store the associated component and wire manager
         this.parent = component;
@@ -57,7 +58,6 @@ class Node {
 
     mouseDown(event){
         event.stopPropagation();
-        //Tells the wiremanager to create a new wire starting at this node
         //Send node location to the wire Manager
         this.wm.Start(this);
     }
@@ -69,6 +69,17 @@ class Node {
         this.x = Math.round(pos.x/20) * 20; 
         this.y = Math.round(pos.y/20) * 20;
 
+    }
+    
+    delete(){
+        this.element.removeEventListener("mousedown", this.mouseDownBind); 
+        this.element.remove();
+        delete this.element;
+        delete this.parent;
+        delete this.wm;
+        delete this.x;
+        delete this.y;
+        delete this.mouseDownBind;
     }
 
 
