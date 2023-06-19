@@ -41,6 +41,7 @@ class Node {
         return this.voltage;
     }
     getPos(){
+        this.updatePos();
         return [this.x,this.y];
     }
 
@@ -50,27 +51,15 @@ class Node {
 
         this.x = Math.round(pos.x/20) * 20;
         this.y = Math.round(pos.y/20) * 20;
-        
-        //Tell any wires attatched, that the node has moved
-//        const nodeMove = new CustomEvent("node_move", {detail:{ pos: this.getPos() }});
-//        this.element.dispatchEvent(nodeMove);
     }
 
     mouseDown(event){
         event.stopPropagation();
         //Send node location to the wire Manager
+        // Start a wire from this node
         this.wm.Start(this);
     }
 
-    rotateNodes(){
-        //update stored x and y position
-        const pos = this.element.getBoundingClientRect();
-
-        this.x = Math.round(pos.x/20) * 20; 
-        this.y = Math.round(pos.y/20) * 20;
-
-    }
-    
     delete(){
         this.element.removeEventListener("mousedown", this.mouseDownBind); 
         this.element.remove();
@@ -81,8 +70,6 @@ class Node {
         delete this.y;
         delete this.mouseDownBind;
     }
-
-
         
 }
 

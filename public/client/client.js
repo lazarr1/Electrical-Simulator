@@ -4,25 +4,26 @@ const address = 'ws://localhost:8080';
 class Client{
 
     constructor(circuit){
-        this.socket = new WebSocket('ws://localhost:8080');
-
-        this.socket.addEventListener('open', this.ProcessServerMessage.bind(this));
-
-        //TESTING FUNCTIONALITY OF THE SERVER
-
-        this.socket.addEventListener('message', this.ProcessServerMessage.bind(this));
-
-        this.socket.addEventListener('close', function () {
-            console.log('Connection closed.');
-        });
-
-        this.socket.addEventListener('error', function (event) {
-            console.error('WebSocket error:', event);
-        });
-        this.reponse = null; 
+        this.initialiseSocket();
         this.circuit = circuit;
     }
 
+    initialiseSocket(){
+        this.socket = new WebSocket('ws://localhost:8080');
+
+        this.ProcessServerMessageBind = this.ProcessServerMessage.bind(this);
+
+        this.socket.addEventListener('message', this.ProcessServerMessageBind);
+
+//        this.socket.addEventListener('close', function () {
+//            console.log('Connection closed.');
+//        });
+//
+//        this.socket.addEventListener('error', function (event) {
+//            console.error('WebSocket error:', event);
+//        });
+        this.reponse = null; 
+    }
     
     ProcessServerMessage(event){
         const msg = event.data;
@@ -38,13 +39,18 @@ class Client{
         }
     }
 
+    removeSocket(){
+        this.socket.removeEventListener("message", this.ProcessServerMessageBind);
+        delete this.ProcessServerMessageBind;
+        delete this.socket;
+    }
+
     sendMsg(msg){
         if (this.socket.readyState !== this.socket.OPEN) {
-            try {
-                console.log(this.socket.readyState);
-              //  this.waitForOpenConnection(this.socket)
-               // this.socket.send(msg)
-            } catch (err) { console.error(err) }
+            if(this.socket.readyState === this.socket.CLOSED){
+                this.removeSocket;
+                this.initialiseSocket(); 
+            }
         } else {
             this.socket.send(msg)
         }

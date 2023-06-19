@@ -9,30 +9,25 @@ import Client from "../client/client.js";
     *      components before sending the data to the server.
     *
     * 
-    * 
-    *      Member functions:
     *       - CreatenewResistr: Creates a resistor with 100 ohm resistance and sends information to server
     *       - CreateNewDCCurrent: Creates a new DCCurrent with a defaul 1Amp current and sends information to server
     *       - ConnectWires: Uses WireManager to sense anywire connections, and sends information to server
 */
 class Circuit{
     constructor(){
-        
         this.client = new Client(this);
 
-        //Store all components in a dictionary.
-        this.Components = []; //key : component name, val: component
-        this.nodes = []; //key : node name, val: node
+        //Store all components
+        this.Components = [];
+        this.nodes = []; 
         this.grounds = [];
 
         //Manages all the connections between components
         this.wireManager = new WireManager();
-
-        //On mousedown, anywhere on the document update the server to match the current information.
-//        document.addEventListener('mousedown', this.mouseDown.bind(this));
     }
 
     setNodes(nodeVoltages){
+        //Set nodes to match the server.
         for (const nodeName in nodeVoltages){
             const nodeID = nodeName.split('N')[1] - 1;
             if(nodeID < this.nodes.length){
@@ -46,7 +41,7 @@ class Circuit{
 
     createNewResistor(){
         const type = "Resistor";
-        const newComp = new CircuitComponent(this.Components.length,2,type,this);
+        const newComp = new CircuitComponent(2,type,this);
         this.Components.push(newComp);
 
         //Position the nodes in the correct position relative to the resistor. 
@@ -54,56 +49,62 @@ class Circuit{
             //Position Nodes Correctly
             const x = 20.5;
             const y = i * 80;
-            const nNode = new Node(x,y, newComp, this.wireManager, this.nodes.length+1);
+            const nNode = new Node(x,y, newComp, this.wireManager);
             
             //Store the node in the circuit's list of nodes 
             newComp.nodes.push(nNode);
         }
-
-        //Tell the server to create a resistor
- //       this.client.SendCreateMessage(type);
-
-        this.simulate();
     }
-
 
     createNewDCurrent(){
         const type = "DCCurrent"
-        const newComp = new CircuitComponent(this.Components.length,2,type,this);
+        const newComp = new CircuitComponent(2,type,this);
         this.Components.push(newComp);
 
-        //Position the nodes in the correct position relative to the resistor. 
-            //A less dodgy way needs to be found for this.
         for (let i = 0; i < 2; i++) {
             //Position Nodes Correctly
             const x = 20.5;
             const y = (i) * 80;
-            const nNode = new Node(x,y, newComp, this.wireManager, this.nodes.length+1);
+            const nNode = new Node(x,y, newComp, this.wireManager);
 
             //Store the node in the circuit's list of nodes 
             newComp.nodes.push(nNode);
         }
-        //Tell the server to create a DCCurrent
-//        this.client.SendCreateMessage(type);
+    }
+    
+    createNewCapacitor(){
+        const type = "Capacitor";
+        const newComp = new CircuitComponent(2, type, this);
+
+        this.Components.push(newComp);
+
+        for (let i = 0; i < 2; i++) {
+            //Position Nodes Correctly
+            const x = 20.5;
+            const y = (i) * 80;
+            const nNode = new Node(x,y, newComp, this.wireManager);
+
+            //Store the node in the circuit's list of nodes 
+            newComp.nodes.push(nNode);
+        }
 
     }
 
     createGroundNode(){
         const type = "Ground";
-        //Do not associate a unique id to ground nodes and "components"
-        const newComp = new CircuitComponent(this.grounds.length,1, type,this); 
+        const newComp = new CircuitComponent(1, type,this);
 
         const x = 20.5;
         const y = 0;
-
         const nNode = new Node(x,y,newComp, this.wireManager, "G");
 
         newComp.nodes.push(nNode);
+
         //Store grounded nodes sperately
         this.grounds.push(newComp);
     }
 
-    GetConnections(){
+    getConnections(){
         //Iterates through every node in the Circuit and checks if the node is connected to any wires
         this.wireManager.getConnections();
         for(const i in this.Components){
@@ -117,17 +118,14 @@ class Circuit{
                 const pos = node.getPos();
 
                 if (pos in this.wireManager.wireGrid){
-                    //If a wire was found to be connected, append this component to the wires' list of connected components
+                    //If a wire was found to be connected, append this node to the wires' list of connected components
                     const wire =this.wireManager.wireGrid[pos];
                     wire.connectedNodes.push(node);
 
                 } 
-
             }
         }
         
-        //console.log(this.wireManager.wireGrid);
-
     }
 
     sendCircuitInfo(){
@@ -141,6 +139,7 @@ class Circuit{
             );
         }
 
+        //Ground nodes
         for(const ground in this.grounds){
             const node = this.grounds[ground].nodes[0];
             const pos = node.getPos();
@@ -168,7 +167,7 @@ class Circuit{
         }
     }
 
-    SendComponents(){
+    sendComponents(){
        this.UpdateComponents();
         for(let iComponentLoc =0; iComponentLoc < this.Components.length; iComponentLoc++){
             const iComponent = this.Components[iComponentLoc];
@@ -197,8 +196,8 @@ class Circuit{
     }
 
     simulate(){
-        this.SendComponents();
-        this.GetConnections();
+        this.sendComponents();
+        this.getConnections();
         this.sendCircuitInfo();
         this.client.SendRunMSG();
     }

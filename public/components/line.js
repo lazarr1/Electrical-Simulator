@@ -36,9 +36,11 @@ class line{
         this.hover_info.innerHTML = "DC: " + this.DC_voltage;
         this.line.appendChild(this.hover_info);
 
-        //Each line is a part of a bigger grouping of other lines known as a "wire"
-        this.handleKeyDown = this.handleKeyDown.bind(this);
+        //Store all bindings
+        this.keyDownBind = this.handleKeyDown.bind(this);
         this.mouseOverBind = this.onMouseOver.bind(this);
+        this.mouseLeaveBind = this.onMouseLeave.bind(this);
+        this.mouseMoveBind = this.handleMouseMove.bind(this);
         this.line.addEventListener("mouseover", this.mouseOverBind);
 
     }
@@ -52,9 +54,9 @@ class line{
         }
     }
     onMouseOver(event){
-        this.line.addEventListener("mouseleave", this.onMouseLeave.bind(this));
-        document.addEventListener("keydown", this.handleKeyDown);
-        this.line.addEventListener("mousemove", this.handleMouseMove.bind(this));
+        this.line.addEventListener("mouseleave", this.mouseLeaveBind);
+        document.addEventListener("keydown", this.keyDownBind);
+        this.line.addEventListener("mousemove", this.mouseMoveBind);
 
         this.getNodeVoltage();
         this.hover_info.innerHTML = "DC: " + this.DC_voltage;
@@ -64,15 +66,15 @@ class line{
 
     handleKeyDown(event){
         //If backspace while hovering
-        if( event.keyCode === 8){
+        if(event.keyCode === 8){
             this.delete();
         }
-
     }
+
     onMouseLeave(){
-        document.removeEventListener("keydown",this.handleKeyDown);
-        this.line.removeEventListener("mouseleave", this.onMouseLeave.bind(this));
-        this.line.removeEventListener("mousemove", this.handleMouseMove.bind(this));
+        document.removeEventListener("keydown",this.keyDownBind);
+        this.line.removeEventListener("mouseleave", this.mouseLeaveBind);
+        this.line.removeEventListener("mousemove", this.mouseMoveBind);
     }
 
     handleMouseMove(event){
@@ -95,13 +97,23 @@ class line{
     }
 
     delete(){
-        //Update any wires that are following this wire, that it no longer exits
-
+        //This was a mistake
         this.line.removeEventListener("mouseover",this.mouseOverBind);
+        delete this.mouseOverBind;
         this.onMouseLeave();
+        delete this.keyDownBind;
+        delete this.mouseLeaveBind;
+        delete this.mouseMoveBind;
+
         this.connectedNodes = [];
         this.line.remove();
+        this.line.removeChild(this.line.lastChild);
+        delete this.line;
+
         this.wm.deleteWire(this.id);
+        this.hover_info.remove();
+        delete this.hover_info;
+
         delete this;
     }
 
@@ -113,7 +125,6 @@ class line{
 
 
 class hline extends line{
-
     Draw(){
 
         if(this.offset){
@@ -179,6 +190,7 @@ class vline extends line{
 
 
     }
+    
     merge(wire){
 
         if(wire.line.height == this.line.height){

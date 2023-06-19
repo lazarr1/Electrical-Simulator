@@ -19,6 +19,9 @@ void CircuitHandler::HandleAddComponent(std::string& message){
 
         _sim->CreateCurrentSource(defaultDCC);
     }
+    else if(message == "Capacitor"){
+        _sim->CreateCapacitor(0.1);
+    }
     else{
         std::cout << "Unkown Command: " << message << std::endl;
     }

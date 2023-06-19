@@ -10,7 +10,7 @@ class WireManager {
         this.wireIdGenerator = 0;
         this.currentlyDrawing = undefined;
         this.wires = {}; //key : id --> Value : line representing the wire 
-        this.wireGrid = {}; // Key : (x,y) --> Value: representative node
+        this.wireGrid = {}; // Key : (x,y) position --> Value: representative node
         this.handleMouseMoveBound = this.handleMouseMove.bind(this);
         this.handleMouseUpBound = this.handleMouseUp.bind(this);
         this.drawing = false;
@@ -39,7 +39,7 @@ class WireManager {
     }
 
     InitialiseWire(start){
-        //This Parameter will define if the the wire will come out like an L or an F (without the middle line)
+        //This boolean will define if the the wire will come out like an L or an F (without the middle line)
         //Based on the users mouse movements
         this.defined = false;
 
@@ -48,6 +48,7 @@ class WireManager {
 
         const nVWire = new vline(start,start,false,++this.wireIdGenerator, this);
         this.wires[nVWire.id] = nVWire;
+
 
         document.addEventListener("mouseup", this.handleMouseUpBound);
         document.addEventListener("mousemove", this.handleMouseMoveBound);
@@ -130,4 +131,3 @@ class WireManager {
 }
 
 export default WireManager;
-

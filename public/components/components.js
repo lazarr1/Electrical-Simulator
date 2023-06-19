@@ -12,9 +12,8 @@ import Node from './nodes.js';
     *       -handleKeyDown - Rotates given mouse over and r key is pressed. (will soon be able to delete)
     */
 class CircuitComponent {
-    constructor(id, terminals, type, circuit) {
-        //Store the id and the number of terminals/nodes it has
-        this.id = id;
+    constructor(terminals, type, circuit) {
+        //Store the number of terminals/nodes it has
         this.terminals = terminals;
         this.type = type;
         this.circuit = circuit;
@@ -27,9 +26,10 @@ class CircuitComponent {
         this.element.classList.add("CircuitComponent");
         this.element.classList.add(type);
         this.rotation = 0;
-        this.handleKeyDown = this.handleKeyDown.bind(this);
+        
+        this.keyDownBind = this.handleKeyDown.bind(this);
         this.mouseDownBind = this.onMouseDown.bind(this);
-        this.mouseOverBind = this.OnMouseOver.bind(this);
+        this.mouseOverBind = this.onMouseOver.bind(this);
 
         document.body.appendChild(this.element);
         this.element.addEventListener("mouseover", this.mouseOverBind);
@@ -37,9 +37,15 @@ class CircuitComponent {
 
     }
 
-    OnMouseOver(){
-        document.addEventListener("keydown", this.handleKeyDown);
-        this.element.addEventListener("mouseleave", this.onMouseLeave.bind(this));
+    onMouseOver(){
+        document.addEventListener("keydown", this.keyDownBind);
+        this.mouseLeaveBind = this.onMouseLeave.bind(this);
+        this.element.addEventListener("mouseleave", this.mouseLeaveBind);
+    }
+
+    onMouseLeave() {
+        document.removeEventListener("keydown",this.keyDownBind);
+        this.element.removeEventListener("mouseleave", this.mouseLeaveBind);
     }
 
     handleKeyDown(event){
@@ -52,21 +58,16 @@ class CircuitComponent {
                 this.rotation += 90;
             }
             this.element.style.transform = `rotate(${this.rotation}deg)`;
-
-            this.nodes.forEach(function(node){
-                node.rotateNodes();
-            })
+            this.updateNodePos();
         }
+        // 'delete' key
         else if(event.keyCode == 8){
             this.onMouseLeave();
+            this.onMouseUp();
             this.delete();
         }
     }
 
-    onMouseLeave(){
-        document.removeEventListener("keydown",this.handleKeyDown);
-        this.element.removeEventListener("mouseleave", this.onMouseLeave.bind(this));
-    }
 
     onMouseDown(event) {
         //Store initialX and Y position of the component, this ensures the component stays
@@ -94,21 +95,28 @@ class CircuitComponent {
         this.element.style.left = `${Math.round((event.clientX - this.initialX)/20) *20}px`;
         this.element.style.top = `${Math.round((event.clientY - this.initialY)/20)*20}px`;
 
+        this.updateNodePos();
+    }
+
+    updateNodePos(){
         //update the position of the nodes
         for (let i = 0; i < this.terminals; i++) {
-            this.nodes[i].updatePos(event);
+            this.nodes[i].updatePos();
         }
     }
 
-
-    setId(id){
-        this.id = id;
-    }
-
     delete(){
+        //Remove all references to this object
         this.element.remove(); 
         this.element.removeEventListener("mousedown", this.mouseDownBind);
         this.element.removeEventListener("mouseover", this.mouseOverBind);
+
+        delete this.mouseMoveListener;
+        delete this.mouseOverBind;
+        delete this.mouseDownBind;
+        delete this.mouseUpListener;
+        delete this.keyDownBind;
+        delete this.mouseLeaveBind;
 
         if(this.type !== "Ground"){
             this.circuit.DeleteComponent(this);
@@ -127,5 +135,3 @@ class CircuitComponent {
 }
 
 export default CircuitComponent
-
-
