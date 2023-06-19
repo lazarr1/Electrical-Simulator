@@ -21,7 +21,6 @@ class Node {
         this.element.classList.add('node');
         component.element.appendChild(this.element);
 
-
         this.element.style.left = `${x}px`;
         this.element.style.top = `${y}px`;
 
@@ -32,14 +31,34 @@ class Node {
         this.parent = component;
         this.wm = wireManager;
 
+        this.connectedNodes = [];
+
+    }
+
+    resetConnectedNodes(){
+        this.connectedNodes = [];
+    }
+
+    addConnectedNode(node){
+        this.connectedNodes.push(node);
+    }
+
+    setConnectedNodes(nodes){
+        this.connectedNodes = nodes;
+    }
+
+    getConnectedNodes(){
+        return this.connectedNodes;
     }
 
     setVoltage(volts){
         this.voltage = volts;
     }
+
     getVoltage(){
         return this.voltage;
     }
+
     getPos(){
         this.updatePos();
         return [this.x,this.y];

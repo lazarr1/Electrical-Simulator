@@ -32,6 +32,7 @@ class Circuit{
             const nodeID = nodeName.split('N')[1] - 1;
             if(nodeID < this.nodes.length){
                 this.nodes[nodeID].setVoltage(nodeVoltages[nodeName]);
+                this.wireManager.setWireVoltage(this.nodes[nodeID]);
             }
             else{
                 console.error("Massive Bug, server thinks there are more nodes than actually exist");
@@ -107,32 +108,23 @@ class Circuit{
     getConnections(){
         //Iterates through every node in the Circuit and checks if the node is connected to any wires
         this.wireManager.getConnections();
-        for(const i in this.Components){
-            const component = this.Components[i];
-            //Iterate through every node of the component 
-            for(const iNode in component.nodes){
+        this.parentNodes = [];
+        this.childNodes = [];
 
-                //Get position of the node and check its position agains the wireMangers
-                // dictionary of all wire locations
-                const node = component.nodes[iNode];
-                const pos = node.getPos();
-
-                if (pos in this.wireManager.wireGrid){
-                    //If a wire was found to be connected, append this node to the wires' list of connected components
-                    const wire =this.wireManager.wireGrid[pos];
-                    wire.connectedNodes.push(node);
-
-                } 
+        for(let iNode = 0; iNode < this.nodes.length; iNode++){
+            if(this.childNodes.indexOf(this.nodes[iNode]) <= -1){
+                this.parentNodes.push(this.nodes[iNode]);
+                this.childNodes.push(this.wireManager.findConnectedNodesDFS(this.nodes[iNode]));
             }
         }
         
     }
 
-    sendCircuitInfo(){
-        for(const wireID in this.wireManager.wires){
-            const wire = this.wireManager.wires[wireID];
+    sendNodeConnections(){
+        for(const iNode in this.parentNodes){
+            const node = this.parentNodes[iNode];
 
-            const [baseNode, ...toConnectNodes] = wire.connectedNodes;
+            const [baseNode, ...toConnectNodes] = node.getConnectedNodes();
 
             toConnectNodes.forEach(n => 
                 this.client.SendConnectNodesMSG("N" + baseNode.id, "N" + n.id)
@@ -142,19 +134,16 @@ class Circuit{
         //Ground nodes
         for(const ground in this.grounds){
             const node = this.grounds[ground].nodes[0];
-            const pos = node.getPos();
+            const grounded = this.wireManager.findConnectedNodesDFS(node);
 
-            if(pos in this.wireManager.wireGrid){
-                const nodes = this.wireManager.wireGrid[pos].connectedNodes;
-
-                //Ground the first node, this should ground all the others
-                const nodeToGround = nodes[0];
+            if(grounded.length >0){
+                const nodeToGround = grounded[0];
                 nodeToGround && this.client.SendGroundNodeMSG("N" + nodeToGround.id);
             }
         }
     }
 
-    UpdateComponents(){
+    UpdateNodes(){
         //give each node an associated ID, to assign correct node voltages to correct nodes
         let newNodeID = 1;
         this.nodes = [];
@@ -165,10 +154,11 @@ class Circuit{
                 this.nodes.push(iNode);
             }
         }
+        this.wireManager.setNodes(this.nodes);
     }
 
     sendComponents(){
-       this.UpdateComponents();
+       this.UpdateNodes();
         for(let iComponentLoc =0; iComponentLoc < this.Components.length; iComponentLoc++){
             const iComponent = this.Components[iComponentLoc];
             this.client.SendCreateMessage(iComponent.type);
@@ -198,7 +188,7 @@ class Circuit{
     simulate(){
         this.sendComponents();
         this.getConnections();
-        this.sendCircuitInfo();
+        this.sendNodeConnections();
         this.client.SendRunMSG();
     }
 }

@@ -21,12 +21,14 @@ class line{
         this.line = document.createElement("div");
         this.line.classList.add('wire');
         document.body.appendChild(this.line);
-        this.connectedNodes = [];
+        this.connectedWires = [];
         this.start = start;
         this.end = end;
         this.wm = wm;
         this.offset = offset;
         this.DC_voltage = 0;
+
+        this.node = false;
 
         //Implement hover over, showing voltage at the wire functionality
         // The css will handle the display of the tooltip text
@@ -44,21 +46,17 @@ class line{
         this.line.addEventListener("mouseover", this.mouseOverBind);
 
     }
-    
-    getNodeVoltage(){
-        if(this.connectedNodes.length > 0){
-            this.DC_voltage = this.connectedNodes[0].getVoltage();
-        }
-        else{
-            this.DC_voltage = 0;
-        }
+
+    setVoltage(voltage){
+        this.DC_voltage = voltage;
     }
+    
+
     onMouseOver(event){
         this.line.addEventListener("mouseleave", this.mouseLeaveBind);
         document.addEventListener("keydown", this.keyDownBind);
         this.line.addEventListener("mousemove", this.mouseMoveBind);
 
-        this.getNodeVoltage();
         this.hover_info.innerHTML = "DC: " + this.DC_voltage;
         this.hover_info.style.left = `${event.clientX - 10}px`;
         this.hover_info.style.top = `${event.clientY}px`;
@@ -105,7 +103,7 @@ class line{
         delete this.mouseLeaveBind;
         delete this.mouseMoveBind;
 
-        this.connectedNodes = [];
+        delete this.connectedWires;
         this.line.remove();
         this.line.removeChild(this.line.lastChild);
         delete this.line;
