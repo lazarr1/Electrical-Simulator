@@ -43,7 +43,7 @@ class CircuitSolver{
         const double _timestep = 0.01;
 
         //duration of simulation, will be able to be set
-        const double _runtime = 100;
+        const double _runtime = 1000;
 
         double _time;
 

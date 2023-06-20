@@ -57,4 +57,13 @@ class Ground extends StaticCircuitComponent{
     }
 }
 
-export {StaticCircuitComponent, Resistor, DCurrent, Ground}
+class Capacitor extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"Capacitor", componentBox);
+    }
+    onClick(){
+        this.crc.createNewCapacitor();
+    }
+}
+
+export {StaticCircuitComponent, Resistor, DCurrent, Capacitor, Ground}

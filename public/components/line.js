@@ -21,12 +21,14 @@ class line{
         this.line = document.createElement("div");
         this.line.classList.add('wire');
         document.body.appendChild(this.line);
-        this.connectedNodes = [];
+        this.connectedWires = [];
         this.start = start;
         this.end = end;
         this.wm = wm;
         this.offset = offset;
         this.DC_voltage = 0;
+
+        this.node = false;
 
         //Implement hover over, showing voltage at the wire functionality
         // The css will handle the display of the tooltip text
@@ -36,27 +38,25 @@ class line{
         this.hover_info.innerHTML = "DC: " + this.DC_voltage;
         this.line.appendChild(this.hover_info);
 
-        //Each line is a part of a bigger grouping of other lines known as a "wire"
-        this.handleKeyDown = this.handleKeyDown.bind(this);
+        //Store all bindings
+        this.keyDownBind = this.handleKeyDown.bind(this);
         this.mouseOverBind = this.onMouseOver.bind(this);
+        this.mouseLeaveBind = this.onMouseLeave.bind(this);
+        this.mouseMoveBind = this.handleMouseMove.bind(this);
         this.line.addEventListener("mouseover", this.mouseOverBind);
 
     }
-    
-    getNodeVoltage(){
-        if(this.connectedNodes.length > 0){
-            this.DC_voltage = this.connectedNodes[0].getVoltage();
-        }
-        else{
-            this.DC_voltage = 0;
-        }
-    }
-    onMouseOver(event){
-        this.line.addEventListener("mouseleave", this.onMouseLeave.bind(this));
-        document.addEventListener("keydown", this.handleKeyDown);
-        this.line.addEventListener("mousemove", this.handleMouseMove.bind(this));
 
-        this.getNodeVoltage();
+    setVoltage(voltage){
+        this.DC_voltage = voltage;
+    }
+    
+
+    onMouseOver(event){
+        this.line.addEventListener("mouseleave", this.mouseLeaveBind);
+        document.addEventListener("keydown", this.keyDownBind);
+        this.line.addEventListener("mousemove", this.mouseMoveBind);
+
         this.hover_info.innerHTML = "DC: " + this.DC_voltage;
         this.hover_info.style.left = `${event.clientX - 10}px`;
         this.hover_info.style.top = `${event.clientY}px`;
@@ -64,15 +64,15 @@ class line{
 
     handleKeyDown(event){
         //If backspace while hovering
-        if( event.keyCode === 8){
+        if(event.keyCode === 8){
             this.delete();
         }
-
     }
+
     onMouseLeave(){
-        document.removeEventListener("keydown",this.handleKeyDown);
-        this.line.removeEventListener("mouseleave", this.onMouseLeave.bind(this));
-        this.line.removeEventListener("mousemove", this.handleMouseMove.bind(this));
+        document.removeEventListener("keydown",this.keyDownBind);
+        this.line.removeEventListener("mouseleave", this.mouseLeaveBind);
+        this.line.removeEventListener("mousemove", this.mouseMoveBind);
     }
 
     handleMouseMove(event){
@@ -95,13 +95,23 @@ class line{
     }
 
     delete(){
-        //Update any wires that are following this wire, that it no longer exits
-
+        //This was a mistake
         this.line.removeEventListener("mouseover",this.mouseOverBind);
+        delete this.mouseOverBind;
         this.onMouseLeave();
-        this.connectedNodes = [];
+        delete this.keyDownBind;
+        delete this.mouseLeaveBind;
+        delete this.mouseMoveBind;
+
+        delete this.connectedWires;
         this.line.remove();
+        this.line.removeChild(this.line.lastChild);
+        delete this.line;
+
         this.wm.deleteWire(this.id);
+        this.hover_info.remove();
+        delete this.hover_info;
+
         delete this;
     }
 
@@ -113,7 +123,6 @@ class line{
 
 
 class hline extends line{
-
     Draw(){
 
         if(this.offset){
@@ -179,6 +188,7 @@ class vline extends line{
 
 
     }
+    
     merge(wire){
 
         if(wire.line.height == this.line.height){

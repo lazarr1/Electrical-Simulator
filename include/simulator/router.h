@@ -8,10 +8,12 @@ class Router{
 
         void RouteMessage(std::string& message );
         std::string GetResponse();
+        bool GetFinishedStatus();
 
     private:
         CircuitHandler _circuit;
         bool _simComplete;
+        bool _finished;
 };
 
 #endif

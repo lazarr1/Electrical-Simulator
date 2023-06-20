@@ -10,9 +10,6 @@ namespace websocket = beast::websocket;     // from <boost/beast/websocket.hpp>
 namespace net = boost::asio;                // from <boost/asio.hpp>
 using tcp = boost::asio::ip::tcp;           // from <boost/asio/ip/tcp.hpp>
 
-
-
-
 int main(){
 
     Router router;
@@ -48,8 +45,12 @@ int main(){
                 router.RouteMessage(message);
 
                 ws.write(net::buffer(router.GetResponse()));
-                // Send a message back to the client
-                // ws.write(net::buffer("Hello, world!"));
+
+                if(router.GetFinishedStatus()){
+                    ws.close(websocket::close_code::normal);
+                }
+
+
             }
 
 

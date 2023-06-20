@@ -20,6 +20,12 @@
     height: 80px;
 }
 
+.Capacitor{
+    background-image : url('components/images/capacitor.png');
+    width: 41px;
+    height: 80px;
+}
+
 .DCCurrent{
     background-image : url('components/images/DCCurrent.png');
     /* background-size: 41px 80px; */
@@ -69,12 +75,12 @@ body {
     position: absolute;
     height: 70vh;
     overflow-y: auto;
-    width : 15vw;
+    width : 10vw;
     top: 100px;
     display: grid;
     column-gap: 5px;
     grid-template-columns: repeat(3, 1fr); 
-    background-color: rgb(204, 204, 204);
+    background-color: rgb(116, 128, 151);
     opacity: 90%;
     border-radius: 5px;
 }

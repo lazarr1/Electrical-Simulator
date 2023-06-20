@@ -10,7 +10,7 @@ class WireManager {
         this.wireIdGenerator = 0;
         this.currentlyDrawing = undefined;
         this.wires = {}; //key : id --> Value : line representing the wire 
-        this.wireGrid = {}; // Key : (x,y) --> Value: representative node
+        this.wireGrid = {}; // Key : (x,y) position --> Value: representative wire
         this.handleMouseMoveBound = this.handleMouseMove.bind(this);
         this.handleMouseUpBound = this.handleMouseUp.bind(this);
         this.drawing = false;
@@ -22,13 +22,108 @@ class WireManager {
             //and recalculates everything.
             //if application gets too slow its probably this function
         this.wireGrid = {};
+
+        //disjoint set of all wires
+        this.wireSet = {};
         for(const key in this.wires){
             const wire = this.wires[key]; 
-            wire.connectedNodes = [];
             this.mapWireLine(wire);
         }
+        this.flattenWireSet();
         
     }
+
+    setNodes(nodes){
+        this.nodes = nodes;
+        this.nodeMap = [];
+        this.nodes.forEach(node => {
+            this.nodeMap[node.getPos()] = node;
+        });
+    }
+
+    findStrongNode(id){
+        let index = -1;
+
+        for(let iWireKey in this.strongWires){
+            const set = this.strongWires[iWireKey];
+            if(set.has(id)){
+                return iWireKey;
+            }
+        }
+ 
+        return index;
+    }
+
+
+    setWireVoltage(node){
+        if(node.getPos() in this.wireGrid){
+            const wireID = this.wireGrid[node.getPos()].id;
+            const strongWireKey = this.findStrongNode(wireID);
+            if(strongWireKey > -1){
+                this.strongWires[strongWireKey].forEach(id =>{
+                    this.wires[id].setVoltage(node.getVoltage());
+                })
+                delete this.strongWires[strongWireKey];
+            }
+        }
+    }
+    
+    DfsHelper(pos){
+
+        //This DFS may jump into a different grid that happens to be 1 jump away from the wire currently being DFSed
+        //this will make sure only the currentWire gets iterated
+        if(!(this.currentWire.has(this.wireGrid[pos].id))){
+            return;
+        }
+
+        if(pos in this.nodeMap){
+            this.connectedNodes.push(this.nodeMap[pos]);
+        }
+
+
+        const pos1 = [pos[0] + 20, pos[1]]; 
+        const pos2 = [pos[0], pos[1]+20]; 
+        const pos3 = [pos[0] - 20, pos[1]]; 
+        const pos4 = [pos[0],pos[1]-20];
+
+        if(pos1 in this.wireGrid && !(pos1 in this.travelledNodes) ) {
+            this.travelledNodes[pos1] = true;
+            this.DfsHelper(pos1);
+        }
+        if(pos2 in this.wireGrid && !(pos2 in this.travelledNodes)){
+            this.travelledNodes[pos2] = true;
+            this.DfsHelper(pos2);
+        }
+        if(pos3 in this.wireGrid && !(pos3 in this.travelledNodes)){
+            this.travelledNodes[pos3] = true;
+            this.DfsHelper(pos3);
+        }
+        if(pos4 in this.wireGrid && !(pos4 in this.travelledNodes)){
+            this.travelledNodes[pos4] = true;
+            this.DfsHelper(pos4);
+        }
+
+    }
+
+    findConnectedNodesDFS(node){
+        this.connectedNodes = [];
+        this.travelledNodes = {};
+        const startPos = node.getPos();
+
+        if(startPos in this.wireGrid){
+            //To ensure the DFS only interates over the connected wires 
+            this.currentWire = this.strongWires[this.findStrongNode(this.wireGrid[startPos].id)]; 
+            this.DfsHelper(startPos);
+
+            //remove the current node from the connectednode list
+            this.connectedNodes.splice(0,1);
+        }
+
+        node.setConnectedNodes(this.connectedNodes);
+        return this.connectedNodes;
+
+    }
+
     Start(node1) {
         //semaphore to prevent race condition if the user was to click on a node to end the
         //drawing of another node
@@ -37,9 +132,10 @@ class WireManager {
             this.InitialiseWire(node1.getPos());
         }   
     }
+    
 
     InitialiseWire(start){
-        //This Parameter will define if the the wire will come out like an L or an F (without the middle line)
+        //This boolean will define if the the wire will come out like an L or an F (without the middle line)
         //Based on the users mouse movements
         this.defined = false;
 
@@ -48,6 +144,7 @@ class WireManager {
 
         const nVWire = new vline(start,start,false,++this.wireIdGenerator, this);
         this.wires[nVWire.id] = nVWire;
+
 
         document.addEventListener("mouseup", this.handleMouseUpBound);
         document.addEventListener("mousemove", this.handleMouseMoveBound);
@@ -100,14 +197,13 @@ class WireManager {
 
     mapWireLine(wire) {
         const pos = wire.line.getBoundingClientRect();
-        // console.log(wire);
+        this.wireSet[wire.id] = [wire.id];
 
         for (let i = pos.x; i <= pos.x + pos.width - pos.height; i += 20) {
             if (!([i, pos.y] in this.wireGrid)) {
                 this.wireGrid[[i, pos.y]] = wire;
             } else {
-                // console.log(this.wireGrid[i,pos.y])
-                wire.connectedNodes = this.wireGrid[[i, pos.y]].connectedNodes;
+                this.wireSet[this.wireGrid[[i,pos.y]].id].push(wire.id);
             }
         }
 
@@ -115,8 +211,39 @@ class WireManager {
             if (!([pos.x, i] in this.wireGrid)) {
                 this.wireGrid[[pos.x, i]] = wire;
             } else {
-                wire.connectedNodes = this.wireGrid[[pos.x, i]].connectedNodes;
+                this.wireSet[this.wireGrid[[pos.x,i]].id].push(wire.id);
             }
+        }
+    }
+
+    flattenWireSet(){
+        //get Strongly Connected wires
+        this.strongWires = [];
+
+        while (Object.keys(this.wireSet).length>0){
+            const firstKey = Object.keys(this.wireSet)[0];
+            let firstSet = this.wireSet[firstKey];
+            
+            firstSet = new Set(firstSet);
+            delete this.wireSet[firstKey];
+
+            let prevLength = -1;
+
+            while(firstSet.size > prevLength){
+                prevLength = firstSet.size;
+
+                for(let rKey in this.wireSet){
+                    const mergeSet = new Set(this.wireSet[rKey]);
+                    let intersection = new Set(
+                        [...firstSet].filter(x => mergeSet.has(x)));
+                    if(intersection.size > 0){
+                        firstSet = new Set([...firstSet, ...mergeSet]);
+                        delete this.wireSet[rKey];
+                    }
+                }
+
+            }
+            this.strongWires.push(firstSet);
         }
     }
 
@@ -130,4 +257,3 @@ class WireManager {
 }
 
 export default WireManager;
-
