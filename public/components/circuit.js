@@ -22,8 +22,16 @@ class Circuit{
         this.nodes = []; 
         this.grounds = [];
 
+
+        document.addEventListener("mouseup", this.run.bind(this));
+        document.addEventListener("keydown", this.run.bind(this));
+
         //Manages all the connections between components
         this.wireManager = new WireManager();
+    }
+
+    run(){
+        this.simulate();
     }
 
     setNodes(nodeVoltages){

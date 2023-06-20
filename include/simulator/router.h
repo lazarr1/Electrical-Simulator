@@ -13,7 +13,6 @@ class Router{
     private:
         CircuitHandler _circuit;
         bool _simComplete;
-        bool _finished;
 };
 
 #endif

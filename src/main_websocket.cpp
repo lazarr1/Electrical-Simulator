@@ -44,9 +44,9 @@ int main(){
 
                 router.RouteMessage(message);
 
-                ws.write(net::buffer(router.GetResponse()));
 
                 if(router.GetFinishedStatus()){
+                    ws.write(net::buffer(router.GetResponse()));
                     ws.close(websocket::close_code::normal);
                 }
 
