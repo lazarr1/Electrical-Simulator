@@ -10,20 +10,30 @@ CircuitHandler::~CircuitHandler(){
 }
 
 void CircuitHandler::HandleAddComponent(std::string& message){
-    if(message == "Resistor"){
+
+    
+    std::string type,valueStr;
+    std::size_t slash_pose = message.find('/');
+
+    type = message.substr(0, slash_pose);
+    valueStr = message.substr(slash_pose + 1);
+
+    int value = std::stod(valueStr);
+
+    if(type == "Resistor"){
         std::cout << "Creating Resistor" << std::endl;
-        _sim->CreateResistor(defaultResistance);
+        _sim->CreateResistor(value);
     }
-    else if(message == "DCCurrent"){
+    else if(type == "DCCurrent"){
         std::cout << "Creating DCCurrent" << std::endl;
 
-        _sim->CreateCurrentSource(defaultDCC);
+        _sim->CreateCurrentSource(value);
     }
-    else if(message == "Capacitor"){
-        _sim->CreateCapacitor(0.1);
+    else if(type == "Capacitor"){
+        _sim->CreateCapacitor(value);
     }
-    else if(message == "Inductor"){
-        _sim->CreateInductor(0.1);
+    else if(type == "Inductor"){
+        _sim->CreateInductor(value);
     }
     else{
         std::cout << "Unkown Command: " << message << std::endl;

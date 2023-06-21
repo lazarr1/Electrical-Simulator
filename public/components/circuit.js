@@ -50,7 +50,7 @@ class Circuit{
 
     createNewResistor(){
         const type = "Resistor";
-        const newComp = new CircuitComponent(2,type,this);
+        const newComp = new CircuitComponent(2,type,this,100);
         this.Components.push(newComp);
 
         //Position the nodes in the correct position relative to the resistor. 
@@ -67,7 +67,7 @@ class Circuit{
 
     createNewDCurrent(){
         const type = "DCCurrent"
-        const newComp = new CircuitComponent(2,type,this);
+        const newComp = new CircuitComponent(2,type,this, 1);
         this.Components.push(newComp);
 
         for (let i = 0; i < 2; i++) {
@@ -83,7 +83,7 @@ class Circuit{
     
     createNewCapacitor(){
         const type = "Capacitor";
-        const newComp = new CircuitComponent(2, type, this);
+        const newComp = new CircuitComponent(2, type, this, 0.1);
 
         this.Components.push(newComp);
 
@@ -96,12 +96,11 @@ class Circuit{
             //Store the node in the circuit's list of nodes 
             newComp.nodes.push(nNode);
         }
-
     }
 
     createNewInductor(){
         const type = "Inductor";
-        const newComp = new CircuitComponent(2, type, this);
+        const newComp = new CircuitComponent(2, type, this, 0.1);
 
         this.Components.push(newComp);
 
@@ -187,7 +186,7 @@ class Circuit{
        this.UpdateNodes();
         for(let iComponentLoc =0; iComponentLoc < this.Components.length; iComponentLoc++){
             const iComponent = this.Components[iComponentLoc];
-            this.client.SendCreateMessage(iComponent.type);
+            this.client.SendCreateMessage(iComponent.type, iComponent.getValue());
         }
     }
 
