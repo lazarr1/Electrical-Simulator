@@ -22,6 +22,9 @@ void CircuitHandler::HandleAddComponent(std::string& message){
     else if(message == "Capacitor"){
         _sim->CreateCapacitor(0.1);
     }
+    else if(message == "Inductor"){
+        _sim->CreateInductor(0.1);
+    }
     else{
         std::cout << "Unkown Command: " << message << std::endl;
     }

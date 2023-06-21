@@ -33,6 +33,12 @@
     height: 80px;
 }
 
+.Inductor{
+    background-image: url('components/images/inductor.png');
+    width: 41px;
+    height: 80px;
+}
+
 .Ground{
     background-image: url('components/images/ground.png');
     width: 41px;
@@ -107,7 +113,7 @@ body {
   word-wrap: normal;
   /* Position the tooltip text - see examples below! */
   position: fixed;
-  z-index: 1;
+  z-index: 11;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */

@@ -11,6 +11,7 @@ class WireManager {
         this.currentlyDrawing = undefined;
         this.wires = {}; //key : id --> Value : line representing the wire 
         this.wireGrid = {}; // Key : (x,y) position --> Value: representative wire
+        this.wireSet = {}; //Key : int (wire position) --> Value: array of connected wire ids;
         this.handleMouseMoveBound = this.handleMouseMove.bind(this);
         this.handleMouseUpBound = this.handleMouseUp.bind(this);
         this.drawing = false;
@@ -232,9 +233,9 @@ class WireManager {
             while(firstSet.size > prevLength){
                 prevLength = firstSet.size;
 
-                for(let rKey in this.wireSet){
+                for(const rKey in this.wireSet){
                     const mergeSet = new Set(this.wireSet[rKey]);
-                    let intersection = new Set(
+                    const intersection = new Set(
                         [...firstSet].filter(x => mergeSet.has(x)));
                     if(intersection.size > 0){
                         firstSet = new Set([...firstSet, ...mergeSet]);

@@ -99,6 +99,24 @@ class Circuit{
 
     }
 
+    createNewInductor(){
+        const type = "Inductor";
+        const newComp = new CircuitComponent(2, type, this);
+
+        this.Components.push(newComp);
+
+        for (let i = 0; i < 2; i++) {
+            //Position Nodes Correctly
+            const x = 20.5;
+            const y = (i) * 80;
+            const nNode = new Node(x,y, newComp, this.wireManager);
+
+            //Store the node in the circuit's list of nodes 
+            newComp.nodes.push(nNode);
+        }
+
+    }
+
     createGroundNode(){
         const type = "Ground";
         const newComp = new CircuitComponent(1, type,this);
