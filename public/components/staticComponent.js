@@ -66,4 +66,14 @@ class Capacitor extends StaticCircuitComponent{
     }
 }
 
-export {StaticCircuitComponent, Resistor, DCurrent, Capacitor, Ground}
+class Inductor extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"Inductor", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewInductor();
+    }
+}
+
+export {StaticCircuitComponent, Resistor, DCurrent, Capacitor, Inductor, Ground}

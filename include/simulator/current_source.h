@@ -10,8 +10,6 @@ class CurrentSource: public CircuitComponent{
         ~CurrentSource();
 
         void Stamp();
-
-        double current;
         
         const int ioPins = 2;
 

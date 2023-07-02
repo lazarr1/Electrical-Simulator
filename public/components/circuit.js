@@ -22,8 +22,16 @@ class Circuit{
         this.nodes = []; 
         this.grounds = [];
 
+
+        document.addEventListener("mouseup", this.run.bind(this));
+        document.addEventListener("keydown", this.run.bind(this));
+
         //Manages all the connections between components
         this.wireManager = new WireManager();
+    }
+
+    run(){
+        this.simulate();
     }
 
     setNodes(nodeVoltages){
@@ -42,7 +50,7 @@ class Circuit{
 
     createNewResistor(){
         const type = "Resistor";
-        const newComp = new CircuitComponent(2,type,this);
+        const newComp = new CircuitComponent(2,type,this,100);
         this.Components.push(newComp);
 
         //Position the nodes in the correct position relative to the resistor. 
@@ -59,7 +67,7 @@ class Circuit{
 
     createNewDCurrent(){
         const type = "DCCurrent"
-        const newComp = new CircuitComponent(2,type,this);
+        const newComp = new CircuitComponent(2,type,this, 1);
         this.Components.push(newComp);
 
         for (let i = 0; i < 2; i++) {
@@ -75,7 +83,24 @@ class Circuit{
     
     createNewCapacitor(){
         const type = "Capacitor";
-        const newComp = new CircuitComponent(2, type, this);
+        const newComp = new CircuitComponent(2, type, this, 0.1);
+
+        this.Components.push(newComp);
+
+        for (let i = 0; i < 2; i++) {
+            //Position Nodes Correctly
+            const x = 20.5;
+            const y = (i) * 80;
+            const nNode = new Node(x,y, newComp, this.wireManager);
+
+            //Store the node in the circuit's list of nodes 
+            newComp.nodes.push(nNode);
+        }
+    }
+
+    createNewInductor(){
+        const type = "Inductor";
+        const newComp = new CircuitComponent(2, type, this, 0.1);
 
         this.Components.push(newComp);
 
@@ -161,7 +186,7 @@ class Circuit{
        this.UpdateNodes();
         for(let iComponentLoc =0; iComponentLoc < this.Components.length; iComponentLoc++){
             const iComponent = this.Components[iComponentLoc];
-            this.client.SendCreateMessage(iComponent.type);
+            this.client.SendCreateMessage(iComponent.type, iComponent.getValue());
         }
     }
 

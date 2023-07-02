@@ -29,11 +29,6 @@ class CircuitHandler{
     private:
         Simulator* _sim;
 
-        const double defaultResistance = 100;
-
-        const double defaultDCC = 1;
-
-//        json circuitInfo;
 };
 
 

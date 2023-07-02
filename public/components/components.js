@@ -1,4 +1,4 @@
-import Node from './nodes.js';
+import modifyBox from './modifyParamsBox.js';
 
 /*  Class: CircuitComponent: 
     *      This class represents the real circuit elements the user has defined. It stores the elments id and type,
@@ -10,13 +10,16 @@ import Node from './nodes.js';
     *       -onMouseOver - Starts listening to the users inputs to rotate/delete
     *       -onMouseClick/MouseMove - Moves the component to the user's curosr (keeping component lined up on the grid)
     *       -handleKeyDown - Rotates given mouse over and r key is pressed. (will soon be able to delete)
-    */
+*/
 class CircuitComponent {
-    constructor(terminals, type, circuit) {
+    constructor(terminals, type, circuit, value) {
         //Store the number of terminals/nodes it has
         this.terminals = terminals;
         this.type = type;
         this.circuit = circuit;
+
+        this.defaultVal = value;
+        this.value = value;
 
         //Store all nodes associated with the component
         this.nodes = [];
@@ -34,6 +37,9 @@ class CircuitComponent {
         document.body.appendChild(this.element);
         this.element.addEventListener("mouseover", this.mouseOverBind);
         this.element.addEventListener("mousedown", this.mouseDownBind);
+
+
+        this.modifyBox = new modifyBox(this); 
 
     }
 
@@ -58,6 +64,7 @@ class CircuitComponent {
                 this.rotation += 90;
             }
             this.element.style.transform = `rotate(${this.rotation}deg)`;
+            this.modifyBox.rotate(this.rotation);
             this.updateNodePos();
         }
         // 'delete' key
@@ -105,8 +112,30 @@ class CircuitComponent {
         }
     }
 
+    setValue(value){
+        this.value = value;
+    }   
+
+    getValue(){
+
+        //If user is modifying parameter, assuming default until it is changed
+        if(this.modifyBox.getOpenStatus()){
+            return this.defaultVal;
+        }
+
+        this.value = this.modifyBox.getValue();
+        if( !isNaN(this.value) &&  !isNaN(parseFloat(this.value))){ // ...and ensure strings of whitespace fail){
+            return this.value;
+        }
+        else{
+            this.modifyBox.setInput(this.defaultVal);
+            return this.defaultVal;
+        }
+    }
+
     delete(){
         //Remove all references to this object
+        //This was a mistake
         this.element.remove(); 
         this.element.removeEventListener("mousedown", this.mouseDownBind);
         this.element.removeEventListener("mouseover", this.mouseOverBind);
@@ -117,6 +146,9 @@ class CircuitComponent {
         delete this.mouseUpListener;
         delete this.keyDownBind;
         delete this.mouseLeaveBind;
+
+        this.modifyBox.delete();
+        delete this.modifyBox;
 
         if(this.type !== "Ground"){
             this.circuit.DeleteComponent(this);

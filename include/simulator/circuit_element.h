@@ -36,9 +36,12 @@ class CircuitComponent{
 
         std::string GetName() const;
 
+        virtual double GetCurrent() const;
+        void SetCurrent(const double curr);
 
         //each component has a constant number of pins
         const int ioPins;
+
 
         //This porvides the interface for external classes like the nodes to know
         //What direction things flow in the component and to know what nodes are connected.
@@ -46,8 +49,9 @@ class CircuitComponent{
         std::vector<std::shared_ptr<Node>> connectedNodes;
 
     protected:
-
         std::string name;
+
+        double _current;
 
         CircuitSolver* _solver;
 
@@ -67,6 +71,7 @@ class Resistor: public CircuitComponent{
 
         double resistance;
 
+        double GetCurrent() const;
 
         const int ioPins = 2;
 

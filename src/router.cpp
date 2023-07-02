@@ -4,12 +4,11 @@
 
 Router::Router(){
    _simComplete = false;
-   _finished = false;
 }
 
 void Router::RouteMessage(std::string& message ){
 
-    _finished = false;
+    _simComplete = false;
     std::string message_type, message_data;
 
     //Message will be formated as
@@ -50,7 +49,6 @@ std::string Router::GetResponse(){
     if(_simComplete == true){
         _simComplete = false;
 
-        _finished = true;
         std::string response = std::string("voltages/") + _circuit.GetNodeVoltagesJSON().dump();
 
         _circuit.ClearCircuit();
@@ -65,5 +63,5 @@ std::string Router::GetResponse(){
 }
 
 bool Router::GetFinishedStatus(){
-    return _finished;
+    return _simComplete;
 }

@@ -8,15 +8,14 @@ CurrentSource::CurrentSource(std::string nameInput, CircuitSolver* sim)
 
 }
 
-
 CurrentSource::~CurrentSource(){
     
 }
 
 void CurrentSource::Stamp(){
 
-    _solver->StampCurrentVector(connectedNodes[0]->parent->id, -current);
-	_solver->StampCurrentVector(connectedNodes[1]->parent->id, current);
+    _solver->StampCurrentVector(connectedNodes[0]->parent->id, -_current);
+	_solver->StampCurrentVector(connectedNodes[1]->parent->id, _current);
 
 }
 

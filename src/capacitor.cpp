@@ -22,7 +22,7 @@ void Capacitor::SetCapacitance(const double capacitance){
     // std::cout << "This is the cap" <<  _eqRes.resistance << std::endl;
 
     //initially 0
-    _eqCurrent.current = 0.001;
+    _eqCurrent.SetCurrent(0.001);
 
 }
 
@@ -45,7 +45,7 @@ void Capacitor::Update(){
     //Equivalent current source gets filled up
     double voltdiff = connectedNodes[0]->parent->voltage - connectedNodes[1]->parent->voltage;
 
-    _eqCurrent.current = -voltdiff/_eqRes.resistance;
+    _eqCurrent.SetCurrent(-voltdiff/_eqRes.resistance);
 
 
 }

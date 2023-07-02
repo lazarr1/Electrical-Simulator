@@ -56,8 +56,8 @@ class Client{
         }
     }
 
-    SendCreateMessage(ComponentType){
-        this.sendMsg("add component:"+ComponentType);
+    SendCreateMessage(ComponentType, value){
+        this.sendMsg("add component:"+ComponentType + "/"+value);
     }
 
     SendGroundNodeMSG(NodeName){

@@ -1,4 +1,4 @@
-import  {Capacitor, Resistor, DCurrent, Ground} from './staticComponent.js';
+import  {Inductor, Capacitor, Resistor, DCurrent, Ground} from './staticComponent.js';
 
 function fillComponentBox(circuit){
 // Define an array of image URLs or class objects
@@ -6,7 +6,8 @@ const components = [
     { name: Resistor, id : 1 },
     { name: DCurrent, id: 2 },
     { name: Ground, id: 3},
-    { name: Capacitor, id: 4}
+    { name: Capacitor, id: 4},
+    { name: Inductor, id:5}
 ];
 
     const componentBox = document.createElement("div");
