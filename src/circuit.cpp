@@ -1,25 +1,26 @@
 #include "simulator/circuit.h"
-
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
-
-Circuit::Circuit(CircuitSolver* solver)
-{
-    _solver = solver;
-}
-
 
 #ifdef __TIMER__
     // #include <time.h>
     #include <chrono>
 #endif
 
+Circuit::Circuit(CircuitSolver* solver)
+{
+    _solver = solver;
+}
 
 void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
-
     //store every component
-    _components.insert(component);
+    if(component->GetName()[0] != 'V'){
+        _components.insert(component);
+    }
+    else{
+        _voltageSources.insert(component);
+    }
     
     for(auto iNode : component->connectedNodes){
 
@@ -31,15 +32,15 @@ void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
         //store every node
         _nodes.insert(iNode);
     }
-
-
 }
 
 void Circuit::CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2){
-
     //If they are not already connected
     if(node1->parent != node2->parent){
-
+        bool hasVs = false;
+        if(node1->parent->hasVs || node2->parent->hasVs){
+            hasVs = true;
+        }
         //merge the bigger node group with the smaller node group
         if(node1->parent->children.size() < node2->parent->children.size()){
             Union(node2, node1);
@@ -47,8 +48,9 @@ void Circuit::CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node
         else{
             Union(node1, node2);
         }
-    }
 
+        node1->parent->hasVs = hasVs;
+    }
 }
 
 //Creating a connection combines the directions node2 flows with to the directions node1 flows
@@ -200,6 +202,10 @@ void Circuit::PrintIM(){
     for(auto j : _components){
         std::cout <<" "<< j->GetName();
     }
+
+    for(auto j : _voltageSources){
+        std::cout << " " << j->GetName();
+    }
     std::cout << std::endl;
     for(auto i : _nodes){
 
@@ -220,6 +226,18 @@ void Circuit::PrintIM(){
             }
         }
         
+        for(auto j : _voltageSources){
+            if(_incidenceMatrix.count(i) > 0){
+
+                if(_incidenceMatrix[i].count(j) > 0){
+                    std::cout << " " << _incidenceMatrix[i][j];
+                }
+                else{
+                    std::cout << " 0";
+                }
+            }
+        }
+
         if(_incidenceMatrix.count(i) > 0)
             std::cout<<std::endl;
     }

@@ -33,6 +33,12 @@
     height: 80px;
 }
 
+.VoltageSource{
+    background-image : url('components/images/VoltageSource.png');
+    width: 41px;
+    height: 80px;
+}
+
 .Inductor{
     background-image: url('components/images/inductor.png');
     width: 41px;
