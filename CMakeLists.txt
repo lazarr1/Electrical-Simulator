@@ -71,6 +71,7 @@ set(elec_sim_SOURCES
     src/vccs.cpp
     src/router.cpp
     src/circuithandler.cpp
+    src/voltage_source.cpp
 )
 
 add_library(circ_sim_lib ${elec_sim_SOURCES})

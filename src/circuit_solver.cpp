@@ -42,7 +42,6 @@ void CircuitSolver::StampMatrix(const int i, const int j, const double x){
 
 void CircuitSolver::StampCurrentVector(const int i, const double x){
 
-
     if(_parentNodes[i]->parent->grounded == false){
         _currentVector(i) += x;
     }
