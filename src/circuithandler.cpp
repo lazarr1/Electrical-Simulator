@@ -18,7 +18,8 @@ void CircuitHandler::HandleAddComponent(std::string& message){
     type = message.substr(0, slash_pose);
     valueStr = message.substr(slash_pose + 1);
 
-    int value = std::stod(valueStr);
+    double value = std::stod(valueStr);
+    std::cout << value << std::endl;
 
     if(type == "Resistor"){
         std::cout << "Creating Resistor" << std::endl;
@@ -30,9 +31,11 @@ void CircuitHandler::HandleAddComponent(std::string& message){
         _sim->CreateCurrentSource(value);
     }
     else if(type == "Capacitor"){
+        std::cout << "Creating Capacitor" << std::endl;
         _sim->CreateCapacitor(value);
     }
     else if(type == "Inductor"){
+        std::cout << "Creating Inductor" << std::endl;
         _sim->CreateInductor(value);
     }
     else{

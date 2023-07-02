@@ -17,12 +17,11 @@ void Inductor::SetInductance(const double inductance){
 
     _inductance = inductance;
 
-
-    _eqRes.resistance = _solver->GetTimestep()/(2 * _inductance);
-    // std::cout << "This is the cap" <<  _eqRes.resistance << std::endl;
+    _eqRes.resistance = _inductance/ _solver->GetTimestep();
+//    std::cout << "This is the cap" <<  _eqRes.resistance << std::endl;
 
     //initially 0
-    _eqCurrent.current = 0.001;
+    _eqCurrent.SetCurrent(0.001);
 
 }
 
@@ -34,7 +33,6 @@ void Inductor::Stamp(){
 
     Update();
 
-
     _eqRes.Stamp();
     _eqCurrent.Stamp();
 
@@ -45,9 +43,9 @@ void Inductor::Update(){
     //Equivalent current source gets filled up
     double voltdiff = connectedNodes[0]->parent->voltage - connectedNodes[1]->parent->voltage;
 
-    _eqCurrent.current += voltdiff/_eqRes.resistance;
+    _eqCurrent.SetCurrent(voltdiff/_eqRes.resistance + _eqCurrent.GetCurrent()); 
 
-
+//    std::cout << "CURRENT   "<< _eqCurrent.GetCurrent() << std::endl;
 }
 
 

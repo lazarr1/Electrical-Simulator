@@ -116,7 +116,7 @@ void Simulator::CreateCurrentSource(const double current){
 
     AllocateNodes(cs);
 
-    cs->current = current;
+    cs->SetCurrent(current);
 
     //update the circuit to include the new component
     _circuit.AddComponent(cs);

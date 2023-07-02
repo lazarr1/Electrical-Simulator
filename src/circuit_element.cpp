@@ -4,7 +4,7 @@
 
 
 CircuitComponent::CircuitComponent(std::string nameInput, int numioPins, const Direction * connectionDirections, CircuitSolver* sim)
-    : ioPins(numioPins), connectionDirection(connectionDirections), name(nameInput), _solver(sim)
+    : ioPins(numioPins), connectionDirection(connectionDirections), name(nameInput), _current(0), _solver(sim)
 {
 
 }
@@ -14,6 +14,14 @@ CircuitComponent::~CircuitComponent(){
 
 std::string CircuitComponent::GetName() const{
     return name;
+}
+
+void CircuitComponent::SetCurrent(const double curr){
+    _current = curr;   
+}
+
+double CircuitComponent::GetCurrent() const{
+    return _current;
 }
 
 Resistor::Resistor(std::string nameInput, CircuitSolver* sim)
@@ -30,6 +38,10 @@ void CircuitComponent::Print() const{
     std::cout << "Name: " << name << std::endl;
 }
 
+double Resistor::GetCurrent() const{
+    return (connectedNodes[0]->parent->voltage - connectedNodes[1]->parent->voltage)/resistance; 
+}
+
 void Resistor::Stamp(){
 
     if(resistance != 0){
@@ -43,4 +55,3 @@ void Resistor::Stamp(){
     }
 
 }
-

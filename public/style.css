@@ -86,9 +86,10 @@ body {
     display: grid;
     column-gap: 5px;
     grid-template-columns: repeat(3, 1fr); 
-    background-color: rgb(116, 128, 151);
+    background-color: lightgray;
+    grid-auto-rows: 90px;
+    grid-gap: 10px;
     opacity: 90%;
-    border-radius: 5px;
 }
 
 .closingButton{
