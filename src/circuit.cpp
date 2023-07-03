@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include "simulator/voltage_source.h"
 
 #ifdef __TIMER__
     // #include <time.h>
@@ -170,12 +171,18 @@ void Circuit::BuildCircuitMatrix(){
         _solver->Resize(idGenerator, false);
         _solver->SetParentNodes(parentNodes);
 
+        
+        for(std::shared_ptr<CircuitComponent> iVs : _voltageSources){
+            std::shared_ptr<VoltageSource> vPtr = std::dynamic_pointer_cast<VoltageSource>(iVs);
+            vPtr->ResizeSolver();
+        }
+        
         for(std::shared_ptr<CircuitComponent> iVs : _voltageSources){
             iVs->Stamp();
         }
 
         for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
-                iComponent->Stamp();
+            iComponent->Stamp();
         }
 
 

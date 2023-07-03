@@ -10,6 +10,8 @@ class VoltageSource: public CircuitComponent{
         ~VoltageSource();
 
         void Stamp();
+
+        void ResizeSolver();
         
         const int ioPins = 2;
 
@@ -19,6 +21,8 @@ class VoltageSource: public CircuitComponent{
     private:
         //A node flows in a node flows out
         const Direction currentDirection[2] {In, Out};
+
+        int _newRow;
 
 };
 

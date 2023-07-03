@@ -52,7 +52,7 @@
 }
 
 .CircuitComponent{
-    cursor : pointer;
+    cursor : move;
     position : absolute;
 }
 
