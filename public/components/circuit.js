@@ -41,7 +41,7 @@ class Circuit{
         //Set nodes to match the server.
         for (const nodeName in nodeVoltages){
             const nodeID = nodeName.split('N')[1] - 1;
-            if(nodeID < this.nodes.length){
+            if(nodeID < this.nodes.length && this.nodes[nodeID] !== undefined){
                 this.nodes[nodeID].setVoltage(nodeVoltages[nodeName]);
                 this.wireManager.setWireVoltage(this.nodes[nodeID]);
             }

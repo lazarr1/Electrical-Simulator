@@ -16,11 +16,10 @@ Circuit::Circuit(CircuitSolver* solver)
 
 void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
     //store every component
-    if(component->GetName()[0] != 'V'){
-        _components.insert(component);
-    }
-    else{
-        _voltageSources.insert(component);
+    _components.insert(component);
+
+    if(component->GetName()[0] == 'V'){
+        _voltageSources.insert(std::dynamic_pointer_cast<VoltageSource>(component));
     }
     
     for(auto iNode : component->connectedNodes){
@@ -172,13 +171,8 @@ void Circuit::BuildCircuitMatrix(){
         _solver->SetParentNodes(parentNodes);
 
         
-        for(std::shared_ptr<CircuitComponent> iVs : _voltageSources){
-            std::shared_ptr<VoltageSource> vPtr = std::dynamic_pointer_cast<VoltageSource>(iVs);
-            vPtr->ResizeSolver();
-        }
-        
-        for(std::shared_ptr<CircuitComponent> iVs : _voltageSources){
-            iVs->Stamp();
+        for(std::shared_ptr<VoltageSource> iVs : _voltageSources){
+            iVs->ResizeSolver();
         }
 
         for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
