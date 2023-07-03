@@ -32,12 +32,24 @@ void CircuitSolver::Resize(const int size, const bool keepOld){
     }
 }
 
+std::pair<int,int> CircuitSolver::GetSize() const{
+    return {_circuitMatrix.size1(), _circuitMatrix.size2()};
+}
+
 //ith row, jth coloumn
 void CircuitSolver::StampMatrix(const int i, const int j, const double x){
 
     if((_parentNodes[i]->parent->grounded == false) &&  (_parentNodes[j]->parent->grounded == false)){
         _circuitMatrix(i,j) += x;
     }
+}
+
+void CircuitSolver::StampVSMatrix(const int i, const int j, const double x){
+   _circuitMatrix(i,j) += x; 
+}
+
+void CircuitSolver::StampVSCurrent(const int i, const double x){
+    _currentVector(i) += x;
 }
 
 void CircuitSolver::StampCurrentVector(const int i, const double x){

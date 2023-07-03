@@ -33,6 +33,12 @@ class CircuitSolver{
         
         void ResetFinishedState();
 
+        std::pair<int,int> GetSize() const;
+
+        void StampVSCurrent(const int i, const double x);
+
+        void StampVSMatrix(const int i, const int j, const double x);
+
         void Print() const;
 
     private:

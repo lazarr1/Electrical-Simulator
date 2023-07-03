@@ -43,9 +43,9 @@ FIND_PACKAGE( Boost 1.80 COMPONENTS program_options REQUIRED )
 
 include_directories(
   include
-  ${Boost_INCLUDE_DIR}
+  SYSTEM ${Boost_INCLUDE_DIR}
   #PRETEND THIS ISN'T HERE
-  build/_deps/json-src/single_include
+  SYSTEM build/_deps/json-src/single_include
 )
 # =========================================================
 include(FetchContent)
@@ -79,15 +79,12 @@ add_library(circ_sim_lib ${elec_sim_SOURCES})
 #if ur library ends up including something use this:
 # target_link_libraries(major_lib ${catkin_LIBRARIES} ${OpenCV_LIBS})
 
-add_executable(simulator src/main.cpp)
-target_link_libraries(simulator circ_sim_lib ${Boost_LIBRARIES}) 
 
 add_executable(websocket src/main_websocket.cpp)
-target_link_libraries(websocket PUBLIC circ_sim_lib PRIVATE ${Boost_LIBRARIES}) 
+target_link_libraries(websocket PUBLIC circ_sim_lib SYSTEM ${Boost_LIBRARIES}) 
 
 ###################
 #BUILD 
-install(TARGETS simulator DESTINATION ${DIVISIBLE_INSTALL_BIN_DIR} )
 
 install(TARGETS websocket DESTINATION ${DIVISIBLE_INSTALL_BIN_DIR})
 

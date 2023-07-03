@@ -37,10 +37,6 @@ void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
 void Circuit::CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2){
     //If they are not already connected
     if(node1->parent != node2->parent){
-        bool hasVs = false;
-        if(node1->parent->hasVs || node2->parent->hasVs){
-            hasVs = true;
-        }
         //merge the bigger node group with the smaller node group
         if(node1->parent->children.size() < node2->parent->children.size()){
             Union(node2, node1);
@@ -49,7 +45,6 @@ void Circuit::CreateConnection(std::shared_ptr<Node> node1, std::shared_ptr<Node
             Union(node1, node2);
         }
 
-        node1->parent->hasVs = hasVs;
     }
 }
 
@@ -175,10 +170,14 @@ void Circuit::BuildCircuitMatrix(){
         _solver->Resize(idGenerator, false);
         _solver->SetParentNodes(parentNodes);
 
+        for(std::shared_ptr<CircuitComponent> iVs : _voltageSources){
+            iVs->Stamp();
+        }
 
         for(std::shared_ptr<CircuitComponent> iComponent : _components){ 
                 iComponent->Stamp();
         }
+
 
     }
     #ifdef __TIMER__

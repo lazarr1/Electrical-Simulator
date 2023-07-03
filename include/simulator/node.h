@@ -21,7 +21,6 @@ struct Node{
     int id;
 
     bool grounded;
-    bool hasVs;
 
     Node(std::string nameInput, std::shared_ptr<CircuitComponent> component);
 
