@@ -2,7 +2,8 @@ const componentParams = {
     "Resistor": "Resistance: ",
     "Capacitor" : "Capacitance: ",
     "DCCurrent" : "Amps: ",
-    "Inductor" : "Inductance: "
+    "Inductor" : "Inductance: ",
+    "VoltageSource" : "Volts: "
 };
 
 class modifyBox{

@@ -44,6 +44,8 @@ class Simulator{
 
         void CreateCurrentSource(const double current);
 
+        void CreateVoltageSource(const double voltage);
+
         void CreateCapacitor(const double capacitance);
 
         void CreateInductor(const double inductance);

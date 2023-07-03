@@ -11,6 +11,7 @@
 #include "simulator/capacitor.h"
 #include "simulator/inductor.h"
 #include "simulator/vccs.h"
+#include "simulator/voltage_source.h"
 
 
 
@@ -124,6 +125,22 @@ void Simulator::CreateCurrentSource(const double current){
     //update the simulator to store the new component
     _presentComponents[cs->GetName()] = cs;
 
+}
+
+void Simulator::CreateVoltageSource(const double voltage){
+   _numComponents++;
+
+   std::string name("V" + std::to_string(_numComponents));
+
+   std::shared_ptr<VoltageSource> vs = std::make_shared<VoltageSource>(name, &_solver);
+
+   AllocateNodes(vs);
+
+   vs->voltage = voltage;
+
+   _circuit.AddComponent(vs);
+
+   _presentComponents[vs->GetName()] = vs;
 }
 
 void Simulator::CreateVccs(const double conductance){

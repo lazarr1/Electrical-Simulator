@@ -33,6 +33,12 @@ class CircuitSolver{
         
         void ResetFinishedState();
 
+        std::pair<int,int> GetSize() const;
+
+        void StampVSCurrent(const int i, const double x);
+
+        void StampVSMatrix(const int i, const int j, const double x);
+
         void Print() const;
 
     private:
@@ -43,7 +49,7 @@ class CircuitSolver{
         const double _timestep = 0.01;
 
         //duration of simulation, will be able to be set
-        const double _runtime = 1000;
+        const double _runtime = 100;
 
         double _time;
 

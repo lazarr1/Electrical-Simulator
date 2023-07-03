@@ -38,6 +38,10 @@ void CircuitHandler::HandleAddComponent(std::string& message){
         std::cout << "Creating Inductor" << std::endl;
         _sim->CreateInductor(value);
     }
+    else if(type == "VoltageSource"){
+        std::cout << "Creating Voltage Source" << std::endl;
+        _sim->CreateVoltageSource(value);
+    }
     else{
         std::cout << "Unkown Command: " << message << std::endl;
     }

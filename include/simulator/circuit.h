@@ -69,6 +69,7 @@ class Circuit{
         std::unordered_set<std::shared_ptr<Node>> _nodes;
         std::unordered_set<std::shared_ptr<CircuitComponent>> _components;
 
+        std::unordered_set<std::shared_ptr<CircuitComponent>> _voltageSources;
 
 
         // std::vector<std::shared_ptr<Node>> _parentNodes;
