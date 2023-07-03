@@ -52,7 +52,7 @@
 }
 
 .CircuitComponent{
-    cursor : move;
+    cursor : pointer;
     position : absolute;
 }
 
@@ -87,12 +87,12 @@ body {
     position: absolute;
     height: 70vh;
     overflow-y: auto;
-    width : 10vw;
+    width : 160px;
     top: 100px;
     display: grid;
     column-gap: 5px;
     grid-template-columns: repeat(3, 1fr); 
-    background-color: lightgray;
+    background-color: #008080;
     grid-auto-rows: 90px;
     grid-gap: 10px;
     opacity: 90%;
@@ -171,4 +171,43 @@ body {
 @keyframes fadeIn {
   from {opacity: 0;}
   to {opacity:1 ;}
+}
+
+#bottombar{
+    position: fixed;
+    z-index: 100; 
+    bottom: 0; 
+    left: 0;
+    width: 100%;
+    background-color: #C0C0C0;
+    height: 40px;
+}
+
+#playbutton{
+    position: absolute;
+    background-image: url('components/images/play.png');
+    height: 40px;
+    width: 40px;
+    left: 1%;
+}
+
+#simtime{
+    position: absolute;
+    left: 5%;
+    font-size: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.link{
+    position: absolute;
+    left: 85%;
+    font-size: 12px;
+    text-decoration: underline;
+    color: #569CD6;
+    padding: 0;
 }

@@ -22,6 +22,9 @@ class Circuit{
         this.nodes = []; 
         this.grounds = [];
 
+        this.playbutton = document.getElementById("playbutton");
+
+        this.playbutton.onclick = this.simulate.bind(this);
 
         document.addEventListener("mouseup", this.run.bind(this));
         document.addEventListener("keydown", this.run.bind(this));

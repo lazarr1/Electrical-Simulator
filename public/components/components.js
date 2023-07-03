@@ -93,8 +93,8 @@ class CircuitComponent {
 
     onMouseUp() {
         //Stop following cursor
-        document.removeEventListener("mouseup", this.mouseUpListener );
         document.removeEventListener("mousemove", this.mouseMoveListener);
+        document.removeEventListener("mouseup", this.mouseUpListener );
     }
 
     onMouseMove(event) {
