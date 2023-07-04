@@ -17,6 +17,8 @@ class Circuit{
     constructor(){
         this.client = new Client(this);
 
+        this.ok = true;
+        this.okDiv = document.getElementById("simulationOk");
         //Store all components
         this.Components = [];
         this.nodes = []; 
@@ -37,7 +39,18 @@ class Circuit{
         this.simulate();
     }
 
+    okButtonOff(){
+        this.okDiv.classList.add("notOk");
+    }   
+    okButtonOn(){
+        this.okDiv.classList.remove("notOk");
+    }
+    ErrorMsg(){
+        this.okButtonOff();
+    }
+
     setNodes(nodeVoltages){
+        this.okButtonOn();
         //Set nodes to match the server.
         for (const nodeName in nodeVoltages){
             const nodeID = nodeName.split('N')[1] - 1;
