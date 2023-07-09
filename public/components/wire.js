@@ -208,7 +208,6 @@ class WireManager {
     checkMerge(line){
         const strongWireKey = this.findStrongNode(line.id);
         if(strongWireKey > -1){
-        console.log(this.strongWires[strongWireKey]);
             this.strongWires[strongWireKey].forEach(id =>{
                 line.merge(this.wires[id]);
             })
