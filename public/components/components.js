@@ -37,7 +37,9 @@ class CircuitComponent {
         document.body.appendChild(this.element);
         this.element.addEventListener("mouseover", this.mouseOverBind);
         this.element.addEventListener("mousedown", this.mouseDownBind);
-
+        
+        this.element.style.left = `${Math.round(this.element.offsetLeft/20) *20}px`;
+        this.element.style.top = `${Math.round(this.element.offsetTop/20)*20}px`;
 
         this.modifyBox = new modifyBox(this); 
 
@@ -79,6 +81,7 @@ class CircuitComponent {
     onMouseDown(event) {
         //Store initialX and Y position of the component, this ensures the component stays
         //in the center of the user's mouse
+
         this.initialX = event.clientX - this.element.offsetLeft;
         this.initialY = event.clientY - this.element.offsetTop;
 

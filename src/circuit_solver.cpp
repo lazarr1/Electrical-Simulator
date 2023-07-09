@@ -1,5 +1,3 @@
-#include "simulator/circuit_solver.h"
-
 #include "simulator/node.h"
 
 #include <boost/numeric/ublas/vector_sparse.hpp>

@@ -16,17 +16,17 @@ import Client from "../client/client.js";
 class Circuit{
     constructor(){
         this.client = new Client(this);
-
-        this.ok = true;
-        this.okDiv = document.getElementById("simulationOk");
+        
+        this.inSim = false;
+//        this.ok = true;
+//        this.okDiv = document.getElementById("simulationOk");
         //Store all components
         this.Components = [];
         this.nodes = []; 
         this.grounds = [];
 
         this.playbutton = document.getElementById("playbutton");
-
-        this.playbutton.onclick = this.simulate.bind(this);
+        this.playbutton.onclick = this.run.bind(this);
 
         document.addEventListener("mouseup", this.run.bind(this));
         document.addEventListener("keydown", this.run.bind(this));
@@ -46,11 +46,11 @@ class Circuit{
         this.okDiv.classList.remove("notOk");
     }
     ErrorMsg(){
-        this.okButtonOff();
+ //       this.okButtonOff();
     }
 
     setNodes(nodeVoltages){
-        this.okButtonOn();
+//        this.okButtonOn();
         //Set nodes to match the server.
         for (const nodeName in nodeVoltages){
             const nodeID = nodeName.split('N')[1] - 1;
@@ -243,10 +243,14 @@ class Circuit{
     }
 
     simulate(){
-        this.sendComponents();
-        this.getConnections();
-        this.sendNodeConnections();
-        this.client.SendRunMSG();
+        if(!this.inSim){
+            this.inSim = true;
+            this.sendComponents();
+            this.getConnections();
+            this.sendNodeConnections();
+            this.client.SendRunMSG();
+            this.inSim = false;
+        }
     }
 }
 
