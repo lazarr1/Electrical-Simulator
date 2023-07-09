@@ -42,17 +42,17 @@ class WireManager {
         });
     }
 
-    findStrongNode(id){
-        let index = -1;
 
-        for(let iWireKey in this.strongWires){
+    findStrongNode(id){
+
+        for(const iWireKey in this.strongWires){
             const set = this.strongWires[iWireKey];
             if(set.has(id)){
                 return iWireKey;
             }
         }
  
-        return index;
+        return -1;
     }
 
 
@@ -194,9 +194,30 @@ class WireManager {
         }
 
         this.drawing = false;
+        this.getConnections();
+
+        if(vline){
+            this.checkMerge(vline);
+        }
+        if(hline){
+            this.checkMerge(hline);
+        }
+    }
+
+
+    checkMerge(line){
+        const strongWireKey = this.findStrongNode(line.id);
+        if(strongWireKey > -1){
+        console.log(this.strongWires[strongWireKey]);
+            this.strongWires[strongWireKey].forEach(id =>{
+                line.merge(this.wires[id]);
+            })
+        }
     }
 
     mapWireLine(wire) {
+        //wire grid is an occupancy map, whereas the wireSet stores all connected wires after
+            // a point that is occupied.
         const pos = wire.line.getBoundingClientRect();
         this.wireSet[wire.id] = [wire.id];
 
@@ -246,11 +267,9 @@ class WireManager {
             }
             this.strongWires.push(firstSet);
         }
+
     }
 
-    mergeWires(wire1, wire2) {
-        wire1.merge(wire2);        
-    }
 
     deleteWire(wireID){
         wireID in this.wires && delete this.wires[wireID];

@@ -146,7 +146,18 @@ class hline extends line{
     }
 
     merge(wire){
-        if(wire.line.width == this.line.width){
+
+        if(!wire)
+            return;
+
+        const thisPos = this.line.getBoundingClientRect();
+        const wirePos = wire.line.getBoundingClientRect();
+
+        if(thisPos.y !== wirePos.y){
+            return;
+        }
+
+        if(wire !== this && wire.line.style.height == this.line.style.height){
             const minX = Math.min(wire.start[0], wire.end[0], this.start[0], this.end[0]); 
             const maxX = Math.max(wire.start[0], wire.end[0], this.start[0], this.end[0]);
 
@@ -190,8 +201,16 @@ class vline extends line{
     }
     
     merge(wire){
+        if(!wire)
+            return;
 
-        if(wire.line.height == this.line.height){
+        const thisPos = this.line.getBoundingClientRect();
+        const wirePos = wire.line.getBoundingClientRect();
+
+        if(thisPos.x !== wirePos.x){
+            return;
+        }
+        if(wire !== this && wire.line.style.width == this.line.style.width){
             const minY = Math.min(wire.start[1], wire.end[1], this.start[1], this.end[1]); 
             const maxY = Math.max(wire.start[1], wire.end[1], this.start[1], this.end[1]);
 

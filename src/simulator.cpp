@@ -130,7 +130,7 @@ void Simulator::CreateCurrentSource(const double current){
 void Simulator::CreateVoltageSource(const double voltage){
    _numComponents++;
 
-   std::string name("V" + std::to_string(_numComponents));
+   std::string name("VS" + std::to_string(_numComponents));
 
    std::shared_ptr<VoltageSource> vs = std::make_shared<VoltageSource>(name, &_solver);
 

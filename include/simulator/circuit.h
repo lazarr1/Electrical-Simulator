@@ -3,6 +3,7 @@
 
 
 #include "circuit_element.h"
+#include "simulator/voltage_source.h"
 
 #include <memory>
 #include <unordered_set>
@@ -69,7 +70,7 @@ class Circuit{
         std::unordered_set<std::shared_ptr<Node>> _nodes;
         std::unordered_set<std::shared_ptr<CircuitComponent>> _components;
 
-        std::unordered_set<std::shared_ptr<CircuitComponent>> _voltageSources;
+        std::unordered_set<std::shared_ptr<VoltageSource>> _voltageSources;
 
 
         // std::vector<std::shared_ptr<Node>> _parentNodes;

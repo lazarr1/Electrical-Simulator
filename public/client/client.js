@@ -36,6 +36,11 @@ class Client{
                 this.reponse = JSON.parse(breakdown_msg[1]);
                 this.circuit.setNodes(this.reponse);
             }
+            else if(breakdown_msg[0] == 'error'){
+                this.circuit.ErrorMsg();
+                this.reponse = JSON.parse(breakdown_msg[1]);
+                this.circuit.setNodes(this.reponse);
+            }
         }
     }
 
