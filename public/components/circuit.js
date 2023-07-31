@@ -59,7 +59,7 @@ class Circuit{
                 this.wireManager.setWireVoltage(this.nodes[nodeID]);
             }
             else{
-                console.error("Massive Bug, server thinks there are more nodes than actually exist");
+                console.error("possible bug? or outdated server: server thinks there are more nodes than actually exist");
             }
         }
     }

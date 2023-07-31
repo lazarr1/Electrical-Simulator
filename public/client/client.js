@@ -15,13 +15,6 @@ class Client{
 
         this.socket.addEventListener('message', this.ProcessServerMessageBind);
 
-//        this.socket.addEventListener('close', function () {
-//            console.log('Connection closed.');
-//        });
-//
-//        this.socket.addEventListener('error', function (event) {
-//            console.error('WebSocket error:', event);
-//        });
         this.reponse = null; 
     }
     

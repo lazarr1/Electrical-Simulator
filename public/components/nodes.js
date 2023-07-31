@@ -66,10 +66,15 @@ class Node {
 
     updatePos(){
         //gets the current position of the node (accounts for any rotation of the parent HTML element)
-        const pos = this.element.getBoundingClientRect();
-
-        this.x = Math.round(pos.x/20) * 20;
-        this.y = Math.round(pos.y/20) * 20;
+        //user may delete this component in the middle of this operation so try catch is required
+        try{
+            const pos = this.element.getBoundingClientRect();
+            this.x = Math.round(pos.x/20) * 20;
+            this.y = Math.round(pos.y/20) * 20;
+        }
+        catch{
+            return;
+        }
     }
 
     mouseDown(event){
@@ -77,6 +82,8 @@ class Node {
         //Send node location to the wire Manager
         // Start a wire from this node
         this.wm.Start(this);
+        if(event.stopPropagation) event.stopPropagation();
+        if(event.preventDefault) event.preventDefault();
     }
 
     delete(){

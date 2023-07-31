@@ -52,7 +52,7 @@
 }
 
 .CircuitComponent{
-    cursor : pointer;
+    cursor : move;
     position : absolute;
 }
 
@@ -73,6 +73,7 @@ div:active {
 .wire:hover{
     border-top: 3px solid blue;
     border-left: 3px solid blue;
+    cursor: move;
 }
 
 body {

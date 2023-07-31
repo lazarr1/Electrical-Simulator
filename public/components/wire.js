@@ -62,7 +62,9 @@ class WireManager {
             const strongWireKey = this.findStrongNode(wireID);
             if(strongWireKey > -1){
                 this.strongWires[strongWireKey].forEach(id =>{
-                    this.wires[id].setVoltage(node.getVoltage());
+                    //user may delete wire in the middle of this operation
+                    if(this.wires[id])
+                        this.wires[id].setVoltage(node.getVoltage());
                 })
                 delete this.strongWires[strongWireKey];
             }
@@ -153,6 +155,7 @@ class WireManager {
     }
 
     handleMouseMove(event){
+        event.stopPropagation();
         const end = roundCoords(event.clientX, event.clientY);  
         const hline = this.wires[this.wireIdGenerator-1];
         const vline = this.wires[this.wireIdGenerator];

@@ -75,6 +75,8 @@ class CircuitComponent {
             this.onMouseUp();
             this.delete();
         }
+        if(event.stopPropagation) event.stopPropagation();
+        if(event.preventDefault) event.preventDefault();
     }
 
 
@@ -92,6 +94,8 @@ class CircuitComponent {
         document.addEventListener("mouseup", this.mouseUpListener);
         document.addEventListener("mousemove", this.mouseMoveListener);
 
+        if(event.stopPropagation) event.stopPropagation();
+        if(event.preventDefault) event.preventDefault();
     }
 
     onMouseUp() {
@@ -106,6 +110,8 @@ class CircuitComponent {
         this.element.style.top = `${Math.round((event.clientY - this.initialY)/20)*20}px`;
 
         this.updateNodePos();
+        if(event.stopPropagation) event.stopPropagation();
+        if(event.preventDefault) event.preventDefault();
     }
 
     updateNodePos(){
