@@ -76,6 +76,7 @@ div:active {
 }
 
 body {
+	user-select: none;
     background-size: 20px 20px;
     background-image:
     linear-gradient(to right, rgb(189, 189, 193) 1px, transparent 1px),

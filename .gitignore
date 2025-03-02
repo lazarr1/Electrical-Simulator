@@ -52,3 +52,5 @@ bin/
 __pycache__/
 
 json/
+_deps/
+install_manifest.txt

@@ -81,7 +81,7 @@ add_library(circ_sim_lib ${elec_sim_SOURCES})
 
 
 add_executable(websocket src/main_websocket.cpp)
-target_link_libraries(websocket PUBLIC circ_sim_lib SYSTEM ${Boost_LIBRARIES}) 
+target_link_libraries(websocket PUBLIC circ_sim_lib ${Boost_LIBRARIES}) 
 
 ###################
 #BUILD 
