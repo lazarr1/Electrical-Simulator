@@ -10,7 +10,7 @@
 #include "circuit_solver.h"
 
 
-enum Direction{
+enum Direction {
     In = -1,
     NoFlow = 0,
     Out = 1

@@ -54,3 +54,4 @@ __pycache__/
 json/
 _deps/
 install_manifest.txt
+.env

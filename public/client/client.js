@@ -1,6 +1,3 @@
-const address = 'ws://localhost:8080';
-
-
 class Client{
 
     constructor(circuit){
@@ -9,19 +6,19 @@ class Client{
     }
 
     initialiseSocket(){
-        this.socket = new WebSocket('ws://localhost:8080');
+        // Dynamically determine backend host
+        let wsHost;
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            wsHost = 'ws://localhost:8080';
+        } else {
+            wsHost = 'wss://lulazar.com/ws';
+        }
+        this.socket = new WebSocket(wsHost);
 
         this.ProcessServerMessageBind = this.ProcessServerMessage.bind(this);
 
         this.socket.addEventListener('message', this.ProcessServerMessageBind);
 
-//        this.socket.addEventListener('close', function () {
-//            console.log('Connection closed.');
-//        });
-//
-//        this.socket.addEventListener('error', function (event) {
-//            console.error('WebSocket error:', event);
-//        });
         this.reponse = null; 
     }
     

@@ -22,10 +22,10 @@ int main(){
 
     while (true) {
         // Wait for a new client connection
-        tcp::socket socket(ioc);
-        acceptor.accept(socket);
 
         try {
+			tcp::socket socket(ioc);
+			acceptor.accept(socket);
             // Create a WebSocket session
             websocket::stream<tcp::socket> ws(std::move(socket));
 
