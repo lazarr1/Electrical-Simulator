@@ -11,7 +11,7 @@ class Client{
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
             wsHost = 'ws://localhost:8080';
         } else {
-            wsHost = 'wss://lulazar.com/ws';
+            wsHost = 'ws://lulazar.com:8080';
         }
         this.socket = new WebSocket(wsHost);
 

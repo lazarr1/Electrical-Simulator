@@ -41,6 +41,10 @@ int main(){
 
                 
                 std::string message = beast::buffers_to_string(buffer.data());
+		if (string.find("GET /health") != std::string::npos) {
+		    std::string response = "HTTP/1.1 200 OK\r\nContent-Length: 2\r\n\r\nOK";
+		    boost::asio::write(socket, boost::asio::buffer(response));
+	    	}
 
                 router.RouteMessage(message);
 
