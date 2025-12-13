@@ -24,8 +24,25 @@ int main(){
         // Wait for a new client connection
 
         try {
-			tcp::socket socket(ioc);
-			acceptor.accept(socket);
+		tcp::socket socket(ioc);
+		acceptor.accept(socket);
+
+		// Read the incoming request into a beast::flat_buffer
+		beast::flat_buffer buffer;
+		http::request<http::string_body> req;
+		http::read(socket, buffer, req);
+
+		// Check if it's a health check
+		if (req.target() == "/health") {
+		    http::response<http::string_body> res{http::status::ok, req.version()};
+		    res.set(http::field::server, "Boost.Beast");
+		    res.body() = "OK";
+		    res.prepare_payload();
+
+		    http::write(socket, res);
+		    socket.close();
+		    continue;
+		}
             // Create a WebSocket session
             websocket::stream<tcp::socket> ws(std::move(socket));
 
@@ -41,10 +58,6 @@ int main(){
 
                 
                 std::string message = beast::buffers_to_string(buffer.data());
-		if (string.find("GET /health") != std::string::npos) {
-		    std::string response = "HTTP/1.1 200 OK\r\nContent-Length: 2\r\n\r\nOK";
-		    boost::asio::write(socket, boost::asio::buffer(response));
-	    	}
 
                 router.RouteMessage(message);
 
