@@ -24,51 +24,42 @@ int main(){
         // Wait for a new client connection
 
         try {
-		tcp::socket socket(ioc);
-		acceptor.accept(socket);
+	    tcp::socket socket(ioc);
+            acceptor.accept(socket);
 
-		// Read the incoming request into a beast::flat_buffer
-		beast::flat_buffer buffer;
-		http::request<http::string_body> req;
-		http::read(socket, buffer, req);
+            // Read the incoming request into a beast::flat_buffer
+	    beast::flat_buffer buffer;
+            http::request<http::string_body> req;
+	    http::read(socket, buffer, req);
 
-		// Check if it's a health check
-		if (req.target() == "/health") {
-		    http::response<http::string_body> res{http::status::ok, req.version()};
-		    res.set(http::field::server, "Boost.Beast");
-		    res.body() = "OK";
-		    res.prepare_payload();
-
-		    http::write(socket, res);
-		    socket.close();
-		    continue;
-		}
             // Create a WebSocket session
-            websocket::stream<tcp::socket> ws(std::move(socket));
+	    if (websocket::is_upgrade(req)) {
+		websocket::stream<tcp::socket> ws(std::move(socket));
+		ws.accept(req);
+
+                while(ws.is_open()){
+                    // Receive a message
+                    beast::flat_buffer buffer;
+                    ws.read(buffer);
+    
+                    std::cout << "Received message: " << beast::make_printable(buffer.data()) << std::endl;
+    
+                    
+                    std::string message = beast::buffers_to_string(buffer.data());
+    
+                    router.RouteMessage(message);
+    
+    
+                    if(router.GetFinishedStatus()){
+                        ws.write(net::buffer(router.GetResponse()));
+                        ws.close(websocket::close_code::normal);
+                    }
+                }
+    	    }
+            //websocket::stream<tcp::socket> ws(std::move(socket));
 
             // Accept the WebSocket handshake
-            ws.accept();
-
-            while(ws.is_open()){
-                // Receive a message
-                beast::flat_buffer buffer;
-                ws.read(buffer);
-
-                std::cout << "Received message: " << beast::make_printable(buffer.data()) << std::endl;
-
-                
-                std::string message = beast::buffers_to_string(buffer.data());
-
-                router.RouteMessage(message);
-
-
-                if(router.GetFinishedStatus()){
-                    ws.write(net::buffer(router.GetResponse()));
-                    ws.close(websocket::close_code::normal);
-                }
-
-
-            }
+            // ws.accept();
 
 
         } catch (const std::exception& e) {
