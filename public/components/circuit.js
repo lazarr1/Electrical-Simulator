@@ -18,25 +18,30 @@ class Circuit{
         this.client = new Client(this);
         
         this.inSim = false;
-//        this.ok = true;
-//        this.okDiv = document.getElementById("simulationOk");
-        //Store all components
         this.Components = [];
         this.nodes = []; 
         this.grounds = [];
 
         this.playbutton = document.getElementById("playbutton");
-        this.playbutton.onclick = this.run.bind(this);
-
-        document.addEventListener("mouseup", this.run.bind(this));
-        document.addEventListener("keydown", this.run.bind(this));
+        this.playbutton.onclick = () => {
+            if (!this.inSim) {
+                this.run();
+            }
+        };
 
         //Manages all the connections between components
         this.wireManager = new WireManager();
     }
 
     run(){
+        console.log("Simulating circuit");
         this.simulate();
+    }
+
+    clearInSimFlag(){
+        console.log("Clearing inSim flag");
+        this.inSim = false;
+        this.playbutton.style.backgroundImage = "url('components/images/play.png')";
     }
 
     okButtonOff(){
@@ -245,11 +250,12 @@ class Circuit{
     simulate(){
         if(!this.inSim){
             this.inSim = true;
+            this.playbutton.style.backgroundImage = "url('components/images/play_running.png')";
             this.sendComponents();
             this.getConnections();
             this.sendNodeConnections();
             this.client.SendRunMSG();
-            this.inSim = false;
+            // this.inSim will be cleared by the websocket response
         }
     }
 }
