@@ -28,6 +28,9 @@ class modifyBox{
         this.box.appendChild(this.form);
         this.component.element.appendChild(this.box);
 
+        // Hide the box completely on creation
+        this.box.style.display = "none";
+
         this.onDblClickBind = this.onDblClick.bind(this);
         this.onMouseDownBind = this.onMouseDown.bind(this);
         this.onDocumentMouseDownBind = this.onDocumentMouseDown.bind(this);
@@ -52,13 +55,16 @@ class modifyBox{
 
     onDblClick(){
         this.form.classList.add("show");
+        this.box.style.display = ""; // Show the box again
         document.addEventListener("mousedown", this.onDocumentMouseDownBind);
-        document.addEventListener("keydown", this.onKeyDownBind);
+        document.addEventListener("keydown", this.onKeyDownBind, true); // use capture phase
+        this.input.focus();
         this.open = true;
     }
 
     onDocumentMouseDown(){
         this.form.classList.remove("show");
+        this.box.style.display = "none"; // Hide the box completely
         document.removeEventListener("mousedown", this.onDocumentMouseDownBind);
         document.removeEventListener("keydown", this.onKeyDownBind);
         this.box.removeEventListener("keydown", this.onKeyDownBind);
@@ -70,8 +76,16 @@ class modifyBox{
     }
 
     onKeyDown(event){
-        event.stopPropagation();
-
+        // Prevent propagation if input is focused (so component doesn't get deleted)
+        if (document.activeElement === this.input) {
+            // Only allow delete if cmd/ctrl + delete is pressed
+            if ((event.key === "Backspace" || event.key === "Delete") && (event.metaKey || event.ctrlKey)) {
+                // Allow component deletion
+            } else {
+                event.stopPropagation();
+                return;
+            }
+        }
         //escape key
         if(event.keyCode === 27){
             this.onDocumentMouseDown();
