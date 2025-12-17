@@ -84,6 +84,7 @@ class Circuit{
             //Store the node in the circuit's list of nodes 
             newComp.nodes.push(nNode);
         }
+        this.enableComponentDragToPlace(newComp)
     }
 
     createNewDCurrent(){
@@ -100,6 +101,7 @@ class Circuit{
             //Store the node in the circuit's list of nodes 
             newComp.nodes.push(nNode);
         }
+        this.enableComponentDragToPlace(newComp)
     }
     
     createNewVoltageSource(){
@@ -116,6 +118,7 @@ class Circuit{
             //Store the node in the circuit's list of nodes 
             newComp.nodes.push(nNode);
         }
+        this.enableComponentDragToPlace(newComp)
     }
 
     createNewCapacitor(){
@@ -133,6 +136,7 @@ class Circuit{
             //Store the node in the circuit's list of nodes 
             newComp.nodes.push(nNode);
         }
+        this.enableComponentDragToPlace(newComp)
     }
 
     createNewInductor(){
@@ -150,7 +154,7 @@ class Circuit{
             //Store the node in the circuit's list of nodes 
             newComp.nodes.push(nNode);
         }
-
+        this.enableComponentDragToPlace(newComp)
     }
 
     createGroundNode(){
@@ -165,6 +169,7 @@ class Circuit{
 
         //Store grounded nodes sperately
         this.grounds.push(newComp);
+        this.enableComponentDragToPlace(newComp)
     }
 
     getConnections(){
@@ -257,6 +262,71 @@ class Circuit{
             this.client.SendRunMSG();
             // this.inSim will be cleared by the websocket response
         }
+    }
+
+    // Drag-and-drop placement for a component after it is created
+    enableComponentDragToPlace(component) {
+        if (this._draggingComponent) return;
+        this._draggingComponent = component;
+        const elem = component.element;
+        elem.style.position = 'absolute';
+        elem.style.pointerEvents = 'none';
+        elem.style.zIndex = 10000;
+        elem.style.display = 'none'; // Hide initially
+        let shown = false;
+        // Show and move on first mousemove
+        const moveHandler = (e) => {
+            if (!shown) {
+                elem.style.display = '';
+                shown = true;
+            }
+            const rootRect = document.getElementById('root').getBoundingClientRect();
+            const mx = e.clientX - rootRect.left;
+            const my = e.clientY - rootRect.top;
+            const gx = Math.round(mx / 20) * 20;
+            const gy = Math.round(my / 20) * 20;
+            elem.style.left = (gx - elem.offsetWidth/2) + 'px';
+            elem.style.top = (gy - elem.offsetHeight/2) + 'px';
+        };
+        document.addEventListener('mousemove', moveHandler);
+        // Drop on click
+        const dropHandler = (e) => {
+            if (shown !== true){
+                escHandler({key: 'Escape'});
+            }
+            document.removeEventListener('mousemove', moveHandler);
+            document.removeEventListener('mousedown', dropHandler, true);
+            document.removeEventListener('keydown', escHandler, true);
+            // Snap to grid on drop
+            const rootRect = document.getElementById('root').getBoundingClientRect();
+            const mx = e.clientX - rootRect.left;
+            const my = e.clientY - rootRect.top;
+            const gx = Math.round(mx / 20) * 20;
+            const gy = Math.round(my / 20) * 20;
+            elem.style.left = (gx - elem.offsetWidth/2) + 'px';
+            elem.style.top = (gy - elem.offsetHeight/2) + 'px';
+            elem.style.pointerEvents = '';
+            elem.style.zIndex = '';
+            this._draggingComponent = null;
+        };
+        // Cancel on esc/delete
+        const escHandler = (e) => {
+            if (e.key === 'Escape' || e.key === 'Delete' || e.key === 'Backspace') {
+                document.removeEventListener('mousemove', moveHandler);
+                document.removeEventListener('mousedown', dropHandler, true);
+                document.removeEventListener('keydown', escHandler, true);
+                if (elem && elem.parentNode) {
+                    elem.parentNode.removeChild(elem);
+                }
+                const idx = this.Components.indexOf(component);
+                if (idx > -1) this.Components.splice(idx, 1);
+                this._draggingComponent = null;
+            }
+        };
+        setTimeout(() => {
+            document.addEventListener('mousedown', dropHandler, true);
+            document.addEventListener('keydown', escHandler, true);
+        }, 0);
     }
 }
 

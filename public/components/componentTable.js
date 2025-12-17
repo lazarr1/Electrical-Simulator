@@ -36,4 +36,4 @@ const components = [
 //    return toggleBox;
 }
 
-export default fillComponentBox; 
+export {fillComponentBox}; 
