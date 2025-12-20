@@ -22,6 +22,7 @@ function createInstructionBox() {
         <li>Click the <b>Play</b> button (bottom left) to run the simulation.</li>
         <li>Hover over a component and press <b>R</b> to rotate it.</li>
         <li>Hover over a component and press <b>Delete</b> to remove it.</li>
+        <li>Double click on a component to edit its value.</li>
         <li>For more help, see the project <a href="https://github.com/lazarr1/Electrical-Simulator" target="_blank" rel="noopener">README</a>.</li>
       </ul>
       <h2>Thank you for visiting!!!</h2>
