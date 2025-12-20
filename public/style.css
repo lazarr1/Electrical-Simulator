@@ -208,7 +208,7 @@ body {
 .link{
     position: absolute;
     left: 90%;
-    font-size: 12px;
+    font-size: 16px;
     text-decoration: underline;
     color: #569CD6;
     padding: 0;
@@ -276,4 +276,50 @@ body {
   border-width: 7px;
   border-style: solid;
   border-color: #555 transparent transparent transparent;
+}
+
+/* --- Instruction Box Styles (centered modal) --- */
+#instruction-box {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 800px;
+  min-width: 260px;
+  background: #fff;
+  border: 2px solid #008080;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  padding: 24px 20px 16px 20px;
+  z-index: 2000;
+  font-size: 1.05em;
+  color: #222;
+  line-height: 1.6;
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+#instruction-box h2 {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  text-align: center;
+  color: black;
+  font-size: 1.2em;
+}
+#instruction-box ul {
+  padding-left: 18px;
+  color: black;
+  margin-bottom: 0;
+}
+#instruction-box li {
+  border: none;
+  font-size: 1.5em;
+  color: black;
+  line-height: 1;
+}
+.instruction-close-btn:focus {
+  outline: 2px solid #008080;
 }
