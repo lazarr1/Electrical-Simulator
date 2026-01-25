@@ -1,71 +1,25 @@
+#include "simulator/service_handler.hpp"
+
+#include <wsdispatcher/dispatcher.hpp>
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/thread_pool.hpp>
+#include <boost/beast/http/parser.hpp>
 #include <boost/beast/core.hpp>
+#include <boost/beast/http/read.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <iostream>
-#include "simulator/router.h"
+#include <memory>
 
-namespace beast = boost::beast;             // from <boost/beast.hpp>
-namespace http = beast::http;               // from <boost/beast/http.hpp>
-namespace websocket = beast::websocket;     // from <boost/beast/websocket.hpp>
+//TODO: move out of src
 namespace net = boost::asio;                // from <boost/asio.hpp>
 using tcp = boost::asio::ip::tcp;           // from <boost/asio/ip/tcp.hpp>
 
+net::io_context ioc;
+net::thread_pool tp(5);
+tcp::endpoint ep(tcp::v4(), 8080);
+
 int main(){
-
-    Router router;
-    // The io_context is required for all I/O
-    net::io_context ioc;
-
-    // Create and bind the acceptor to listen on TCP port 8080
-    tcp::acceptor acceptor(ioc, {tcp::v4(), 8080});
-    std::cout << "Listening on port " << acceptor.local_endpoint().port() << std::endl;
-
-    while (true) {
-        // Wait for a new client connection
-
-        try {
-	    tcp::socket socket(ioc);
-            acceptor.accept(socket);
-
-            // Read the incoming request into a beast::flat_buffer
-	    beast::flat_buffer buffer;
-            http::request<http::string_body> req;
-	    http::read(socket, buffer, req);
-
-            // Create a WebSocket session
-	    if (websocket::is_upgrade(req)) {
-		websocket::stream<tcp::socket> ws(std::move(socket));
-		ws.accept(req);
-
-                while(ws.is_open()){
-                    // Receive a message
-                    beast::flat_buffer buffer;
-                    ws.read(buffer);
-    
-                    std::cout << "Received message: " << beast::make_printable(buffer.data()) << std::endl;
-    
-                    
-                    std::string message = beast::buffers_to_string(buffer.data());
-    
-                    router.RouteMessage(message);
-    
-    
-                    if(router.GetFinishedStatus()){
-                        ws.write(net::buffer(router.GetResponse()));
-                        ws.close(websocket::close_code::normal);
-                    }
-                }
-    	    }
-            //websocket::stream<tcp::socket> ws(std::move(socket));
-
-            // Accept the WebSocket handshake
-            // ws.accept();
-
-
-        } catch (const std::exception& e) {
-            std::cerr << "Error: " << e.what() << std::endl;
-        }
-    }
-
-    return 0;
+    auto dispatcher = std::make_shared<Dispatcher<CircuitApplication>>(tp, ioc, ep);
+    std::cout << "Listening on port " << ep.port() << std::endl;
+    dispatcher->do_accept();
 }

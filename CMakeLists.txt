@@ -40,18 +40,29 @@ set(CMAKE_CXX_STANDARD 11)
 FIND_PACKAGE( Boost 1.80 COMPONENTS program_options REQUIRED )
 
 
+include(FetchContent)
 
+FetchContent_Declare(json 
+  URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+
+FetchContent_MakeAvailable(json)
+
+FetchContent_Declare(wsdispatcher
+  GIT_REPOSITORY https://github.com/lazarr1/ws-dispatcher.git 
+  GIT_TAG v1.0.1
+)
+
+FetchContent_MakeAvailable(WsDispatcher)
 include_directories(
   include
   SYSTEM ${Boost_INCLUDE_DIR}
-  #PRETEND THIS ISN'T HERE
   SYSTEM build/_deps/json-src/single_include
+  SYSTEM build/_deps/wsdispatcher-src/inc
 )
 # =========================================================
-include(FetchContent)
 
-FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
-FetchContent_MakeAvailable(json)
 
 # CMakeLists.txt
 #add_library(foo ...)
@@ -72,16 +83,19 @@ set(elec_sim_SOURCES
     src/router.cpp
     src/circuithandler.cpp
     src/voltage_source.cpp
+    src/service_handler.cpp
 )
 
 add_library(circ_sim_lib ${elec_sim_SOURCES})
 
-#if ur library ends up including something use this:
-# target_link_libraries(major_lib ${catkin_LIBRARIES} ${OpenCV_LIBS})
-
-
 add_executable(websocket src/main_websocket.cpp)
-target_link_libraries(websocket PUBLIC circ_sim_lib ${Boost_LIBRARIES}) 
+# target_link_libraries(websocket PUBLIC circ_sim_lib ${Boost_LIBRARIES}) 
+target_link_libraries(websocket
+    PRIVATE
+        circ_sim_lib
+        WsDispatcher
+        ${Boost_LIBRARIES}
+)
 
 ###################
 #BUILD 
