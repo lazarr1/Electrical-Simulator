@@ -29,6 +29,7 @@ class WireManager {
         for(const key in this.wires){
             const wire = this.wires[key]; 
             this.mapWireLine(wire);
+            wire.setVoltage(0);
         }
         this.flattenWireSet();
         
