@@ -153,6 +153,25 @@ class hline extends line{
         const thisPos = this.line.getBoundingClientRect();
         const wirePos = wire.line.getBoundingClientRect();
 
+        const x1 = thisPos.x;
+        const x2 = wirePos.x;
+
+        const y1 = thisPos.y;
+        const y2 = wirePos.y;
+
+        const height1 = thisPos.bottom - y1;
+        const height2 = wirePos.bottom - y2;
+
+        const width1 = thisPos.right - x1;
+        const width2 = wirePos.right - x2;
+
+        const rect1 = {x: x1, y: y1, height: height1, width: width1};
+        const rect2 = {x: x2, y: y2, height: height2, width: width2};
+
+        if (!(this.isColliding(rect1, rect2))){
+            return;
+        }
+
         if(thisPos.y !== wirePos.y){
             return;
         }
@@ -169,12 +188,25 @@ class hline extends line{
 
 
             wire.delete();
-            
         }
 
     }
 
+    isColliding(rect1, rect2){
+    // Check if the rectangles overlap on the x-axis.
+        if (rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x) {
+            // Check if the rectangles overlap on the y-axis.
+            if (rect1.y < rect2.y + rect2.height && rect1.y + rect1.height > rect2.y) {
+                // Collision detected.
+                return true;
+            }
+        }
+        
+        // No collision.
+        return false;
+    }
 }
+
 
 class vline extends line{
     Draw(){
@@ -207,6 +239,25 @@ class vline extends line{
         const thisPos = this.line.getBoundingClientRect();
         const wirePos = wire.line.getBoundingClientRect();
 
+        const x1 = thisPos.x;
+        const x2 = wirePos.x;
+
+        const y1 = thisPos.y;
+        const y2 = wirePos.y;
+
+        const height1 = thisPos.bottom - y1;
+        const height2 = wirePos.bottom - y2;
+
+        const width1 = thisPos.right - x1;
+        const width2 = wirePos.right - x2;
+
+        const rect1 = {x: x1, y: y1, height: height1, width: width1};
+        const rect2 = {x: x2, y: y2, height: height2, width: width2};
+
+        if (!(this.isColliding(rect1, rect2))){
+            return;
+        }
+
         if(thisPos.x !== wirePos.x){
             return;
         }
@@ -224,6 +275,20 @@ class vline extends line{
             wire.delete();
             
         }
+    }
+
+    isColliding(rect1, rect2){
+    // Check if the rectangles overlap on the x-axis.
+        if (rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x) {
+            // Check if the rectangles overlap on the y-axis.
+            if (rect1.y < rect2.y + rect2.height && rect1.y + rect1.height > rect2.y) {
+                // Collision detected.
+                return true;
+            }
+        }
+        
+        // No collision.
+        return false;
     }
 }
 
