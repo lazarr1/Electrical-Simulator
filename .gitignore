@@ -54,3 +54,4 @@ install_manifest.txt
 .env
 websocket_temp
 build/
+compile_commands.json

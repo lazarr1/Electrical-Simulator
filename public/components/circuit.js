@@ -208,6 +208,22 @@ class Circuit{
                 nodeToGround && this.client.SendGroundNodeMSG("N" + nodeToGround.id);
             }
         }
+
+        // Direct node connections
+        let nodeLocs = {}
+        for (const iComponent in this.Components){
+            const nodes = this.Components[iComponent].nodes;
+            for (const iNode in nodes){
+                const node = nodes[iNode];
+                if (!([node.x, node.y] in nodeLocs)) {
+                    nodeLocs[[node.x, node.y]] = "N" + node.id;
+                    console.log([node.x, node.y]);
+                } else {
+                    this.client.SendConnectNodesMSG(nodeLocs[[node.x, node.y]], "N" + node.id);
+                }
+            }
+        }
+
     }
 
     UpdateNodes(){
