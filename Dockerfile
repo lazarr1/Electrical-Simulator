@@ -11,7 +11,8 @@ RUN apk update && \
 		g++ \
 		boost-dev \
 		make \
-		musl-dev
+		musl-dev \
+		git
 	# RUN apk add --no-cache make gcc g++ musl-dev
 
 WORKDIR /app
