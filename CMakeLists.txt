@@ -42,32 +42,25 @@ FIND_PACKAGE( Boost 1.80 COMPONENTS program_options REQUIRED )
 
 include(FetchContent)
 
-FetchContent_Declare(json 
+FetchContent_Declare(json
   URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 
 FetchContent_MakeAvailable(json)
 
-FetchContent_Declare(wsdispatcher
-  GIT_REPOSITORY https://github.com/lazarr1/ws-dispatcher.git 
-  GIT_TAG v1.0.1
+FetchContent_Declare(WsDispatcher
+  GIT_REPOSITORY https://github.com/lazarr1/ws-dispatcher.git
+  GIT_TAG v1.0.2
 )
 
 FetchContent_MakeAvailable(WsDispatcher)
 include_directories(
   include
   SYSTEM ${Boost_INCLUDE_DIR}
-  SYSTEM build/_deps/json-src/single_include
-  SYSTEM build/_deps/wsdispatcher-src/inc
 )
 # =========================================================
 
-
-# CMakeLists.txt
-#add_library(foo ...)
-#target_link_libraries(foo PRIVATE nlohmann_json::nlohmann_json)
-# include_directories(dependencies/libraries/)
 
 set(elec_sim_SOURCES
     # Source files
@@ -87,18 +80,22 @@ set(elec_sim_SOURCES
 )
 
 add_library(circ_sim_lib ${elec_sim_SOURCES})
+target_link_libraries(circ_sim_lib
+    PUBLIC
+        nlohmann_json::nlohmann_json
+	WsDispatcher::WsDispatcher
+)
 
 add_executable(websocket src/main_websocket.cpp)
-# target_link_libraries(websocket PUBLIC circ_sim_lib ${Boost_LIBRARIES}) 
+
 target_link_libraries(websocket
     PRIVATE
         circ_sim_lib
-        WsDispatcher
+	WsDispatcher
         ${Boost_LIBRARIES}
 )
 
 ###################
-#BUILD 
+#BUILD
 
 install(TARGETS websocket DESTINATION ${DIVISIBLE_INSTALL_BIN_DIR})
-
