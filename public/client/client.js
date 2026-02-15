@@ -11,6 +11,9 @@ class Client{
     }
 
     initialiseSocket(){
+		if (this.socket && this.socket.readyState !== WebSocket.CLOSED) {
+			return;
+		}
         // Dynamically determine backend host
         let wsHost;
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
@@ -31,10 +34,6 @@ class Client{
         });
         this.socket.addEventListener('close', () => {
             this.isConnecting = false;
-
-			setTimeout(() => {
-				this.initialiseSocket();
-			}, 5000);
         });
         this.socket.addEventListener('error', () => {
             this.isConnecting = false;
@@ -78,22 +77,25 @@ class Client{
     }
 
 	startResponseTimeout(lastMsg){
-		// Clear any existing timeout
 		if (this.responseTimeout) {
 			clearTimeout(this.responseTimeout);
 		}
 
 		this.responseTimeout = setTimeout(() => {
-			console.warn("WebSocket response timeout. Reconnecting...");
+        console.warn("WebSocket response timeout. Reconnecting...");
 
-			this.removeSocket();
-			this.initialiseSocket();
+        this.responseTimeout = null;
 
-			// Requeue message
-			this.messageQueue.unshift(lastMsg);
+        this.removeSocket();
+
+        // Requeue message BEFORE reconnect
+        this.messageQueue.unshift(lastMsg);
+
+        this.initialiseSocket();
 
 		}, this.TIMEOUT_MS);
 	}
+
 	sendMsg(msg){
 		if (!this.socket || this.socket.readyState === WebSocket.CLOSED) {
 			this.removeSocket();
