@@ -17,7 +17,6 @@ function createInstructionBox() {
         <li>Move your mouse to position the component, then click to place it.</li>
         <li>Click and drag on a node (small black circle) to start drawing a wire.</li>
         <li>Connect all components with wires. </li>
-        <li>Double-click a component to edit its value.</li>
         <li>Ensure your circuit is grounded (add a ground component).</li>
         <li>Click the <b>Play</b> button (bottom left) to run the simulation.</li>
         <li>Hover over a component and press <b>R</b> to rotate it.</li>
