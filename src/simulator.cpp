@@ -223,13 +223,23 @@ void Simulator::Simulate(){
     //reset solver 
     _solver.ResetFinishedState();
 
+    // Clear previous history
+    _timeHistory.clear();
+    _voltageHistory.clear();
+
     //Run simulation
     while(!_solver.GetFinishedState()){
         _circuit.BuildCircuitMatrix();
         _solver.Solve();
+
+        // Record time-series data
+        _timeHistory.push_back(_solver.GetTime());
+        for(auto& [key, iNode] : _nodes){
+            _voltageHistory[key].push_back(
+                std::round(iNode->parent->voltage * 10000) / 10000
+            );
+        }
     }
-
-
 }
 
 void Simulator::GroundNode(std::string NodeName){
@@ -245,6 +255,39 @@ json Simulator::GetNodeVoltagesJSON(){
 
     }
     return nodeInfo;
+}
+
+json Simulator::GetTimeSeriesJSON(){
+    json ts;
+
+    // Downsample to max ~3000 points
+    const size_t maxPoints = 3000;
+    size_t totalPoints = _timeHistory.size();
+    size_t step = 1;
+    if(totalPoints > maxPoints){
+        step = totalPoints / maxPoints;
+    }
+
+    // Build downsampled time array
+    std::vector<double> times;
+    for(size_t i = 0; i < totalPoints; i += step){
+        times.push_back(std::round(_timeHistory[i] * 10000) / 10000);
+    }
+    ts["times"] = times;
+
+    // Build downsampled voltage arrays per node
+    json data;
+    for(auto& [key, voltages] : _voltageHistory){
+        std::vector<double> sampled;
+        for(size_t i = 0; i < voltages.size(); i += step){
+            sampled.push_back(voltages[i]);
+        }
+        data[key] = sampled;
+    }
+    ts["data"] = data;
+    ts["timestep"] = _solver.GetTimestep();
+
+    return ts;
 }
 
 

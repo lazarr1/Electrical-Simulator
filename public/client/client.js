@@ -51,18 +51,24 @@ class Client{
 
         if(msg != null){
             console.log(msg);
-            const breakdown_msg = msg.split('/');
+            const slashIdx = msg.indexOf('/');
+            if (slashIdx === -1) return;
+            const msgType = msg.substring(0, slashIdx);
+            const msgBody = msg.substring(slashIdx + 1);
 
-            if(breakdown_msg[0] == 'voltages'){
+            if(msgType == 'voltages'){
                 this.circuit.clearInSimFlag();
-                this.reponse = JSON.parse(breakdown_msg[1]);
-                this.circuit.setNodes(this.reponse);
+                this.reponse = JSON.parse(msgBody);
+                this.circuit.setNodes(this.reponse.nodes);
+                if(this.reponse.timeseries){
+                    this.circuit.setTimeSeries(this.reponse.timeseries);
+                }
             }
-            else if(breakdown_msg[0] == 'error'){
+            else if(msgType == 'error'){
                 this.circuit.clearInSimFlag();
                 this.circuit.ErrorMsg();
-                this.reponse = JSON.parse(breakdown_msg[1]);
-                this.circuit.setNodes(this.reponse);
+                this.reponse = JSON.parse(msgBody);
+                this.circuit.setNodes(this.reponse.nodes || this.reponse);
             }
         }
     }

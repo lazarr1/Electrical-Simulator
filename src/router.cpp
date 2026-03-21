@@ -49,7 +49,11 @@ std::string Router::GetResponse(){
     if(_simComplete == true){
         _simComplete = false;
 
-        std::string response = std::string("voltages/") + _circuit.GetNodeVoltagesJSON().dump();
+        json responseJson;
+        responseJson["nodes"] = _circuit.GetNodeVoltagesJSON();
+        responseJson["timeseries"] = _circuit.GetTimeSeriesJSON();
+
+        std::string response = std::string("voltages/") + responseJson.dump();
 
         _circuit.ClearCircuit();
 

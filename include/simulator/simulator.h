@@ -62,6 +62,8 @@ class Simulator{
         
         json GetNodeVoltagesJSON();
 
+        json GetTimeSeriesJSON();
+
         double GetNodeVoltage(std::string NodeName);
 
         void PrintComponents();
@@ -81,7 +83,10 @@ class Simulator{
 
         CircuitSolver _solver;
 
-        
+        // Time-series history: collected during Simulate()
+        std::vector<double> _timeHistory;
+        std::unordered_map<std::string, std::vector<double>> _voltageHistory;
+
         Circuit _circuit;
 
 

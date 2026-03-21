@@ -83,7 +83,10 @@ void CircuitHandler::GetNodeVoltage(std::string& message){
 
 json CircuitHandler::GetNodeVoltagesJSON(){
     return _sim->GetNodeVoltagesJSON();
-//    ws.write(net::buffer("voltages/" + circuitInfo));
+}
+
+json CircuitHandler::GetTimeSeriesJSON(){
+    return _sim->GetTimeSeriesJSON();
 }
 
 void CircuitHandler::ClearCircuit(){

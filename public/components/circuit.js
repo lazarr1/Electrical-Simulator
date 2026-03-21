@@ -2,6 +2,7 @@ import WireManager from "./wire.js";
 import CircuitComponent from "./components.js";
 import Node from "./nodes.js";
 import Client from "../client/client.js";
+import Oscilloscope from "./oscilloscope.js";
 
 /*  Class: Circuit
     *      This class manages all the components, manages any changes to the components and 
@@ -31,6 +32,14 @@ class Circuit{
 
         //Manages all the connections between components
         this.wireManager = new WireManager();
+
+        // Oscilloscope
+        this.oscilloscope = new Oscilloscope();
+
+        this.scopeButton = document.getElementById('scopebutton');
+        if (this.scopeButton) {
+            this.scopeButton.addEventListener('click', () => this.oscilloscope.toggle());
+        }
     }
 
     run(){
@@ -52,6 +61,11 @@ class Circuit{
     }
     ErrorMsg(){
  //       this.okButtonOff();
+    }
+
+    setTimeSeries(tsData){
+        this.oscilloscope.setData(tsData);
+        this.oscilloscope.show();
     }
 
     setNodes(nodeVoltages){

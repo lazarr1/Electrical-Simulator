@@ -205,6 +205,21 @@ body {
     left: 1%;
 }
 
+#scopebutton{
+    position: absolute;
+    left: 4%;
+    height: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    cursor: pointer;
+    background: #008080;
+    color: white;
+    border: 1px solid #006060;
+    border-radius: 4px;
+    padding: 0 10px;
+}
+
 #simtime{
     position: absolute;
     left: 5%;
@@ -334,4 +349,85 @@ body {
 }
 .instruction-close-btn:focus {
   outline: 2px solid #008080;
+}
+
+/* ===== Oscilloscope ===== */
+#oscilloscope {
+    position: fixed;
+    bottom: 45px;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: #1a1a2e;
+    border-top: 2px solid #008080;
+    padding: 0;
+    transition: transform 0.25s ease;
+}
+#oscilloscope.oscilloscope-hidden {
+    transform: translateY(100%);
+    pointer-events: none;
+}
+
+.scope-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 10px;
+    background: #16213e;
+}
+.scope-title {
+    color: #00FF00;
+    font-family: monospace;
+    font-size: 13px;
+    font-weight: bold;
+}
+.scope-select {
+    height: 22px;
+    min-width: 80px;
+    max-width: 200px;
+    font-size: 11px;
+    font-family: monospace;
+    background: #0f3460;
+    color: #ccc;
+    border: 1px solid #444;
+    border-radius: 3px;
+}
+.scope-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #ff4444;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 6px;
+}
+.scope-close:hover {
+    color: #ff8888;
+}
+
+.scope-canvas {
+    display: block;
+    width: 100%;
+}
+
+.scope-legend {
+    display: flex;
+    gap: 14px;
+    padding: 3px 10px 5px;
+    background: #16213e;
+    flex-wrap: wrap;
+}
+.scope-legend-entry {
+    color: #ccc;
+    font-family: monospace;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.scope-legend-color {
+    display: inline-block;
+    width: 10px;
+    height: 3px;
+    border-radius: 1px;
 }

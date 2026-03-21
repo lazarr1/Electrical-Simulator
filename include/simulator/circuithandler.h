@@ -24,6 +24,8 @@ class CircuitHandler{
 
         json GetNodeVoltagesJSON();
 
+        json GetTimeSeriesJSON();
+
         void ClearCircuit();
 
     private:
