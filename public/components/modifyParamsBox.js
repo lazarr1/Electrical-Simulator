@@ -1,9 +1,10 @@
 const componentParams = {
-    "Resistor": "Resistance: ",
-    "Capacitor" : "Capacitance: ",
-    "DCCurrent" : "Amps: ",
-    "Inductor" : "Inductance: ",
-    "VoltageSource" : "Volts: "
+    "Resistor": "Resistance (Ω): ",
+    "Capacitor" : "Capacitance (F): ",
+    "DCCurrent" : "Current (A): ",
+    "Inductor" : "Inductance (H): ",
+    "VoltageSource" : "Voltage (V): ",
+    "VCCS" : "Transconductance (S): "
 };
 
 class modifyBox{

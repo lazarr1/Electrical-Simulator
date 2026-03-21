@@ -86,4 +86,14 @@ class VoltageSource extends StaticCircuitComponent{
     }
 }
 
-export {VoltageSource, StaticCircuitComponent, Resistor, DCurrent, Capacitor, Inductor, Ground}
+class VCCSComponent extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"VCCS", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewVCCS();
+    }
+}
+
+export {VoltageSource, StaticCircuitComponent, Resistor, DCurrent, Capacitor, Inductor, Ground, VCCSComponent}

@@ -45,6 +45,12 @@
     height: 80px;
 }
 
+.VCCS{
+    background-image: url('components/images/vccs.png');
+    width: 61px;
+    height: 80px;
+}
+
 .Ground{
     background-image: url('components/images/ground.png');
     width: 41px;

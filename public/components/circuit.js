@@ -157,6 +157,27 @@ class Circuit{
         this.enableComponentDragToPlace(newComp)
     }
 
+    createNewVCCS(){
+        const type = "VCCS";
+        // VCCS is a 4-terminal device: +sense, -sense, +output, -output
+        const newComp = new CircuitComponent(4, type, this, 1);
+        this.Components.push(newComp);
+
+        // 4 nodes arranged vertically: two on the left side, two on the right side
+        const nodePositions = [
+            { x: 0,  y: 0  },   // +sense  (top-left)
+            { x: 0,  y: 80 },   // -sense  (bottom-left)
+            { x: 40, y: 0  },   // +output (top-right)
+            { x: 40, y: 80 }    // -output (bottom-right)
+        ];
+
+        for (let i = 0; i < 4; i++) {
+            const nNode = new Node(nodePositions[i].x, nodePositions[i].y, newComp, this.wireManager);
+            newComp.nodes.push(nNode);
+        }
+        this.enableComponentDragToPlace(newComp)
+    }
+
     createGroundNode(){
         const type = "Ground";
         const newComp = new CircuitComponent(1, type,this);
