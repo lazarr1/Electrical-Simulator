@@ -52,6 +52,8 @@ class Simulator{
 
         void CreateVccs(const double conductance);
 
+        void CreateACVoltageSource(const double amplitude);
+
         void GroundNode(std::string NodeName);
 
         void CreateConnection(std::string NodeName1, std::string NodeName2);

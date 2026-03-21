@@ -4,6 +4,7 @@ const componentParams = {
     "DCCurrent" : "Current (A): ",
     "Inductor" : "Inductance (H): ",
     "VoltageSource" : "Voltage (V): ",
+    "ACVoltageSource" : "Amplitude (V): ",
     "VCCS" : "Transconductance (S): "
 };
 

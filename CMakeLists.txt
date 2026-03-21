@@ -76,6 +76,7 @@ set(elec_sim_SOURCES
     src/router.cpp
     src/circuithandler.cpp
     src/voltage_source.cpp
+    src/ac_voltage_source.cpp
     src/service_handler.cpp
 )
 

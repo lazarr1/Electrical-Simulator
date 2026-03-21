@@ -12,6 +12,7 @@
 #include "simulator/inductor.h"
 #include "simulator/vccs.h"
 #include "simulator/voltage_source.h"
+#include "simulator/ac_voltage_source.h"
 
 
 
@@ -141,6 +142,23 @@ void Simulator::CreateVoltageSource(const double voltage){
    _circuit.AddComponent(vs);
 
    _presentComponents[vs->GetName()] = vs;
+}
+
+void Simulator::CreateACVoltageSource(const double amplitude){
+
+    _numComponents++;
+
+    std::string name("AV" + std::to_string(_numComponents));
+
+    std::shared_ptr<ACVoltageSource> avs = std::make_shared<ACVoltageSource>(name, &_solver);
+
+    AllocateNodes(avs);
+
+    avs->SetAmplitude(amplitude);
+
+    _circuit.AddComponent(avs);
+
+    _presentComponents[avs->GetName()] = avs;
 }
 
 void Simulator::CreateVccs(const double conductance){

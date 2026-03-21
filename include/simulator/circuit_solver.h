@@ -27,6 +27,8 @@ class CircuitSolver{
 
         const double GetTimestep() const;
 
+        double GetTime() const;
+
         bool GetFinishedState() const;
         
         void Solve();

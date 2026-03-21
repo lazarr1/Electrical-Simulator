@@ -157,6 +157,20 @@ class Circuit{
         this.enableComponentDragToPlace(newComp)
     }
 
+    createNewACVoltageSource(){
+        const type = "ACVoltageSource"
+        const newComp = new CircuitComponent(2,type,this, 5);
+        this.Components.push(newComp);
+
+        for (let i = 0; i < 2; i++) {
+            const x = 20.5;
+            const y = (i) * 80;
+            const nNode = new Node(x,y, newComp, this.wireManager);
+            newComp.nodes.push(nNode);
+        }
+        this.enableComponentDragToPlace(newComp)
+    }
+
     createNewVCCS(){
         const type = "VCCS";
         // VCCS is a 4-terminal device: +sense, -sense, +output, -output

@@ -1,4 +1,4 @@
-import  {VoltageSource, Inductor, Capacitor, Resistor, DCurrent, Ground, VCCSComponent} from './staticComponent.js';
+import  {VoltageSource, Inductor, Capacitor, Resistor, DCurrent, Ground, VCCSComponent, ACVoltageSourceComponent} from './staticComponent.js';
 
 function fillComponentBox(circuit){
 // Define an array of image URLs or class objects
@@ -9,7 +9,8 @@ const components = [
     { name: Capacitor, id: 4},
     { name: Inductor, id:5},
     { name: VoltageSource, id:6},
-    { name: VCCSComponent, id:7}
+    { name: VCCSComponent, id:7},
+    { name: ACVoltageSourceComponent, id:8}
 ];
 
     const componentBox = document.createElement("div");

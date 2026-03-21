@@ -18,7 +18,7 @@ void Circuit::AddComponent(std::shared_ptr<CircuitComponent> component){
     //store every component
     _components.insert(component);
 
-    if(component->GetName().substr(0,2) == "VS"){
+    if(component->GetName().substr(0,2) == "VS" || component->GetName().substr(0,2) == "AV"){
         _voltageSources.insert(std::dynamic_pointer_cast<VoltageSource>(component));
     }
     

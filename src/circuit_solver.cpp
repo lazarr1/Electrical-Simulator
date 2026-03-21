@@ -109,6 +109,10 @@ const double CircuitSolver::GetTimestep() const{
     return _timestep;
 }
 
+double CircuitSolver::GetTime() const{
+    return _time;
+}
+
 bool CircuitSolver::GetFinishedState() const{
     return _finished;
 }

@@ -46,6 +46,10 @@ void CircuitHandler::HandleAddComponent(std::string& message){
         std::cout << "Creating VCCS" << std::endl;
         _sim->CreateVccs(value);
     }
+    else if(type == "ACVoltageSource"){
+        std::cout << "Creating AC Voltage Source" << std::endl;
+        _sim->CreateACVoltageSource(value);
+    }
     else{
         std::cout << "Unkown Command: " << message << std::endl;
     }

@@ -18,11 +18,12 @@ class VoltageSource: public CircuitComponent{
         double voltage;
         // void Print() const;
         
+    protected:
+        int _newRow;
+
     private:
         //A node flows in a node flows out
         const Direction currentDirection[2] {In, Out};
-
-        int _newRow;
 
 };
 
