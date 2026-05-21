@@ -23,6 +23,17 @@ class Circuit {
 
         this.wireManager = new WireManager();
         this.oscilloscope = new Oscilloscope();
+        this.scopeSelection = {};
+        this.scopeVisible = false;
+
+        this.oscilloscope.setSelectionChangeHandler((selectionMap) => {
+            this.scopeSelection = selectionMap;
+            this.updateScopeNodeDecorations();
+        });
+        this.oscilloscope.setVisibilityChangeHandler((visible) => {
+            this.scopeVisible = visible;
+            this.updateScopeNodeDecorations();
+        });
 
         this.scopeButton = document.getElementById('scopebutton');
         if (this.scopeButton) {
@@ -66,6 +77,21 @@ class Circuit {
             } else {
                 console.error('Massive Bug, server thinks there are more nodes than actually exist');
             }
+        }
+
+        this.updateScopeNodeDecorations();
+    }
+
+    updateScopeNodeDecorations() {
+        for (const node of this.nodes) {
+            if (!node) {
+                continue;
+            }
+
+            const nodeName = node.id ? `N${node.id}` : '';
+            node.setLabel(nodeName);
+            node.setScopeVisible(!!this.scopeVisible);
+            node.setTraceColor(this.scopeSelection[nodeName] || null);
         }
     }
 
@@ -256,6 +282,7 @@ class Circuit {
             }
         }
         this.wireManager.setNodes(this.nodes);
+        this.updateScopeNodeDecorations();
     }
 
     sendComponents() {

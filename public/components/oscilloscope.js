@@ -1,13 +1,3 @@
-/**
- * Oscilloscope — canvas-based time-series waveform viewer.
- *
- * Usage:
- *   const scope = new Oscilloscope();
- *   scope.setData(timeseriesObj);   // { times: [...], data: { N1: [...], N2: [...] } }
- *   scope.show();
- *   scope.hide();
- */
-
 const TRACE_COLORS = [
     '#00FF00', '#FF4444', '#44AAFF', '#FFFF00',
     '#FF44FF', '#44FFFF', '#FF8800', '#88FF44'
@@ -15,12 +5,10 @@ const TRACE_COLORS = [
 
 class Oscilloscope {
     constructor() {
-        // Outer wrapper
         this.wrapper = document.createElement('div');
         this.wrapper.id = 'oscilloscope';
         this.wrapper.classList.add('oscilloscope-hidden');
 
-        // Header bar
         this.header = document.createElement('div');
         this.header.className = 'scope-header';
 
@@ -29,15 +17,22 @@ class Oscilloscope {
         this.title.className = 'scope-title';
         this.header.appendChild(this.title);
 
-        // Node selector
-        this.nodeSelect = document.createElement('select');
-        this.nodeSelect.className = 'scope-select';
-        this.nodeSelect.multiple = true;
-        this.nodeSelect.title = 'Select nodes (Ctrl/Cmd+click for multiple)';
-        this.nodeSelect.addEventListener('change', () => this.render());
-        this.header.appendChild(this.nodeSelect);
+        this.nodePicker = document.createElement('div');
+        this.nodePicker.className = 'scope-picker';
 
-        // Close button
+        this.nodePickerButton = document.createElement('button');
+        this.nodePickerButton.type = 'button';
+        this.nodePickerButton.className = 'scope-picker-button';
+        this.nodePickerButton.textContent = 'Choose nodes';
+        this.nodePickerButton.addEventListener('click', () => this.togglePicker());
+
+        this.nodePickerPanel = document.createElement('div');
+        this.nodePickerPanel.className = 'scope-picker-panel';
+
+        this.nodePicker.appendChild(this.nodePickerButton);
+        this.nodePicker.appendChild(this.nodePickerPanel);
+        this.header.appendChild(this.nodePicker);
+
         this.closeBtn = document.createElement('button');
         this.closeBtn.textContent = '✕';
         this.closeBtn.className = 'scope-close';
@@ -46,12 +41,10 @@ class Oscilloscope {
 
         this.wrapper.appendChild(this.header);
 
-        // Canvas
         this.canvas = document.createElement('canvas');
         this.canvas.className = 'scope-canvas';
         this.wrapper.appendChild(this.canvas);
 
-        // Legend
         this.legend = document.createElement('div');
         this.legend.className = 'scope-legend';
         this.wrapper.appendChild(this.legend);
@@ -60,20 +53,37 @@ class Oscilloscope {
 
         this.ctx = this.canvas.getContext('2d');
         this.data = null;
+        this.selectedNodes = [];
+        this.availableNodes = [];
+        this.selectionChangeHandler = null;
+        this.visibilityChangeHandler = null;
 
-        // Handle resize
         this._resizeBound = this._onResize.bind(this);
+        this._outsideClickBound = this._handleOutsideClick.bind(this);
         window.addEventListener('resize', this._resizeBound);
+        document.addEventListener('mousedown', this._outsideClickBound);
+    }
+
+    setSelectionChangeHandler(handler) {
+        this.selectionChangeHandler = handler;
+    }
+
+    setVisibilityChangeHandler(handler) {
+        this.visibilityChangeHandler = handler;
     }
 
     show() {
         this.wrapper.classList.remove('oscilloscope-hidden');
+        this._notifyVisibility(true);
         this._onResize();
         this.render();
     }
 
     hide() {
         this.wrapper.classList.add('oscilloscope-hidden');
+        this.closePicker();
+        this._notifyVisibility(false);
+        this._notifySelection({});
     }
 
     isVisible() {
@@ -81,50 +91,121 @@ class Oscilloscope {
     }
 
     toggle() {
-        if (this.isVisible()) this.hide();
-        else this.show();
+        if (this.isVisible()) {
+            this.hide();
+        } else {
+            this.show();
+        }
     }
 
-    /**
-     * @param {Object} tsData  { times: number[], data: { [nodeName]: number[] }, timestep: number }
-     */
     setData(tsData) {
         this.data = tsData;
-        this._populateNodeSelect();
-        if (this.isVisible()) this.render();
+        this._populateNodePicker();
+        if (this.isVisible()) {
+            this.render();
+        }
     }
 
-    _populateNodeSelect() {
-        this.nodeSelect.innerHTML = '';
-        if (!this.data || !this.data.data) return;
+    _populateNodePicker() {
+        this.nodePickerPanel.innerHTML = '';
+        this.availableNodes = [];
 
-        // Sort node names naturally (N1, N2, ... N10)
-        const names = Object.keys(this.data.data).sort((a, b) => {
+        if (!this.data || !this.data.data) {
+            this.selectedNodes = [];
+            this._updatePickerButton();
+            return;
+        }
+
+        this.availableNodes = Object.keys(this.data.data).sort((a, b) => {
             const na = parseInt(a.replace(/\D/g, ''), 10);
             const nb = parseInt(b.replace(/\D/g, ''), 10);
             return na - nb;
         });
 
-        names.forEach((name, idx) => {
-            const opt = document.createElement('option');
-            opt.value = name;
-            opt.textContent = name;
-            // Select first 4 by default
-            if (idx < 4) opt.selected = true;
-            this.nodeSelect.appendChild(opt);
-        });
+        this.selectedNodes = this.selectedNodes.filter((name) => this.availableNodes.includes(name));
+        if (this.selectedNodes.length === 0) {
+            this.selectedNodes = this.availableNodes.slice(0, 4);
+        }
+
+        for (const name of this.availableNodes) {
+            const row = document.createElement('label');
+            row.className = 'scope-picker-row';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = this.selectedNodes.includes(name);
+            checkbox.addEventListener('change', () => this._handleNodeToggle(name, checkbox.checked));
+
+            const label = document.createElement('span');
+            label.className = 'scope-picker-label';
+            label.textContent = name;
+
+            row.appendChild(checkbox);
+            row.appendChild(label);
+            this.nodePickerPanel.appendChild(row);
+        }
+
+        this._updatePickerButton();
+    }
+
+    _handleNodeToggle(name, selected) {
+        if (selected) {
+            if (!this.selectedNodes.includes(name)) {
+                this.selectedNodes.push(name);
+            }
+        } else {
+            this.selectedNodes = this.selectedNodes.filter((nodeName) => nodeName !== name);
+        }
+
+        this._updatePickerButton();
+        this.render();
+    }
+
+    _updatePickerButton() {
+        if (this.selectedNodes.length === 0) {
+            this.nodePickerButton.textContent = 'Choose nodes';
+            return;
+        }
+
+        const preview = this.selectedNodes.slice(0, 3).join(', ');
+        const suffix = this.selectedNodes.length > 3 ? ` +${this.selectedNodes.length - 3}` : '';
+        this.nodePickerButton.textContent = `${preview}${suffix}`;
+    }
+
+    togglePicker() {
+        this.nodePicker.classList.toggle('is-open');
+    }
+
+    closePicker() {
+        this.nodePicker.classList.remove('is-open');
+    }
+
+    _handleOutsideClick(event) {
+        if (!this.nodePicker.contains(event.target)) {
+            this.closePicker();
+        }
     }
 
     _getSelectedNodes() {
-        const selected = [];
-        for (const opt of this.nodeSelect.options) {
-            if (opt.selected) selected.push(opt.value);
+        return [...this.selectedNodes];
+    }
+
+    _notifySelection(selectionMap) {
+        if (this.selectionChangeHandler) {
+            this.selectionChangeHandler(selectionMap);
         }
-        return selected;
+    }
+
+    _notifyVisibility(visible) {
+        if (this.visibilityChangeHandler) {
+            this.visibilityChangeHandler(visible);
+        }
     }
 
     _onResize() {
-        if (!this.isVisible()) return;
+        if (!this.isVisible()) {
+            return;
+        }
         const rect = this.canvas.parentElement.getBoundingClientRect();
         const w = Math.max(300, rect.width - 20);
         const h = Math.max(150, Math.min(400, window.innerHeight * 0.3));
@@ -144,7 +225,6 @@ class Oscilloscope {
         const plotW = w - pad.left - pad.right;
         const plotH = h - pad.top - pad.bottom;
 
-        // Clear
         ctx.fillStyle = '#1a1a2e';
         ctx.fillRect(0, 0, w, h);
 
@@ -152,33 +232,41 @@ class Oscilloscope {
             ctx.fillStyle = '#888';
             ctx.font = '14px monospace';
             ctx.textAlign = 'center';
-            ctx.fillText('No data — run a simulation', w / 2, h / 2);
+            ctx.fillText('No data - run a simulation', w / 2, h / 2);
+            this._notifySelection({});
             return;
         }
 
         const times = this.data.times;
         const selectedNodes = this._getSelectedNodes();
-        if (selectedNodes.length === 0) return;
+        if (selectedNodes.length === 0) {
+            this._notifySelection({});
+            return;
+        }
 
-        // Determine Y range across selected nodes
-        let yMin = Infinity, yMax = -Infinity;
+        let yMin = Infinity;
+        let yMax = -Infinity;
         for (const name of selectedNodes) {
             const vals = this.data.data[name];
-            if (!vals) continue;
-            for (const v of vals) {
-                if (v < yMin) yMin = v;
-                if (v > yMax) yMax = v;
+            if (!vals) {
+                continue;
+            }
+            for (const value of vals) {
+                if (value < yMin) {
+                    yMin = value;
+                }
+                if (value > yMax) {
+                    yMax = value;
+                }
             }
         }
 
-        // Handle constant signals (DC) — ensure a visible range
         if (yMax - yMin < 1e-9) {
             const center = (yMax + yMin) / 2;
             const margin = Math.abs(center) * 0.2 || 1;
             yMin = center - margin;
             yMax = center + margin;
         } else {
-            // Add 10% padding
             const yRange = yMax - yMin;
             yMin -= yRange * 0.1;
             yMax += yRange * 0.1;
@@ -188,15 +276,19 @@ class Oscilloscope {
         const tMax = times[times.length - 1];
         const tRange = tMax - tMin || 1;
 
-        // Draw grid
         this._drawGrid(ctx, pad, plotW, plotH, tMin, tMax, yMin, yMax);
 
-        // Draw traces
         this.legend.innerHTML = '';
+        const selectionMap = {};
+
         selectedNodes.forEach((name, idx) => {
             const vals = this.data.data[name];
-            if (!vals) return;
+            if (!vals) {
+                return;
+            }
+
             const color = TRACE_COLORS[idx % TRACE_COLORS.length];
+            selectionMap[name] = color;
 
             ctx.beginPath();
             ctx.strokeStyle = color;
@@ -205,17 +297,21 @@ class Oscilloscope {
             for (let i = 0; i < times.length && i < vals.length; i++) {
                 const x = pad.left + ((times[i] - tMin) / tRange) * plotW;
                 const y = pad.top + plotH - ((vals[i] - yMin) / (yMax - yMin)) * plotH;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
             }
             ctx.stroke();
 
-            // Legend entry
             const entry = document.createElement('span');
             entry.className = 'scope-legend-entry';
             entry.innerHTML = `<span class="scope-legend-color" style="background:${color}"></span>${name}`;
             this.legend.appendChild(entry);
         });
+
+        this._notifySelection(selectionMap);
     }
 
     _drawGrid(ctx, pad, plotW, plotH, tMin, tMax, yMin, yMax) {
@@ -224,7 +320,6 @@ class Oscilloscope {
         ctx.fillStyle = '#888';
         ctx.font = '10px monospace';
 
-        // Horizontal grid lines (voltage)
         const ySteps = 6;
         for (let i = 0; i <= ySteps; i++) {
             const y = pad.top + (i / ySteps) * plotH;
@@ -239,7 +334,6 @@ class Oscilloscope {
             ctx.fillText(val.toFixed(2) + 'V', pad.left - 5, y);
         }
 
-        // Vertical grid lines (time)
         const tSteps = 8;
         for (let i = 0; i <= tSteps; i++) {
             const x = pad.left + (i / tSteps) * plotW;
@@ -254,12 +348,10 @@ class Oscilloscope {
             ctx.fillText(val.toFixed(2) + 's', x, pad.top + plotH + 5);
         }
 
-        // Border
         ctx.strokeStyle = '#555';
         ctx.lineWidth = 1;
         ctx.strokeRect(pad.left, pad.top, plotW, plotH);
 
-        // Axis labels
         ctx.fillStyle = '#aaa';
         ctx.font = '11px monospace';
         ctx.textAlign = 'center';
@@ -274,6 +366,7 @@ class Oscilloscope {
 
     destroy() {
         window.removeEventListener('resize', this._resizeBound);
+        document.removeEventListener('mousedown', this._outsideClickBound);
         this.wrapper.remove();
     }
 }
