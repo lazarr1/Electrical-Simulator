@@ -1,3 +1,5 @@
+import { cloneDefinition } from './componentSchemas.js';
+
 /*  Class: StaticCircuitComponent:
     *   This base class is simply the "clickable" version of each component that when clicked on by a user, it creates
     *   the real component. The class simply needs the type of component it creates, so that the stylesheet can update
@@ -10,12 +12,20 @@ class StaticCircuitComponent {
     constructor(id, circuit, type, componentBox) {
         this.id = id;
         this.crc = circuit;
+        this.definition = cloneDefinition(type);
         this.element = document.createElement("div");
         this.element.classList.add("StaticCircuitComponent");
         this.element.classList.add(type);
         this.type = type;
+        this.element.title = this.definition.displayName;
+        this.element.setAttribute('aria-label', this.definition.displayName);
         this.element.addEventListener("click", this.onClick.bind(this));
-       // document.body.appendChild(this.element);
+
+        const caption = document.createElement('span');
+        caption.className = 'StaticCircuitComponentLabel';
+        caption.textContent = this.definition.displayName;
+        this.element.appendChild(caption);
+
         componentBox.appendChild(this.element);
     }
 

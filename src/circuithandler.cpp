@@ -1,5 +1,21 @@
 #include "simulator/circuithandler.h"
 
+#include <stdexcept>
+
+namespace {
+json ParseParams(const std::string& payload) {
+    if (payload.empty()) {
+        return json::object();
+    }
+
+    if (payload.front() == '{') {
+        return json::parse(payload);
+    }
+
+    return json{{"value", std::stod(payload)}};
+}
+}
+
 CircuitHandler::CircuitHandler(){ 
     
     _sim = new Simulator();
@@ -11,44 +27,40 @@ CircuitHandler::~CircuitHandler(){
 
 void CircuitHandler::HandleAddComponent(std::string& message){
 
-    
     std::string type,valueStr;
     std::size_t slash_pose = message.find('/');
 
     type = message.substr(0, slash_pose);
     valueStr = message.substr(slash_pose + 1);
-
-    double value = std::stod(valueStr);
-    std::cout << value << std::endl;
+    json params = ParseParams(valueStr);
 
     if(type == "Resistor"){
         std::cout << "Creating Resistor" << std::endl;
-        _sim->CreateResistor(value);
+        _sim->CreateResistor(params);
     }
     else if(type == "DCCurrent"){
         std::cout << "Creating DCCurrent" << std::endl;
-
-        _sim->CreateCurrentSource(value);
+        _sim->CreateCurrentSource(params);
     }
     else if(type == "Capacitor"){
         std::cout << "Creating Capacitor" << std::endl;
-        _sim->CreateCapacitor(value);
+        _sim->CreateCapacitor(params);
     }
     else if(type == "Inductor"){
         std::cout << "Creating Inductor" << std::endl;
-        _sim->CreateInductor(value);
+        _sim->CreateInductor(params);
     }
     else if(type == "VoltageSource"){
         std::cout << "Creating Voltage Source" << std::endl;
-        _sim->CreateVoltageSource(value);
+        _sim->CreateVoltageSource(params);
     }
     else if(type == "VCCS"){
         std::cout << "Creating VCCS" << std::endl;
-        _sim->CreateVccs(value);
+        _sim->CreateVccs(params);
     }
     else if(type == "ACVoltageSource"){
         std::cout << "Creating AC Voltage Source" << std::endl;
-        _sim->CreateACVoltageSource(value);
+        _sim->CreateACVoltageSource(params);
     }
     else{
         std::cout << "Unkown Command: " << message << std::endl;
