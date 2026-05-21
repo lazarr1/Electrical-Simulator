@@ -1,95 +1,126 @@
-import WireManager from "./wire.js";
+import WireManager from './wire.js';
 
-/*  Class: Node: 
-    *       This class defines the nodes for each component. Clicking on allows the user to create a wire that will connect 
-    *       any nodes touching the same wire.
-    *
-    *       
-    *      Member functions:
-    *       - OnClick(): creates a wire starting at the node
-*/
 class Node {
     constructor(x, y, component, wireManager, id) {
-        //Store the nodes unique ID to communicate with simulator
-        this.id = id
+        this.id = id;
         this.x = x;
         this.y = y;
-
         this.voltage = 0;
-        //Create html element
-        this.element = document.createElement("div");
+        this.scopeVisible = false;
+        this.traceColor = null;
+
+        this.element = document.createElement('div');
         this.element.classList.add('node');
         component.element.appendChild(this.element);
+
+        this.labelElement = document.createElement('div');
+        this.labelElement.className = 'node-label';
+        document.body.appendChild(this.labelElement);
 
         this.element.style.left = `${x}px`;
         this.element.style.top = `${y}px`;
 
         this.mouseDownBind = this.mouseDown.bind(this);
-        this.element.addEventListener("mousedown", this.mouseDownBind );
+        this.element.addEventListener('mousedown', this.mouseDownBind);
 
-        //Store the associated component and wire manager
         this.parent = component;
         this.wm = wireManager;
-
         this.connectedNodes = [];
 
+        this.refreshVisualState();
     }
 
-    resetConnectedNodes(){
+    resetConnectedNodes() {
         this.connectedNodes = [];
     }
 
-    addConnectedNode(node){
+    addConnectedNode(node) {
         this.connectedNodes.push(node);
     }
 
-    setConnectedNodes(nodes){
+    setConnectedNodes(nodes) {
         this.connectedNodes = nodes;
     }
 
-    getConnectedNodes(){
+    getConnectedNodes() {
         return this.connectedNodes;
     }
 
-    setVoltage(volts){
+    setVoltage(volts) {
         this.voltage = volts;
+        this.refreshVisualState();
     }
 
-    getVoltage(){
+    getVoltage() {
         return this.voltage;
     }
 
-    getPos(){
+    setScopeVisible(visible) {
+        this.scopeVisible = visible;
+        this.refreshVisualState();
+    }
+
+    setTraceColor(color) {
+        this.traceColor = color;
+        this.refreshVisualState();
+    }
+
+    setLabel(label) {
+        this.labelElement.textContent = label || '';
+        this.refreshVisualState();
+    }
+
+    refreshVisualState() {
+        const shouldShow = this.scopeVisible && this.labelElement.textContent;
+        this.labelElement.classList.toggle('is-visible', !!shouldShow);
+        this.element.classList.toggle('is-scoped', !!this.traceColor);
+        if (this.traceColor) {
+            this.element.style.boxShadow = `0 0 0 4px ${this.traceColor}55`;
+            this.labelElement.style.borderColor = this.traceColor;
+            this.labelElement.style.color = this.traceColor;
+        } else {
+            this.element.style.boxShadow = '';
+            this.labelElement.style.borderColor = '';
+            this.labelElement.style.color = '';
+        }
+        this.updateLabelPosition();
+    }
+
+    getPos() {
         this.updatePos();
-        return [this.x,this.y];
+        return [this.x, this.y];
     }
 
-    updatePos(){
-        //gets the current position of the node (accounts for any rotation of the parent HTML element)
+    updatePos() {
         const pos = this.element.getBoundingClientRect();
-
-        this.x = Math.round(pos.x/20) * 20;
-        this.y = Math.round(pos.y/20) * 20;
+        this.x = Math.round(pos.x / 20) * 20;
+        this.y = Math.round(pos.y / 20) * 20;
+        this.updateLabelPosition();
     }
 
-    mouseDown(event){
+    updateLabelPosition() {
+        const pos = this.element.getBoundingClientRect();
+        this.labelElement.style.left = `${pos.left + 14}px`;
+        this.labelElement.style.top = `${pos.top - 10}px`;
+    }
+
+    mouseDown(event) {
         event.stopPropagation();
-        //Send node location to the wire Manager
-        // Start a wire from this node
         this.wm.Start(this);
     }
 
-    delete(){
-        this.element.removeEventListener("mousedown", this.mouseDownBind); 
+    delete() {
+        this.element.removeEventListener('mousedown', this.mouseDownBind);
         this.element.remove();
+        this.labelElement.remove();
         delete this.element;
+        delete this.labelElement;
         delete this.parent;
         delete this.wm;
         delete this.x;
         delete this.y;
         delete this.mouseDownBind;
     }
-        
 }
 
-export default Node
+export default Node;
