@@ -1,39 +1,27 @@
-import WireManager from "./wire.js";
-import CircuitComponent from "./components.js";
-import Node from "./nodes.js";
-import Client from "../client/client.js";
-import Oscilloscope from "./oscilloscope.js";
+import WireManager from './wire.js';
+import CircuitComponent from './components.js';
+import Node from './nodes.js';
+import Client from '../client/client.js';
+import Oscilloscope from './oscilloscope.js';
+import { cloneDefinition } from './componentSchemas.js';
 
-/*  Class: Circuit
-    *      This class manages all the components, manages any changes to the components and 
-    *      forwards any changes made to the server, it also detects any connections between 
-    *      components before sending the data to the server.
-    *
-    * 
-    *       - CreatenewResistr: Creates a resistor with 100 ohm resistance and sends information to server
-    *       - CreateNewDCCurrent: Creates a new DCCurrent with a defaul 1Amp current and sends information to server
-    *       - ConnectWires: Uses WireManager to sense anywire connections, and sends information to server
-*/
-class Circuit{
-    constructor(){
+class Circuit {
+    constructor() {
         this.client = new Client(this);
-        
+
         this.inSim = false;
         this.Components = [];
-        this.nodes = []; 
+        this.nodes = [];
         this.grounds = [];
 
-        this.playbutton = document.getElementById("playbutton");
+        this.playbutton = document.getElementById('playbutton');
         this.playbutton.onclick = () => {
             if (!this.inSim) {
                 this.run();
             }
         };
 
-        //Manages all the connections between components
         this.wireManager = new WireManager();
-
-        // Oscilloscope
         this.oscilloscope = new Oscilloscope();
 
         this.scopeButton = document.getElementById('scopebutton');
@@ -42,339 +30,257 @@ class Circuit{
         }
     }
 
-    run(){
-        console.log("Simulating circuit");
+    run() {
+        console.log('Simulating circuit');
         this.simulate();
     }
 
-    clearInSimFlag(){
-        console.log("Clearing inSim flag");
+    clearInSimFlag() {
+        console.log('Clearing inSim flag');
         this.inSim = false;
         this.playbutton.style.backgroundImage = "url('components/images/play.png')";
     }
 
-    okButtonOff(){
-        this.okDiv.classList.add("notOk");
-    }   
-    okButtonOn(){
-        this.okDiv.classList.remove("notOk");
-    }
-    ErrorMsg(){
- //       this.okButtonOff();
+    okButtonOff() {
+        this.okDiv.classList.add('notOk');
     }
 
-    setTimeSeries(tsData){
+    okButtonOn() {
+        this.okDiv.classList.remove('notOk');
+    }
+
+    ErrorMsg() {
+    }
+
+    setTimeSeries(tsData) {
         this.oscilloscope.setData(tsData);
         this.oscilloscope.show();
     }
 
-    setNodes(nodeVoltages){
-//        this.okButtonOn();
-        //Set nodes to match the server.
-        for (const nodeName in nodeVoltages){
+    setNodes(nodeVoltages) {
+        for (const nodeName in nodeVoltages) {
             const nodeID = nodeName.split('N')[1] - 1;
-            if(nodeID < this.nodes.length && this.nodes[nodeID] !== undefined){
+            if (nodeID < this.nodes.length && this.nodes[nodeID] !== undefined) {
                 this.nodes[nodeID].setVoltage(nodeVoltages[nodeName]);
                 this.wireManager.setWireVoltage(this.nodes[nodeID]);
+            } else {
+                console.error('Massive Bug, server thinks there are more nodes than actually exist');
             }
-            else{
-                console.error("Massive Bug, server thinks there are more nodes than actually exist");
-            }
         }
     }
 
-    createNewResistor(){
-        const type = "Resistor";
-        const newComp = new CircuitComponent(2,type,this,100);
-        this.Components.push(newComp);
+    createComponent(type, options = {}) {
+        const definition = cloneDefinition(type);
+        const component = new CircuitComponent({
+            terminals: definition.terminals,
+            type: definition.type,
+            displayName: definition.displayName,
+            circuit: this,
+            params: { ...definition.params, ...(options.params || {}) },
+            paramSchema: definition.schema,
+            gridAnchor: definition.gridAnchor
+        });
 
-        //Position the nodes in the correct position relative to the resistor. 
-        for (let i = 0; i < 2; i++) {
-            //Position Nodes Correctly
-            const x = 20.5;
-            const y = i * 80;
-            const nNode = new Node(x,y, newComp, this.wireManager);
-            
-            //Store the node in the circuit's list of nodes 
-            newComp.nodes.push(nNode);
+        for (const nodeConfig of definition.nodeLayout) {
+            const node = new Node(nodeConfig.x, nodeConfig.y, component, this.wireManager, options.nodeId);
+            component.nodes.push(node);
         }
-        this.enableComponentDragToPlace(newComp)
+
+        return component;
     }
 
-    createNewDCurrent(){
-        const type = "DCCurrent"
-        const newComp = new CircuitComponent(2,type,this, 1);
-        this.Components.push(newComp);
-
-        for (let i = 0; i < 2; i++) {
-            //Position Nodes Correctly
-            const x = 20.5;
-            const y = (i) * 80;
-            const nNode = new Node(x,y, newComp, this.wireManager);
-
-            //Store the node in the circuit's list of nodes 
-            newComp.nodes.push(nNode);
-        }
-        this.enableComponentDragToPlace(newComp)
-    }
-    
-    createNewVoltageSource(){
-        const type = "VoltageSource"
-        const newComp = new CircuitComponent(2,type,this, 1);
-        this.Components.push(newComp);
-
-        for (let i = 0; i < 2; i++) {
-            //Position Nodes Correctly
-            const x = 20.5;
-            const y = (i) * 80;
-            const nNode = new Node(x,y, newComp, this.wireManager);
-
-            //Store the node in the circuit's list of nodes 
-            newComp.nodes.push(nNode);
-        }
-        this.enableComponentDragToPlace(newComp)
+    createNewResistor() {
+        const component = this.createComponent('Resistor');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
     }
 
-    createNewCapacitor(){
-        const type = "Capacitor";
-        const newComp = new CircuitComponent(2, type, this, 0.1);
-
-        this.Components.push(newComp);
-
-        for (let i = 0; i < 2; i++) {
-            //Position Nodes Correctly
-            const x = 20.5;
-            const y = (i) * 80;
-            const nNode = new Node(x,y, newComp, this.wireManager);
-
-            //Store the node in the circuit's list of nodes 
-            newComp.nodes.push(nNode);
-        }
-        this.enableComponentDragToPlace(newComp)
+    createNewDCurrent() {
+        const component = this.createComponent('DCCurrent');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
     }
 
-    createNewInductor(){
-        const type = "Inductor";
-        const newComp = new CircuitComponent(2, type, this, 0.1);
-
-        this.Components.push(newComp);
-
-        for (let i = 0; i < 2; i++) {
-            //Position Nodes Correctly
-            const x = 20.5;
-            const y = (i) * 80;
-            const nNode = new Node(x,y, newComp, this.wireManager);
-
-            //Store the node in the circuit's list of nodes 
-            newComp.nodes.push(nNode);
-        }
-        this.enableComponentDragToPlace(newComp)
+    createNewVoltageSource() {
+        const component = this.createComponent('VoltageSource');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
     }
 
-    createNewACVoltageSource(){
-        const type = "ACVoltageSource"
-        const newComp = new CircuitComponent(2,type,this, 5);
-        this.Components.push(newComp);
-
-        for (let i = 0; i < 2; i++) {
-            const x = 20.5;
-            const y = (i) * 80;
-            const nNode = new Node(x,y, newComp, this.wireManager);
-            newComp.nodes.push(nNode);
-        }
-        this.enableComponentDragToPlace(newComp)
+    createNewCapacitor() {
+        const component = this.createComponent('Capacitor');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
     }
 
-    createNewVCCS(){
-        const type = "VCCS";
-        // VCCS is a 4-terminal device: +sense, -sense, +output, -output
-        const newComp = new CircuitComponent(4, type, this, 1);
-        this.Components.push(newComp);
-
-        // 4 nodes arranged vertically: two on the left side, two on the right side
-        const nodePositions = [
-            { x: 0,  y: 0  },   // +sense  (top-left)
-            { x: 0,  y: 80 },   // -sense  (bottom-left)
-            { x: 40, y: 0  },   // +output (top-right)
-            { x: 40, y: 80 }    // -output (bottom-right)
-        ];
-
-        for (let i = 0; i < 4; i++) {
-            const nNode = new Node(nodePositions[i].x, nodePositions[i].y, newComp, this.wireManager);
-            newComp.nodes.push(nNode);
-        }
-        this.enableComponentDragToPlace(newComp)
+    createNewInductor() {
+        const component = this.createComponent('Inductor');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
     }
 
-    createGroundNode(){
-        const type = "Ground";
-        const newComp = new CircuitComponent(1, type,this);
-
-        const x = 20.5;
-        const y = 0;
-        const nNode = new Node(x,y,newComp, this.wireManager, "G");
-
-        newComp.nodes.push(nNode);
-
-        //Store grounded nodes sperately
-        this.grounds.push(newComp);
-        this.enableComponentDragToPlace(newComp)
+    createNewACVoltageSource() {
+        const component = this.createComponent('ACVoltageSource');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
     }
 
-    getConnections(){
-        //Iterates through every node in the Circuit and checks if the node is connected to any wires
+    createNewVCCS() {
+        const component = this.createComponent('VCCS');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
+    createGroundNode() {
+        const component = this.createComponent('Ground', { nodeId: 'G' });
+        this.grounds.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
+    getConnections() {
         this.wireManager.getConnections();
         this.parentNodes = [];
         this.childNodes = [];
 
-        for(let iNode = 0; iNode < this.nodes.length; iNode++){
-            if(this.childNodes.indexOf(this.nodes[iNode]) <= -1){
+        for (let iNode = 0; iNode < this.nodes.length; iNode++) {
+            if (this.childNodes.indexOf(this.nodes[iNode]) <= -1) {
                 this.parentNodes.push(this.nodes[iNode]);
                 this.childNodes.push(this.wireManager.findConnectedNodesDFS(this.nodes[iNode]));
             }
         }
-        
     }
 
-    sendNodeConnections(){
-        for(const iNode in this.parentNodes){
+    sendNodeConnections() {
+        for (const iNode in this.parentNodes) {
             const node = this.parentNodes[iNode];
-
             const [baseNode, ...toConnectNodes] = node.getConnectedNodes();
 
-            toConnectNodes.forEach(n => 
-                this.client.SendConnectNodesMSG("N" + baseNode.id, "N" + n.id)
-            );
+            toConnectNodes.forEach((n) => this.client.SendConnectNodesMSG('N' + baseNode.id, 'N' + n.id));
         }
 
-        //Ground nodes
-        for(const ground in this.grounds){
+        for (const ground in this.grounds) {
             const node = this.grounds[ground].nodes[0];
             const grounded = this.wireManager.findConnectedNodesDFS(node);
 
-            if(grounded.length >0){
+            if (grounded.length > 0) {
                 const nodeToGround = grounded[0];
-                nodeToGround && this.client.SendGroundNodeMSG("N" + nodeToGround.id);
+                nodeToGround && this.client.SendGroundNodeMSG('N' + nodeToGround.id);
             }
         }
 
-        // Direct node connections
-        let nodeLocs = {}
-        for (const iComponent in this.Components){
-            const nodes = this.Components[iComponent].nodes;
-            for (const iNode in nodes){
-                const node = nodes[iNode];
+        const nodeLocs = {};
+        for (const component of this.Components) {
+            for (const node of component.nodes) {
                 if (!([node.x, node.y] in nodeLocs)) {
-                    nodeLocs[[node.x, node.y]] = "N" + node.id;
-                    console.log([node.x, node.y]);
+                    nodeLocs[[node.x, node.y]] = 'N' + node.id;
                 } else {
-                    this.client.SendConnectNodesMSG(nodeLocs[[node.x, node.y]], "N" + node.id);
+                    this.client.SendConnectNodesMSG(nodeLocs[[node.x, node.y]], 'N' + node.id);
                 }
             }
         }
-
     }
 
-    UpdateNodes(){
-        //give each node an associated ID, to assign correct node voltages to correct nodes
+    UpdateNodes() {
         let newNodeID = 1;
         this.nodes = [];
-        for(let iComponentLoc =0; iComponentLoc < this.Components.length; iComponentLoc++){
-            const iComponent = this.Components[iComponentLoc];
-            for(const iNode of iComponent.nodes){
-                iNode.id = newNodeID++;
-                this.nodes.push(iNode);
+        for (const component of this.Components) {
+            for (const node of component.nodes) {
+                node.id = newNodeID++;
+                this.nodes.push(node);
             }
         }
         this.wireManager.setNodes(this.nodes);
     }
 
-    sendComponents(){
-       this.UpdateNodes();
-        for(let iComponentLoc =0; iComponentLoc < this.Components.length; iComponentLoc++){
-            const iComponent = this.Components[iComponentLoc];
-            this.client.SendCreateMessage(iComponent.type, iComponent.getValue());
+    sendComponents() {
+        this.UpdateNodes();
+        for (const component of this.Components) {
+            this.client.SendCreateMessage(component.type, component.getSerializableParams());
         }
     }
 
-    DeleteComponent(component){
+    DeleteComponent(component) {
         const index = this.Components.indexOf(component);
-        if (index > -1) { 
-            this.Components.splice(index, 1); 
-        }
-        else{
-            console.error("A COMPONENT WAS NOT DELETED CORRECTLY!!!");
-        }
-    }
-    
-    DeleteGround(ground){
-        const index = this.grounds.indexOf(ground);
-        if (index > -1) { 
-            this.grounds.splice(index, 1);
-        }
-        else{
-            console.error("A GROUND COMPONENT WAS NOT DELETED CORRECTLY!!!");
+        if (index > -1) {
+            this.Components.splice(index, 1);
+        } else {
+            console.error('A COMPONENT WAS NOT DELETED CORRECTLY!!!');
         }
     }
 
-    simulate(){
-        if(!this.inSim){
+    DeleteGround(ground) {
+        const index = this.grounds.indexOf(ground);
+        if (index > -1) {
+            this.grounds.splice(index, 1);
+        } else {
+            console.error('A GROUND COMPONENT WAS NOT DELETED CORRECTLY!!!');
+        }
+    }
+
+    simulate() {
+        if (!this.inSim) {
             this.inSim = true;
             this.playbutton.style.backgroundImage = "url('components/images/play_running.png')";
             this.sendComponents();
             this.getConnections();
             this.sendNodeConnections();
             this.client.SendRunMSG();
-            // this.inSim will be cleared by the websocket response
         }
     }
 
-    // Drag-and-drop placement for a component after it is created
     enableComponentDragToPlace(component) {
-        if (this._draggingComponent) return;
+        if (this._draggingComponent) {
+            return;
+        }
+
         this._draggingComponent = component;
         const elem = component.element;
         elem.style.position = 'absolute';
         elem.style.pointerEvents = 'none';
         elem.style.zIndex = 10000;
-        elem.style.display = 'none'; // Hide initially
+        elem.style.display = 'none';
         let shown = false;
-        // Show and move on first mousemove
+
         const moveHandler = (e) => {
             if (!shown) {
                 elem.style.display = '';
                 shown = true;
             }
+
             const rootRect = document.getElementById('root').getBoundingClientRect();
             const mx = e.clientX - rootRect.left;
             const my = e.clientY - rootRect.top;
             const gx = Math.round(mx / 20) * 20;
             const gy = Math.round(my / 20) * 20;
-            elem.style.left = (gx - elem.offsetWidth/2) + 'px';
-            elem.style.top = (gy - elem.offsetHeight/2) + 'px';
+            const anchor = component.getPlacementAnchor();
+
+            elem.style.left = gx - anchor.x + 'px';
+            elem.style.top = gy - anchor.y + 'px';
         };
-        document.addEventListener('mousemove', moveHandler);
-        // Drop on click
+
         const dropHandler = (e) => {
-            if (shown !== true){
-                escHandler({key: 'Escape'});
+            if (shown !== true) {
+                escHandler({ key: 'Escape' });
             }
+
             document.removeEventListener('mousemove', moveHandler);
             document.removeEventListener('mousedown', dropHandler, true);
             document.removeEventListener('keydown', escHandler, true);
-            // Snap to grid on drop
+
             const rootRect = document.getElementById('root').getBoundingClientRect();
             const mx = e.clientX - rootRect.left;
             const my = e.clientY - rootRect.top;
             const gx = Math.round(mx / 20) * 20;
             const gy = Math.round(my / 20) * 20;
-            elem.style.left = (gx - elem.offsetWidth/2) + 'px';
-            elem.style.top = (gy - elem.offsetHeight/2) + 'px';
+            const anchor = component.getPlacementAnchor();
+
+            elem.style.left = gx - anchor.x + 'px';
+            elem.style.top = gy - anchor.y + 'px';
             elem.style.pointerEvents = '';
             elem.style.zIndex = '';
             this._draggingComponent = null;
         };
-        // Cancel on esc/delete
+
         const escHandler = (e) => {
             if (e.key === 'Escape' || e.key === 'Delete' || e.key === 'Backspace') {
                 document.removeEventListener('mousemove', moveHandler);
@@ -384,10 +290,14 @@ class Circuit{
                     elem.parentNode.removeChild(elem);
                 }
                 const idx = this.Components.indexOf(component);
-                if (idx > -1) this.Components.splice(idx, 1);
+                if (idx > -1) {
+                    this.Components.splice(idx, 1);
+                }
                 this._draggingComponent = null;
             }
         };
+
+        document.addEventListener('mousemove', moveHandler);
         setTimeout(() => {
             document.addEventListener('mousedown', dropHandler, true);
             document.addEventListener('keydown', escHandler, true);
@@ -395,4 +305,4 @@ class Circuit{
     }
 }
 
-export default Circuit
+export default Circuit;

@@ -23,6 +23,10 @@ Simulator::Simulator()
 
 }
 
+void Simulator::CreateResistor(const json& params){
+    CreateResistor(params.value("resistance", params.value("value", 100.0)));
+}
+
 void Simulator::CreateResistor(const double resistanceInput){
     //Increment the count of current components;
     _numComponents++;
@@ -66,6 +70,10 @@ void Simulator::CreateCapacitor(const double capacitance){
     _presentComponents[capacitor->GetName()] = capacitor; 
 }
 
+void Simulator::CreateCapacitor(const json& params){
+    CreateCapacitor(params.value("capacitance", params.value("value", 0.1)));
+}
+
 void Simulator::CreateInductor(const double inductance){
     //Increment the count of current components;
     _numComponents++;
@@ -85,6 +93,10 @@ void Simulator::CreateInductor(const double inductance){
 
     //update the simulator to store the new component
     _presentComponents[inductor->GetName()] = inductor; 
+}
+
+void Simulator::CreateInductor(const json& params){
+    CreateInductor(params.value("inductance", params.value("value", 0.1)));
 }
 
 
@@ -128,6 +140,10 @@ void Simulator::CreateCurrentSource(const double current){
 
 }
 
+void Simulator::CreateCurrentSource(const json& params){
+    CreateCurrentSource(params.value("current", params.value("value", 1.0)));
+}
+
 void Simulator::CreateVoltageSource(const double voltage){
    _numComponents++;
 
@@ -144,6 +160,10 @@ void Simulator::CreateVoltageSource(const double voltage){
    _presentComponents[vs->GetName()] = vs;
 }
 
+void Simulator::CreateVoltageSource(const json& params){
+    CreateVoltageSource(params.value("voltage", params.value("value", 1.0)));
+}
+
 void Simulator::CreateACVoltageSource(const double amplitude){
 
     _numComponents++;
@@ -155,6 +175,23 @@ void Simulator::CreateACVoltageSource(const double amplitude){
     AllocateNodes(avs);
 
     avs->SetAmplitude(amplitude);
+
+    _circuit.AddComponent(avs);
+
+    _presentComponents[avs->GetName()] = avs;
+}
+
+void Simulator::CreateACVoltageSource(const json& params){
+    _numComponents++;
+
+    std::string name("AV" + std::to_string(_numComponents));
+
+    std::shared_ptr<ACVoltageSource> avs = std::make_shared<ACVoltageSource>(name, &_solver);
+
+    AllocateNodes(avs);
+
+    avs->SetAmplitude(params.value("amplitude", params.value("value", 5.0)));
+    avs->SetFrequency(params.value("frequency", 60.0));
 
     _circuit.AddComponent(avs);
 
@@ -183,6 +220,10 @@ void Simulator::CreateVccs(const double conductance){
     _presentComponents[vccs->GetName()] = vccs;
 
 
+}
+
+void Simulator::CreateVccs(const json& params){
+    CreateVccs(params.value("conductance", params.value("value", 1.0)));
 }
 
 void Simulator::CreateConnection(std::string NodeName1, std::string NodeName2){

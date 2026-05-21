@@ -130,8 +130,8 @@ class Client{
 		}
 	}
 
-    SendCreateMessage(ComponentType, value){
-        this.sendMsg("add component:"+ComponentType + "/"+value);
+    SendCreateMessage(ComponentType, params){
+        this.sendMsg("add component:" + ComponentType + "/" + JSON.stringify(params || {}));
     }
 
     SendGroundNodeMSG(NodeName){

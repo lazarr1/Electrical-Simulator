@@ -12,6 +12,30 @@
 
 .StaticCircuitComponent{
     cursor : pointer;
+    position: relative;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    background-repeat: no-repeat;
+    background-position: center 10px;
+    border-radius: 12px;
+    background-color: rgba(255,255,255,0.25);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+.StaticCircuitComponentLabel {
+    display: block;
+    width: 100%;
+    margin-top: auto;
+    padding: 4px 3px 6px;
+    text-align: center;
+    font-size: 10px;
+    line-height: 1.1;
+    color: #08343a;
+    font-weight: 700;
+    background: rgba(255,255,255,0.72);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
 }
 
 .Resistor{
@@ -89,6 +113,7 @@ div:active {
 
 body {
 	user-select: none;
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
     background-size: 20px 20px;
     background-image:
     linear-gradient(to right, rgb(189, 189, 193) 1px, transparent 1px),
@@ -96,20 +121,21 @@ body {
 }
 
 .grid-container {
-    padding : 10px;
-    border-radius: 10px;
+    padding : 12px;
+    border-radius: 18px;
     position: absolute;
-    height: 70vh;
+    height: 78vh;
     overflow-y: auto;
-    width : 160px;
-    top: 100px;
+    width : 220px;
+    top: 24px;
+    left: 24px;
     display: grid;
-    column-gap: 5px;
-    grid-template-columns: repeat(3, 1fr); 
-    background-color: #008080;
-    grid-auto-rows: 90px;
+    column-gap: 10px;
+    grid-template-columns: repeat(2, 1fr); 
+    background: linear-gradient(180deg, rgba(12, 117, 124, 0.94), rgba(4, 71, 82, 0.96));
+    grid-auto-rows: 110px;
     grid-gap: 10px;
-    opacity: 90%;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.18);
 }
 
 .closingButton{
@@ -257,52 +283,128 @@ body {
 }
 
 /* --- fix for modifyBox overhang and centering --- */
-.modifyBox {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  transform: translate(-50%, -110%); /* move box above component, centered */
-  z-index: 1000;
-  pointer-events: auto;
+.param-editor-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(8, 20, 31, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 2500;
 }
 
-.modifyBox .modifyBoxText {
-  min-width: 160px;
-  max-width: 220px;
-  width: max-content;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 8px 0;
-  position: relative;
-  z-index: 1;
-  margin: 0 auto;
-  left: 0;
-  right: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+.param-editor-overlay.is-open {
+    display: flex;
 }
 
-.modifyBox .modifyBoxText input {
-  width: 80%;
-  margin: 6px auto 0 auto;
-  display: block;
-  font-size: 1.1em;
-  border-radius: 4px;
-  border: 1px solid #aaa;
-  padding: 2px 6px;
-  box-sizing: border-box;
+.param-editor {
+    width: min(460px, calc(100vw - 32px));
+    background: linear-gradient(180deg, #fdfcf5, #eef6f6);
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(12, 37, 52, 0.28);
+    border: 1px solid rgba(8, 52, 58, 0.18);
+    overflow: hidden;
 }
 
-.modifyBox .modifyBoxText::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -7px;
-  border-width: 7px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
+.param-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 16px;
+    padding: 18px 20px 12px;
+    background: linear-gradient(135deg, #0c757c, #094e57);
+    color: white;
+}
+
+.param-editor-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.param-editor-subtitle {
+    margin-top: 4px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.param-editor-close,
+.param-editor-reset,
+.param-editor-save {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.param-editor-close {
+    background: rgba(255,255,255,0.14);
+    color: white;
+}
+
+.param-editor-form {
+    display: grid;
+    gap: 14px;
+    padding: 18px 20px;
+}
+
+.param-editor-row {
+    display: grid;
+    gap: 8px;
+}
+
+.param-editor-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.param-editor-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #123940;
+}
+
+.param-editor-unit,
+.param-editor-help {
+    font-size: 11px;
+    color: #4b6b72;
+}
+
+.param-editor-input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid rgba(11, 82, 90, 0.22);
+    border-radius: 12px;
+    padding: 12px 14px;
+    background: white;
+    color: #123940;
+    font-size: 14px;
+}
+
+.param-editor-input:focus {
+    outline: 2px solid rgba(12, 117, 124, 0.22);
+    border-color: #0c757c;
+}
+
+.param-editor-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 20px 20px;
+}
+
+.param-editor-reset {
+    background: #dfecee;
+    color: #1d4b52;
+}
+
+.param-editor-save {
+    background: #0c757c;
+    color: white;
 }
 
 /* --- Instruction Box Styles (centered modal) --- */

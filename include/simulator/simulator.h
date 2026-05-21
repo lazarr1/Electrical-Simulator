@@ -41,18 +41,25 @@ class Simulator{
         Simulator();
 
         void CreateResistor(const double resistanceInput);
+    void CreateResistor(const json& params);
 
         void CreateCurrentSource(const double current);
+    void CreateCurrentSource(const json& params);
 
         void CreateVoltageSource(const double voltage);
+    void CreateVoltageSource(const json& params);
 
         void CreateCapacitor(const double capacitance);
+    void CreateCapacitor(const json& params);
 
         void CreateInductor(const double inductance);
+    void CreateInductor(const json& params);
 
         void CreateVccs(const double conductance);
+    void CreateVccs(const json& params);
 
         void CreateACVoltageSource(const double amplitude);
+    void CreateACVoltageSource(const json& params);
 
         void GroundNode(std::string NodeName);
 
