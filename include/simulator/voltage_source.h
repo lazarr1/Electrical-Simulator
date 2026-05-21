@@ -9,6 +9,7 @@ class VoltageSource: public CircuitComponent{
         VoltageSource(std::string nameInput, CircuitSolver* sim);
         ~VoltageSource();
 
+        void PrepareSolver() override;
         void Stamp();
 
         void ResizeSolver();

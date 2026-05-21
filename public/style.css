@@ -81,6 +81,64 @@
     height: 80px;
 }
 
+.VCVS,
+.FunctionGenerator,
+.NMOS,
+.PMOS,
+.NPN,
+.PNP,
+.NotGate,
+.AndGate,
+.OrGate,
+.NandGate {
+    width: 81px;
+    height: 80px;
+    background-image: none;
+    background: linear-gradient(135deg, rgba(250,255,255,0.92), rgba(214,231,235,0.92));
+    border: 2px solid #1f5d66;
+    border-radius: 14px;
+}
+
+.Diode {
+    background-image: none;
+    background: linear-gradient(135deg, rgba(255,250,242,0.92), rgba(247,222,197,0.92));
+    border: 2px solid #9d5a13;
+    border-radius: 14px;
+}
+
+.CircuitComponent.VCVS::after,
+.CircuitComponent.FunctionGenerator::after,
+.CircuitComponent.Diode::after,
+.CircuitComponent.NMOS::after,
+.CircuitComponent.PMOS::after,
+.CircuitComponent.NPN::after,
+.CircuitComponent.PNP::after,
+.CircuitComponent.NotGate::after,
+.CircuitComponent.AndGate::after,
+.CircuitComponent.OrGate::after,
+.CircuitComponent.NandGate::after {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #154c54;
+}
+
+.CircuitComponent.VCVS::after { content: 'VCVS'; }
+.CircuitComponent.FunctionGenerator::after { content: 'FG'; }
+.CircuitComponent.Diode::after { content: 'D'; color: #8f4f0f; }
+.CircuitComponent.NMOS::after { content: 'NMOS'; }
+.CircuitComponent.PMOS::after { content: 'PMOS'; }
+.CircuitComponent.NPN::after { content: 'NPN'; }
+.CircuitComponent.PNP::after { content: 'PNP'; }
+.CircuitComponent.NotGate::after { content: 'NOT'; }
+.CircuitComponent.AndGate::after { content: 'AND'; }
+.CircuitComponent.OrGate::after { content: 'OR'; }
+.CircuitComponent.NandGate::after { content: 'NAND'; }
+
 .Ground{
     background-image: url('components/images/ground.png');
     width: 41px;

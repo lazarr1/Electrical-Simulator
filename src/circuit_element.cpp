@@ -12,6 +12,9 @@ CircuitComponent::CircuitComponent(std::string nameInput, int numioPins, const D
 CircuitComponent::~CircuitComponent(){
 }
 
+void CircuitComponent::PrepareSolver(){
+}
+
 std::string CircuitComponent::GetName() const{
     return name;
 }

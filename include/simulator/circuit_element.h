@@ -30,6 +30,7 @@ class CircuitComponent{
         CircuitComponent(std::string nameInput, int numioPins, const Direction * connectionDirections, CircuitSolver* sim);
 
         virtual ~CircuitComponent();
+        virtual void PrepareSolver();
         virtual void Stamp() = 0;
 
         virtual void Print() const;
