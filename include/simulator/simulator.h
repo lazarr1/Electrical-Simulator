@@ -58,8 +58,20 @@ class Simulator{
         void CreateVccs(const double conductance);
     void CreateVccs(const json& params);
 
+        void CreateVcvs(const json& params);
+
         void CreateACVoltageSource(const double amplitude);
     void CreateACVoltageSource(const json& params);
+
+        void CreateFunctionGenerator(const json& params);
+
+        void CreateDiode(const json& params);
+
+        void CreateMosfet(const json& params, bool pType);
+
+        void CreateBjt(const json& params, bool pnp);
+
+        void CreateDigitalGate(const std::string& kind, const json& params);
 
         void GroundNode(std::string NodeName);
 

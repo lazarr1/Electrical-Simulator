@@ -10,6 +10,14 @@ const makeNumberField = (key, label, unit, value, options = {}) => ({
     value
 });
 
+const makeSelectField = (key, label, value, options) => ({
+    key,
+    label,
+    input: 'select',
+    options,
+    value
+});
+
 const COMPONENT_DEFINITIONS = {
     Resistor: {
         type: 'Resistor',
@@ -84,6 +92,20 @@ const COMPONENT_DEFINITIONS = {
         ],
         gridAnchor: { x: 0, y: 40 }
     },
+    VCVS: {
+        type: 'VCVS',
+        displayName: 'VCVS',
+        terminals: 4,
+        params: { gain: 2 },
+        schema: [makeNumberField('gain', 'Gain', 'V/V', 2)],
+        nodeLayout: [
+            { x: 0, y: 0 },
+            { x: 0, y: 80 },
+            { x: 40, y: 0 },
+            { x: 40, y: 80 }
+        ],
+        gridAnchor: { x: 0, y: 40 }
+    },
     Ground: {
         type: 'Ground',
         displayName: 'Ground',
@@ -92,6 +114,148 @@ const COMPONENT_DEFINITIONS = {
         schema: [],
         nodeLayout: [{ x: 20.5, y: 0 }],
         gridAnchor: { x: 20.5, y: 20.5 }
+    },
+    FunctionGenerator: {
+        type: 'FunctionGenerator',
+        displayName: 'Function Gen',
+        terminals: 2,
+        params: { amplitude: 5, frequency: 60, offset: 0, phase: 0, dutyCycle: 0.5, waveform: 'sine' },
+        schema: [
+            makeSelectField('waveform', 'Waveform', 'sine', [
+                { label: 'Sine', value: 'sine' },
+                { label: 'Square', value: 'square' },
+                { label: 'Triangle', value: 'triangle' },
+                { label: 'Saw', value: 'saw' }
+            ]),
+            makeNumberField('amplitude', 'Amplitude', 'V', 5),
+            makeNumberField('frequency', 'Frequency', 'Hz', 60, { min: 0 }),
+            makeNumberField('offset', 'Offset', 'V', 0),
+            makeNumberField('phase', 'Phase', 'deg', 0),
+            makeNumberField('dutyCycle', 'Duty Cycle', '', 0.5, { min: 0.01, max: 0.99 })
+        ],
+        nodeLayout: [{ x: 20.5, y: 0 }, { x: 20.5, y: 80 }],
+        gridAnchor: { x: 20.5, y: 40 }
+    },
+    Diode: {
+        type: 'Diode',
+        displayName: 'Diode',
+        terminals: 2,
+        params: { forwardVoltage: 0.7, onResistance: 0.01, offResistance: 1000000000 },
+        schema: [
+            makeNumberField('forwardVoltage', 'Forward Voltage', 'V', 0.7),
+            makeNumberField('onResistance', 'On Resistance', 'Ohm', 0.01, { min: 0.000001 }),
+            makeNumberField('offResistance', 'Off Resistance', 'Ohm', 1000000000, { min: 1 })
+        ],
+        nodeLayout: [{ x: 20.5, y: 0 }, { x: 20.5, y: 80 }],
+        gridAnchor: { x: 20.5, y: 40 }
+    },
+    NMOS: {
+        type: 'NMOS',
+        displayName: 'NMOS',
+        terminals: 3,
+        params: { threshold: 2.5, onResistance: 0.05, offResistance: 1000000000 },
+        schema: [
+            makeNumberField('threshold', 'Threshold', 'V', 2.5),
+            makeNumberField('onResistance', 'On Resistance', 'Ohm', 0.05, { min: 0.000001 }),
+            makeNumberField('offResistance', 'Off Resistance', 'Ohm', 1000000000, { min: 1 })
+        ],
+        nodeLayout: [{ x: 0, y: 40 }, { x: 40, y: 0 }, { x: 40, y: 80 }],
+        gridAnchor: { x: 0, y: 40 }
+    },
+    PMOS: {
+        type: 'PMOS',
+        displayName: 'PMOS',
+        terminals: 3,
+        params: { threshold: 2.5, onResistance: 0.05, offResistance: 1000000000 },
+        schema: [
+            makeNumberField('threshold', 'Threshold', 'V', 2.5),
+            makeNumberField('onResistance', 'On Resistance', 'Ohm', 0.05, { min: 0.000001 }),
+            makeNumberField('offResistance', 'Off Resistance', 'Ohm', 1000000000, { min: 1 })
+        ],
+        nodeLayout: [{ x: 0, y: 40 }, { x: 40, y: 0 }, { x: 40, y: 80 }],
+        gridAnchor: { x: 0, y: 40 }
+    },
+    NPN: {
+        type: 'NPN',
+        displayName: 'NPN',
+        terminals: 3,
+        params: { baseTurnOn: 0.7, transconductance: 2, onResistance: 0.1, offResistance: 1000000000, baseResistance: 1000 },
+        schema: [
+            makeNumberField('baseTurnOn', 'Base Turn-On', 'V', 0.7),
+            makeNumberField('transconductance', 'Transconductance', 'S', 2),
+            makeNumberField('onResistance', 'On Resistance', 'Ohm', 0.1),
+            makeNumberField('offResistance', 'Off Resistance', 'Ohm', 1000000000),
+            makeNumberField('baseResistance', 'Base Resistance', 'Ohm', 1000)
+        ],
+        nodeLayout: [{ x: 0, y: 40 }, { x: 40, y: 0 }, { x: 40, y: 80 }],
+        gridAnchor: { x: 0, y: 40 }
+    },
+    PNP: {
+        type: 'PNP',
+        displayName: 'PNP',
+        terminals: 3,
+        params: { baseTurnOn: 0.7, transconductance: 2, onResistance: 0.1, offResistance: 1000000000, baseResistance: 1000 },
+        schema: [
+            makeNumberField('baseTurnOn', 'Base Turn-On', 'V', 0.7),
+            makeNumberField('transconductance', 'Transconductance', 'S', 2),
+            makeNumberField('onResistance', 'On Resistance', 'Ohm', 0.1),
+            makeNumberField('offResistance', 'Off Resistance', 'Ohm', 1000000000),
+            makeNumberField('baseResistance', 'Base Resistance', 'Ohm', 1000)
+        ],
+        nodeLayout: [{ x: 0, y: 40 }, { x: 40, y: 0 }, { x: 40, y: 80 }],
+        gridAnchor: { x: 0, y: 40 }
+    },
+    NotGate: {
+        type: 'NotGate',
+        displayName: 'NOT Gate',
+        terminals: 3,
+        params: { threshold: 2.5, highLevel: 5, lowLevel: 0 },
+        schema: [
+            makeNumberField('threshold', 'Threshold', 'V', 2.5),
+            makeNumberField('highLevel', 'High Level', 'V', 5),
+            makeNumberField('lowLevel', 'Low Level', 'V', 0)
+        ],
+        nodeLayout: [{ x: 0, y: 40 }, { x: 60, y: 20 }, { x: 60, y: 60 }],
+        gridAnchor: { x: 0, y: 40 }
+    },
+    AndGate: {
+        type: 'AndGate',
+        displayName: 'AND Gate',
+        terminals: 4,
+        params: { threshold: 2.5, highLevel: 5, lowLevel: 0 },
+        schema: [
+            makeNumberField('threshold', 'Threshold', 'V', 2.5),
+            makeNumberField('highLevel', 'High Level', 'V', 5),
+            makeNumberField('lowLevel', 'Low Level', 'V', 0)
+        ],
+        nodeLayout: [{ x: 0, y: 20 }, { x: 0, y: 60 }, { x: 60, y: 20 }, { x: 60, y: 60 }],
+        gridAnchor: { x: 0, y: 40 }
+    },
+    OrGate: {
+        type: 'OrGate',
+        displayName: 'OR Gate',
+        terminals: 4,
+        params: { threshold: 2.5, highLevel: 5, lowLevel: 0 },
+        schema: [
+            makeNumberField('threshold', 'Threshold', 'V', 2.5),
+            makeNumberField('highLevel', 'High Level', 'V', 5),
+            makeNumberField('lowLevel', 'Low Level', 'V', 0)
+        ],
+        nodeLayout: [{ x: 0, y: 20 }, { x: 0, y: 60 }, { x: 60, y: 20 }, { x: 60, y: 60 }],
+        gridAnchor: { x: 0, y: 40 }
+    },
+    NandGate: {
+        type: 'NandGate',
+        displayName: 'NAND Gate',
+        terminals: 4,
+        params: { threshold: 2.5, highLevel: 5, lowLevel: 0 },
+        schema: [
+            makeNumberField('threshold', 'Threshold', 'V', 2.5),
+            makeNumberField('highLevel', 'High Level', 'V', 5),
+            makeNumberField('lowLevel', 'Low Level', 'V', 0)
+        ],
+        nodeLayout: [{ x: 0, y: 20 }, { x: 0, y: 60 }, { x: 60, y: 20 }, { x: 60, y: 60 }],
+        gridAnchor: { x: 0, y: 40 }
     }
 };
 

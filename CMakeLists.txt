@@ -74,10 +74,16 @@ set(elec_sim_SOURCES
     src/capacitor.cpp
     src/inductor.cpp
     src/vccs.cpp
+    src/vcvs.cpp
     src/router.cpp
     src/circuithandler.cpp
     src/voltage_source.cpp
     src/ac_voltage_source.cpp
+    src/function_generator.cpp
+    src/diode.cpp
+    src/mosfet.cpp
+    src/bjt.cpp
+    src/digital_gate.cpp
     src/service_handler.cpp
 )
 

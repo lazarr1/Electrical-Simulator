@@ -11,8 +11,14 @@
 #include "simulator/capacitor.h"
 #include "simulator/inductor.h"
 #include "simulator/vccs.h"
+#include "simulator/vcvs.h"
 #include "simulator/voltage_source.h"
 #include "simulator/ac_voltage_source.h"
+#include "simulator/function_generator.h"
+#include "simulator/diode.h"
+#include "simulator/mosfet.h"
+#include "simulator/bjt.h"
+#include "simulator/digital_gate.h"
 
 
 
@@ -224,6 +230,117 @@ void Simulator::CreateVccs(const double conductance){
 
 void Simulator::CreateVccs(const json& params){
     CreateVccs(params.value("conductance", params.value("value", 1.0)));
+}
+
+void Simulator::CreateVcvs(const json& params){
+    _numComponents++;
+
+    std::string name("vcvs" + std::to_string(_numComponents));
+
+    std::shared_ptr<VCVS> vcvs = std::make_shared<VCVS>(name, &_solver);
+
+    AllocateNodes(vcvs);
+    vcvs->SetGain(params.value("gain", 1.0));
+
+    _circuit.AddComponent(vcvs);
+    _presentComponents[vcvs->GetName()] = vcvs;
+}
+
+void Simulator::CreateFunctionGenerator(const json& params){
+    _numComponents++;
+
+    std::string name("FG" + std::to_string(_numComponents));
+
+    std::shared_ptr<FunctionGenerator> generator = std::make_shared<FunctionGenerator>(name, &_solver);
+
+    AllocateNodes(generator);
+    generator->SetAmplitude(params.value("amplitude", 5.0));
+    generator->SetFrequency(params.value("frequency", 60.0));
+    generator->SetOffset(params.value("offset", 0.0));
+    generator->SetPhase(params.value("phase", 0.0));
+    generator->SetDutyCycle(params.value("dutyCycle", 0.5));
+    generator->SetWaveform(params.value("waveform", std::string("sine")));
+
+    _circuit.AddComponent(generator);
+    _presentComponents[generator->GetName()] = generator;
+}
+
+void Simulator::CreateDiode(const json& params){
+    _numComponents++;
+
+    std::string name("D" + std::to_string(_numComponents));
+
+    std::shared_ptr<Diode> diode = std::make_shared<Diode>(name, &_solver);
+
+    AllocateNodes(diode);
+    diode->SetForwardVoltage(params.value("forwardVoltage", 0.7));
+    diode->SetOnResistance(params.value("onResistance", 0.01));
+    diode->SetOffResistance(params.value("offResistance", 1000000000.0));
+
+    _circuit.AddComponent(diode);
+    _presentComponents[diode->GetName()] = diode;
+}
+
+void Simulator::CreateMosfet(const json& params, bool pType){
+    _numComponents++;
+
+    std::string prefix = pType ? "PM" : "NM";
+    std::string name(prefix + std::to_string(_numComponents));
+
+    std::shared_ptr<MOSFET> mosfet = std::make_shared<MOSFET>(name, &_solver, pType);
+
+    AllocateNodes(mosfet);
+    mosfet->SetThreshold(params.value("threshold", 2.5));
+    mosfet->SetOnResistance(params.value("onResistance", 0.05));
+    mosfet->SetOffResistance(params.value("offResistance", 1000000000.0));
+
+    _circuit.AddComponent(mosfet);
+    _presentComponents[mosfet->GetName()] = mosfet;
+}
+
+void Simulator::CreateBjt(const json& params, bool pnp){
+    _numComponents++;
+
+    std::string prefix = pnp ? "PNP" : "NPN";
+    std::string name(prefix + std::to_string(_numComponents));
+
+    std::shared_ptr<BJT> bjt = std::make_shared<BJT>(name, &_solver, pnp);
+
+    AllocateNodes(bjt);
+    bjt->SetBaseTurnOn(params.value("baseTurnOn", 0.7));
+    bjt->SetTransconductance(params.value("transconductance", 2.0));
+    bjt->SetOnResistance(params.value("onResistance", 0.1));
+    bjt->SetOffResistance(params.value("offResistance", 1000000000.0));
+    bjt->SetBaseResistance(params.value("baseResistance", 1000.0));
+
+    _circuit.AddComponent(bjt);
+    _presentComponents[bjt->GetName()] = bjt;
+}
+
+void Simulator::CreateDigitalGate(const std::string& kind, const json& params){
+    static const Direction inverterDirections[3] {NoFlow, In, Out};
+    static const Direction gateDirections[4] {NoFlow, NoFlow, In, Out};
+
+    const bool unary = kind == "not";
+    _numComponents++;
+
+    std::string name(kind + std::to_string(_numComponents));
+
+    std::shared_ptr<DigitalGate> gate = std::make_shared<DigitalGate>(
+        name,
+        unary ? 3 : 4,
+        unary ? inverterDirections : gateDirections,
+        kind,
+        &_solver
+    );
+
+    AllocateNodes(gate);
+    gate->SetThreshold(params.value("threshold", 2.5));
+    gate->SetHighLevel(params.value("highLevel", 5.0));
+    gate->SetLowLevel(params.value("lowLevel", 0.0));
+
+    _circuit.AddComponent(gate);
+    _presentComponents[gate->GetName()] = gate;
 }
 
 void Simulator::CreateConnection(std::string NodeName1, std::string NodeName2){

@@ -131,6 +131,72 @@ class Circuit {
         this.enableComponentDragToPlace(component);
     }
 
+    createNewVCVS() {
+        const component = this.createComponent('VCVS');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
+    createNewFunctionGenerator() {
+        const component = this.createComponent('FunctionGenerator');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
+    createNewDiode() {
+        const component = this.createComponent('Diode');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
+    createNewNMOS() {
+        const component = this.createComponent('NMOS');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
+    createNewPMOS() {
+        const component = this.createComponent('PMOS');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
+    createNewNPN() {
+        const component = this.createComponent('NPN');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
+    createNewPNP() {
+        const component = this.createComponent('PNP');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
+    createNewNotGate() {
+        const component = this.createComponent('NotGate');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
+    createNewAndGate() {
+        const component = this.createComponent('AndGate');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
+    createNewOrGate() {
+        const component = this.createComponent('OrGate');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
+    createNewNandGate() {
+        const component = this.createComponent('NandGate');
+        this.Components.push(component);
+        this.enableComponentDragToPlace(component);
+    }
+
     createGroundNode() {
         const component = this.createComponent('Ground', { nodeId: 'G' });
         this.grounds.push(component);

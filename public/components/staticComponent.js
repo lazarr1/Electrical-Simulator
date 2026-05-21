@@ -106,6 +106,16 @@ class VCCSComponent extends StaticCircuitComponent{
     }
 }
 
+class VCVSComponent extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"VCVS", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewVCVS();
+    }
+}
+
 class ACVoltageSourceComponent extends StaticCircuitComponent{
     constructor(id,circuit,componentBox){
         super(id,circuit,"ACVoltageSource", componentBox);
@@ -116,4 +126,104 @@ class ACVoltageSourceComponent extends StaticCircuitComponent{
     }
 }
 
-export {VoltageSource, StaticCircuitComponent, Resistor, DCurrent, Capacitor, Inductor, Ground, VCCSComponent, ACVoltageSourceComponent}
+class FunctionGeneratorComponent extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"FunctionGenerator", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewFunctionGenerator();
+    }
+}
+
+class DiodeComponent extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"Diode", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewDiode();
+    }
+}
+
+class NMOSComponent extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"NMOS", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewNMOS();
+    }
+}
+
+class PMOSComponent extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"PMOS", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewPMOS();
+    }
+}
+
+class NPNComponent extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"NPN", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewNPN();
+    }
+}
+
+class PNPComponent extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"PNP", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewPNP();
+    }
+}
+
+class NotGateComponent extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"NotGate", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewNotGate();
+    }
+}
+
+class AndGateComponent extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"AndGate", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewAndGate();
+    }
+}
+
+class OrGateComponent extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"OrGate", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewOrGate();
+    }
+}
+
+class NandGateComponent extends StaticCircuitComponent{
+    constructor(id,circuit,componentBox){
+        super(id,circuit,"NandGate", componentBox);
+    }
+
+    onClick(){
+        this.crc.createNewNandGate();
+    }
+}
+
+export {VoltageSource, StaticCircuitComponent, Resistor, DCurrent, Capacitor, Inductor, Ground, VCCSComponent, VCVSComponent, ACVoltageSourceComponent, FunctionGeneratorComponent, DiodeComponent, NMOSComponent, PMOSComponent, NPNComponent, PNPComponent, NotGateComponent, AndGateComponent, OrGateComponent, NandGateComponent}

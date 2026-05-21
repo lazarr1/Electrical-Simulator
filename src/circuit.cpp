@@ -170,9 +170,8 @@ void Circuit::BuildCircuitMatrix(){
         _solver->Resize(idGenerator, false);
         _solver->SetParentNodes(parentNodes);
 
-        
-        for(std::shared_ptr<VoltageSource> iVs : _voltageSources){
-            iVs->ResizeSolver();
+        for(std::shared_ptr<CircuitComponent> iComponent : _components){
+            iComponent->PrepareSolver();
         }
 
         for(std::shared_ptr<CircuitComponent> iComponent : _components){ 

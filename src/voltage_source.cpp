@@ -11,6 +11,10 @@ VoltageSource::~VoltageSource(){
     
 }
 
+void VoltageSource::PrepareSolver(){
+    ResizeSolver();
+}
+
 void VoltageSource::ResizeSolver(){
     std::pair<int,int> currsize = _solver->GetSize();
     _solver->Resize(currsize.first + 1, false);
