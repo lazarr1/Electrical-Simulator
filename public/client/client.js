@@ -59,16 +59,23 @@ class Client{
             if(msgType == 'voltages'){
                 this.circuit.clearInSimFlag();
                 this.reponse = JSON.parse(msgBody);
-                this.circuit.setNodes(this.reponse.nodes);
-                if(this.reponse.timeseries){
-                    this.circuit.setTimeSeries(this.reponse.timeseries);
+
+                // Handle both new format {nodes: {...}, timeseries: {...}}
+                // and old format {"N1": 5, "N2": 0}
+                const nodeVoltages = this.reponse.nodes || this.reponse;
+                this.circuit.setNodes(nodeVoltages);
+
+                const tsData = this.reponse.timeseries;
+                if(tsData){
+                    this.circuit.setTimeSeries(tsData);
                 }
             }
             else if(msgType == 'error'){
                 this.circuit.clearInSimFlag();
                 this.circuit.ErrorMsg();
                 this.reponse = JSON.parse(msgBody);
-                this.circuit.setNodes(this.reponse.nodes || this.reponse);
+                const nodeVoltages = this.reponse.nodes || this.reponse;
+                this.circuit.setNodes(nodeVoltages);
             }
         }
     }

@@ -171,10 +171,18 @@ class Oscilloscope {
             }
         }
 
-        // Add 10% padding
-        const yRange = yMax - yMin || 1;
-        yMin -= yRange * 0.1;
-        yMax += yRange * 0.1;
+        // Handle constant signals (DC) — ensure a visible range
+        if (yMax - yMin < 1e-9) {
+            const center = (yMax + yMin) / 2;
+            const margin = Math.abs(center) * 0.2 || 1;
+            yMin = center - margin;
+            yMax = center + margin;
+        } else {
+            // Add 10% padding
+            const yRange = yMax - yMin;
+            yMin -= yRange * 0.1;
+            yMax += yRange * 0.1;
+        }
 
         const tMin = times[0];
         const tMax = times[times.length - 1];
